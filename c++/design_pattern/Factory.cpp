@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <map>
 #include <cmath>
 #include <initializer_list>
@@ -117,12 +118,21 @@ namespace InnerFactory{
 
 namespace HierarchicalFactory {
 
+	struct RoadLogistics;
+	struct SeaLogistics;
+
+
 	struct Transport {
 		virtual void deliver() =0 ;
 	};
 
 	struct Logistics {
-		virtual Transport* create_transport() =0;
+
+		void someOperation();
+		Transport* create_transport(){
+			return nullptr;
+		};
+
 	};
 
 
@@ -134,22 +144,34 @@ namespace HierarchicalFactory {
 		void deliver() {}
 	};
 
-	struct RoadLogistics : Logistics {
+	struct RoadLogistics : public Logistics {
 		Transport* create_transport(){
 			return new Truck();
 		}
 	};
 
-	struct SeaLogistics : Logistics {
+	struct SeaLogistics : public Logistics {
 		Transport* create_transport(){
 			return new Ship();
 		}
 	};
 
+	void Logistics::someOperation(){
+		// ...
+		Transport* t = create_transport();
+		t->deliver();
+		// ...
+	}
+
 
 	void do_hierarchical_factory(){
+		Logistics l;
 		RoadLogistics rl;
-		auto p = rl.create_transport();
+		SeaLogistics sl;
+
+		l.someOperation();
+		rl.someOperation();
+		sl.someOperation();
 	}
 };
 

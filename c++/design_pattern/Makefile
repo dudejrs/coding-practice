@@ -1,8 +1,6 @@
 CC = g++
 FLAGS=-std=c++14
-BOOST_FLAGS=-L /Users/kimdeokyoung/boost_1_81_0/stage/lib
 
-PATH := $(PATH):/Users/kimdeokyoung/boost_1_81_0
 
 CPP_SOURCES := $(wildcard *.cpp)
 CPP_OBJECTS := $(CPP_SOURCES:.cpp=.o)
