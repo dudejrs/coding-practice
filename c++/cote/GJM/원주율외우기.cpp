@@ -3,10 +3,11 @@
 #include <sstream>
 #include <string>
 #define MAX_ 987654321
+#define N 10000
 
 using namespace std;
 
-
+int cache[N+2];
 
 int classify(int cur, int n, const string& s ){
 
@@ -34,7 +35,12 @@ int memorize(int cur, const string& s){
 	
 	if(cur == s.size()) return 0;
 
-	int ret = MAX_;
+	int& ret = cache[cur];
+
+	if(ret != -1 ) return ret;
+
+
+	ret = MAX_;
 
 
 	for(int i =3; i < 6; i++){
@@ -58,6 +64,7 @@ int main(void){
 	int test_cases = stoi(buf);
 
 	while( test_cases > 0 ){
+		memset(cache, -1 , sizeof(cache));
 
 		getline(fd,buf);
 		cout << solve(buf) << endl;
