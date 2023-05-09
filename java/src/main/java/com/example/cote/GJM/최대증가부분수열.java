@@ -33,7 +33,7 @@ public class 최대증가부분수열{
 		ret = 1;
 		int best = -1;
 
-		for(int i=cur+1; i<l.size(); i++){
+		for(int i=cur+1; i<l.size(); i++	){
 			if(cur == -1 || l.get(cur) < l.get(i)){
 				int tmp = Math.max(ret, solve(i, l)+1);
 				if(ret < tmp){
