@@ -16,9 +16,11 @@ public class 광학문자인식{
 
 	private static double[][] T ;
 	private static double[][] M ;
+	private static double[][] cache;
+	private static int[][] choices;
 
 	private static List<String> terms;
-
+	private static Map<String, Integer> termToInt = new HashMap<>();
 	private static List<String> querys = new LinkedList<>();
 
 	private static List<Double> parseDoubleToList(String line){
@@ -39,7 +41,12 @@ public class 광학문자인식{
 		m = c.get(0);
 		q = c.get(1);
 
-		terms = Arrays.stream(reader.readLine().split(" ")).collect(toList());
+		terms = Arrays.asList(reader.readLine().split(" "));
+
+		for(int i =0; i< terms.size(); i++){
+			termToInt.put(terms.get(i), i+1);
+		}
+
 
 		T = new double[m+1][m+1];
 		
@@ -63,6 +70,16 @@ public class 광학문자인식{
 			}
 		}
 
+		choices = new int[Q_+2][m+2];
+		for(int i=0; i< Q_+2 ;i++){
+			Arrays.fill(choices[i], 0);
+		}
+
+		cache = new double[Q_+2][m+2];
+		for(int i=0; i< Q_+2 ;i++){
+			Arrays.fill(cache[i], 1.d);
+		}
+
 		String line = "";
 
 		while((line = reader.readLine()) != null){
@@ -71,8 +88,49 @@ public class 광학문자인식{
 
 	}
 
-	private static double solve(String[] mismatched){
-		return 0.d;
+
+	private static double f(int count, int prv, String[] mismatched){
+		
+
+		double ret  = cache[count][prv];
+		if( ret != 1.) return ret;
+
+		if(count == mismatched.length ) return 0.d;
+
+		ret = -1e200;
+
+		int idx = termToInt.get(mismatched[count]);
+
+		int best = choices[count][prv];
+		for(int cur=0; cur<m+1; cur++){
+			double tmp = T[prv][cur] + M[cur][idx] + f(count+1, cur, mismatched);
+			if(ret < tmp){
+				ret = tmp;
+				best = cur;
+			}
+		}
+
+		choices[count][prv] = best;
+		cache[count][prv] = ret;
+
+		return ret;
+	}
+
+	private static void reconstruct (int count, int prv, int n){
+		int next =choices[count][prv];
+		System.out.print(terms.get(next)+" ");
+		if(count < n-1)
+			reconstruct(count+1, next, n);
+		return;
+	}
+
+	private static void solve(String[] mismatched){
+
+		f(0,0,mismatched);
+
+		reconstruct(0,0,mismatched.length);
+		System.out.println("");
+		return;
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -82,8 +140,7 @@ public class 광학문자인식{
 		for(String query : querys){
 
 			String[] mismatched =Arrays.copyOfRange(query.split(" "),1,5);
-
-			System.out.println(solve(mismatched));
+			solve(mismatched);
 		}
 
 	}	
