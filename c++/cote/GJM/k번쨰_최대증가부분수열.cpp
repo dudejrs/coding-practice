@@ -41,7 +41,7 @@ int findMax(int prv,vector<int>& v){
 	}
 
 	return ret;
-}
+}⁄
 
 int count(int prv, vector<int>& v){
 	if(findMax(prv, v) == 1) return 1;
