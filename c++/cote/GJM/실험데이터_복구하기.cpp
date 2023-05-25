@@ -76,7 +76,7 @@ string solve( const vector<string>& words){
 	memset(overlap, 0, sizeof(overlap));
 	memset(cache, -1, sizeof(cache));
 	preCalc(words);
-
+`
 	int m = -1;
 	int cur_max = 0;
 
