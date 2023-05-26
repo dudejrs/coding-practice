@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-#define N 100
+#define N 30
 
 
 using namespace std;
@@ -51,9 +51,40 @@ int solve(int* start, int* finish){
 	return selected;
 }
 
-int solveDP(int* start, int* end){
-	int* selected = new int[N];
+bool canBeScheduled(int cur, int* start, int* end, bool* selected){
+	int meetingBegin = start[cur];
+	int meetingEnd = end[cur];
 
+	for(int i=0; i<N; i++){
+		if(!selected[i]) continue;
+		if(start[i]< meetingBegin &&  meetingBegin < end[i]) return false;
+		if(start[i]< meetingEnd &&  meetingEnd < end[i]) return false;
+	}
+
+
+	return true;
+}
+
+int schedule(int cur, int* start, int* finish, bool* selected){
+	if(cur == N)
+		return 0;
+
+	int ret = 0;
+
+	if(canBeScheduled(cur, start, finish, selected)){
+		selected[cur] = true;
+		ret = max(ret, schedule(cur+1, start, finish, selected)+1);
+		selected[cur] = false;
+	}
+
+	return max(ret, schedule(cur+1, start, finish, selected));
+	
+}
+
+int solveDP(int* start, int* finish){
+	bool* selected = new bool[N];
+
+	return schedule(0, start, finish, selected);
 }
 
 int main(void){
@@ -66,6 +97,7 @@ int main(void){
 	solve(begin,end);
 
 	cout << solve(begin,end) << endl;
+	cout << solveDP(begin,end) << endl;
 
 	return 0;
 }
