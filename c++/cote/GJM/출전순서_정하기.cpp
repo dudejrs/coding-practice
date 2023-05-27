@@ -62,6 +62,15 @@ int main(void){
 	int* russians = initialize(gen);
 	int* koreans = initialize(gen);
 
+	for(int i=0; i<N; i++){
+		cout << russians[i] << " ";
+	}
+	cout << endl;
+	for(int i=0; i<N; i++){
+		cout << koreans[i] << " ";
+	}
+	cout << endl;
+
 	cout << solve(russians, koreans) << endl;
 	cout << solve2(russians, koreans) << endl;
 
