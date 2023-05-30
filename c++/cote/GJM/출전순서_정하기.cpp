@@ -34,7 +34,6 @@ int solve2(int* russians, int* koreans){
 			wins++;
 		}
 	}
-
 	return wins;
 }
 

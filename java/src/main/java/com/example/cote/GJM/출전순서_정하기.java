@@ -43,7 +43,6 @@ public class 출전순서_정하기 {
 			}
 		}
 
-
 		return count;
 	}
 
