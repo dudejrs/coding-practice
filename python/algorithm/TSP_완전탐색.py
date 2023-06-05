@@ -29,15 +29,15 @@ def initialize() :
 def solve(cur, path, vistied, W) :
 
 	if(len(path) == N) :
-		return 0; 
+		return W[cur][0]; 
 
-	ret = 0
+	ret = INF
 
 	for i in range(0, N) :
 		if not vistied[i] and  W[cur][i] != INF :
 			visited[i] = True
 			path.append(i)
-			ret = max(ret, W[cur][i] + solve(i, path, vistied, W))
+			ret = min(ret, W[cur][i] + solve(i, path, vistied, W))
 			visited[i] = False
 			del path[-1]
 
