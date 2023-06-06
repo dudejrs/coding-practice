@@ -1,4 +1,4 @@
-import random 	
+import random
 
 
 TEST_CASES = 10
@@ -8,43 +8,43 @@ INF = 987654321
 
 random.seed(43);
 
-cache = [[-1]*(1<<N)] * N
+cache = [[-1 for _ in range(0,(1<<N))] for _ in range(0,N)]
 
 
 def initialize() : 
 
-	ret = [];
-
+	ret = [ [0 for j in range(0,N)] for i in range(0,N) ];
+	ret[1][2] = 3;
 	for i in range(0, N) :
+		ret[i][i] = INF;
+		for j in range(0, i) :
+			tmp = random.randint(1, 100)
+			if(tmp % 37 < 1) : tmp = INF
+			ret[i][j] = tmp;
+			ret[j][i] = tmp;
 
-		row = [];
-		for j in range(0, N) :
-			tmp = random.randint(0, 100)
-			if(i == j or tmp % 37 < 1) : tmp = INF
-			row.append(tmp)
 
-		ret.append(row)	
 
 	return ret
 
 
-def solve(cur, vistied, W) :
+def solve(cur, visited, W) :
 
 
-	if (vistied == (1<<N)-1) : return W[cur][0]
+	if (visited == (1<<N)-1) : return W[cur][0]
 
-	ret = cache[cur][vistied];
+	ret = cache[cur][visited];
 	if ret != -1 : return ret
 
 	ret = INF
 
 	for i in range(0, N) :
-		if not (vistied & (1 << i) ) and  W[cur][i] != INF :
-			if(cur == 0) : print(W[cur][i] + solve(i,  vistied | (1 << i), W))
-			ret = min(ret, W[cur][i] + solve(i,  vistied | (1 << i), W))
+		if not (visited & (1 << i) ) and  W[cur][i] != INF :
+			newvisited =  visited + (1<<i)
+			ret = min(ret, W[cur][i] + solve(i,  newvisited, W))
 
+	cache[cur][visited] = ret;
 
-	cache[cur][vistied] = ret;
 
 	return ret
 
@@ -61,9 +61,9 @@ def print_solution(W, ret) :
 
 if __name__ == "__main__"  : 
 
-	for _ in range(0,TEST_CASES) :
+	for _ in range(0,1) :
 
-		cache = [[-1]*(1<<N)] * (N+1)
+		cache = [[-1 for _ in range(0,(1<<N))] for _ in range(0,N)]
 
 		W = initialize()
 		visited = 1 
