@@ -184,6 +184,7 @@ void search4 (double** W, vector<int>& path, vector<bool>& visited, double curre
 
 // 6. MST 휴리스틱을 이용한 가지치기
 
+
 void solve(double** W){
 	function_t functions[] = {*serach0, *search1, *search3, *search4};
 
