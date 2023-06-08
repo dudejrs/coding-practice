@@ -1,11 +1,12 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <map>
 #include <iomanip>
 
 #define INF 1e200
 #define N 10
-#define MAX 30
+#define MAX 20
 
 
 using namespace std;
@@ -182,13 +183,138 @@ void search4 (double** W, vector<int>& path, vector<bool>& visited, double curre
 (..., p,b,a,q, ..., cur)
 */
 
+
+// 마지막 네개의 도시중 가운데 두도시의 순서를 바꿨을 떄 경로가 짧아지는지 여부를 반환
+bool pathSwappingPruning (double** W, vector<int>& path){
+	if(path.size() < 4 )return false;
+	int p = path[path.size() - 4];
+	int a = path[path.size() - 3];
+	int b = path[path.size() - 2];
+	int q = path[path.size() - 1];
+	
+	return W[p][a] + W[a][b] + W[b][q] > W[p][b] + W[b][a] + W[a][q];
+}
+
+// 모든 길이의 부분 경로를 뒤집어서 경로가 짧아지는지 여부를 반환
+bool pathReversePruning(double**W, vector<int>& path){
+	
+	if(path.size()<4) return false;
+	int q = path[path.size() -1];
+	int b = path[path.size() -2];
+
+
+	for(int i=0; i+3 < path.size(); i++){
+		int a = path[i+1];
+		int p = path[i];
+
+		if( W[p][a] + W[b][q] > W[p][b] + W[a][q]){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void search5 (double** W, vector<int>& path, vector<bool>& visited, double currentLength, double& best){
+	if(pathReversePruning(W,path)) return;
+
+	int cur = path.back();
+
+	if (path.size() == N) {
+		best = min(best, currentLength + W[cur][0]);
+		return;
+	}
+
+	for(int i=0; i< N; i++){		
+		if(visited[i]) continue;
+		path.push_back(i);
+		visited[i] = true;
+		search5(W, path, visited, currentLength+ W[cur][i], best);
+		path.pop_back();
+		visited[i] = false;
+	}
+}
+
 // 6. MST 휴리스틱을 이용한 가지치기
 
+void search6 (double** W, vector<int>& path, vector<bool>& visited, double currentLength, double& best){
+	int cur = path.back();
+
+	if (path.size() == N) {
+		best = min(best, currentLength + W[cur][0]);
+		return;
+	}
+
+	for(int i=0; i< N; i++){		
+		if(visited[i]) continue;
+		path.push_back(i);
+		visited[i] = true;
+		search6(W, path, visited, currentLength+ W[cur][i], best);
+		path.pop_back();
+		visited[i] = false;
+	}
+}
+
+// 7. 남은 조각의 수가 k이하일 때만 메모이제이션
+
+const int CACHED_DEPTH = 5;
+
+map<int, double> cache[MAX][CACHED_DEPTH +1];
+
+double _search_dp(double** W, int cur, int visited ){
+
+	if (visited == (1<< N)-1) return W[cur][0];
+	
+	int remaining = N - __builtin_popcount(visited);
+	double& ret = cache[cur][remaining][visited];
+	if(ret > 0 ) return ret;
+	
+	ret =INF;
+
+	for(int i=0; i< N; i++){		
+		if(visited & (1 << i)) continue;
+		ret = min(ret,_search_dp(W, i, visited | (1 << i)) + W[cur][i]);
+	}
+
+	return ret;
+}
+
+void _search7 (double** W, vector<int>& path, int visited, double currentLength, double& best){
+	int cur = path.back();
+	if(path.size() + CACHED_DEPTH >= N){
+		best = min(best, currentLength + _search_dp(W, cur, visited) );
+		return;
+	}
+	if (path.size() == N) {
+		best = min(best, currentLength + W[cur][0]);
+		return;
+	}
+
+	for(int i=0; i< N; i++){		
+		if(visited & (1<<i) ) continue;
+		path.push_back(i);
+		_search7(W, path, visited | (1 << i) , currentLength+ W[cur][i], best);
+		path.pop_back();
+	}
+}
+
+void search7(double** W, vector<int>& path, vector<bool>& _visited, double currentLength, double& best){
+	
+	int visited = 1;
+
+	for(int i=0; i< MAX; i++){
+		for(int j=0; j< CACHED_DEPTH+1; j++){
+			cache[i][j].clear();
+		}
+	}
+
+	_search7(W,path,visited,0,best);
+}
 
 void solve(double** W){
-	function_t functions[] = {*serach0, *search1, *search3, *search4};
+	function_t functions[] = {*serach0, *search1, *search3, *search4, *search5, *search6, *search7};
 
-	for(int i =0; i<4 ;i++){
+	for(int i =0; i<7 ;i++){
 		double best = INF;
 		vector<bool> visited(N, false); 
 		vector<int> path(1, 0);
@@ -198,6 +324,9 @@ void solve(double** W){
 		cout << "solve : " <<fixed << setprecision(3) <<best<< endl;
 	}
 }
+
+
+
 
 int main(void){
 
