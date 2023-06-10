@@ -235,10 +235,99 @@ void search5 (double** W, vector<int>& path, vector<bool>& visited, double curre
 	}
 }
 
-// 6. MST 휴리스틱을 이용한 가지치기
+// 6. MST 휴리스틱을 이용한 가지치기 : 현재 선택된 노드에서, 최소 스패닝트리를 만든것 보다 작으면 가지치기 
 
-void search6 (double** W, vector<int>& path, vector<bool>& visited, double currentLength, double& best){
+struct Node {
+	Node* representitive;
+	Node* next;
+	int value;
+
+	Node(int value) : representitive(this), next(nullptr), value(value){}
+};
+
+struct DisjointSet{
+
+	vector<Node*> groups;
+
+	DisjointSet(int n) : groups(0) {
+		for(int i=0; i<n; i++){
+			groups.push_back(new Node(i));
+		}
+
+	}
+
+	int find(int a){
+		Node* r = groups[a]->representitive;
+
+		int cnt = 0;
+		for(auto group : groups){
+			if(group == r) break;
+			cnt++;
+		}
+
+		return cnt;
+	}
+
+	void _changeGroup(int rootA, int rootB){
+		if (rootA == rootB) return;
+		if (find(rootA) != rootA || find(rootB) != rootB ) return;
+
+		Node* cur = groups[rootA];
+		while(cur->next != nullptr) {
+			cur = cur->next;
+		}
+		cur->next = groups[rootB];
+		cur = groups[rootB];
+
+		while(cur){
+			cur->representitive = groups[rootA];
+			cur = cur->next;
+		}
+
+	}
+
+	bool merge(int a, int b){
+		int rootA = find(a);
+		int rootB = find(b);
+
+		if(rootA == rootB) return false;
+
+		if(a<b)
+			_changeGroup(rootA, rootB);
+		else 
+			_changeGroup(rootB, rootA);
+
+		return true;
+	}
+};
+
+typedef pair<double, pair<int,int>> Edge;
+
+
+double mstHeuristic(int cur, const vector<bool>& visited, vector<Edge>& edges){
+
+	DisjointSet sets(N);
+
+	double result = 0.f;
+
+
+	for(int i=0; i< edges.size(); i++){
+		int a = edges[i].second.first, b = edges[i].second.first; 
+		if( a!= 0 && a != cur && visited[a]) continue;
+		if( b!= 0 && b != cur && visited[b]) continue;
+
+		if(sets.merge(a,b))
+			result += edges[i].first;
+	}
+
+	return result;
+}
+
+
+void _search6 (double** W, vector<int>& path, vector<bool>& visited, double currentLength, double& best,vector<Edge>& edges){
+
 	int cur = path.back();
+	if( best <= currentLength + mstHeuristic(cur, visited, edges)) return;
 
 	if (path.size() == N) {
 		best = min(best, currentLength + W[cur][0]);
@@ -249,10 +338,24 @@ void search6 (double** W, vector<int>& path, vector<bool>& visited, double curre
 		if(visited[i]) continue;
 		path.push_back(i);
 		visited[i] = true;
-		search6(W, path, visited, currentLength+ W[cur][i], best);
+		_search6(W, path, visited, currentLength+ W[cur][i], best, edges);
 		path.pop_back();
 		visited[i] = false;
 	}
+}
+
+void search6(double** W, vector<int>& path, vector<bool>& visited, double currentLength, double& best){
+
+	vector<Edge> edges;
+
+	for(int i=0; i<N; i++){
+		for(int j=0; j<N; j++){
+			edges.push_back(make_pair(W[i][j], make_pair(i,j)));
+		}
+	}
+	sort(begin(edges),end(edges));
+	
+	_search6(W, path, visited, currentLength, best, edges);
 }
 
 // 7. 남은 조각의 수가 k이하일 때만 메모이제이션
