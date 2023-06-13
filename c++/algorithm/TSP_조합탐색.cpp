@@ -349,7 +349,7 @@ void search6(double** W, vector<int>& path, vector<bool>& visited, double curren
 	vector<Edge> edges;
 
 	for(int i=0; i<N; i++){
-		for(int j=0; j<N; j++){
+		for(int j=0; j<i; j++){
 			edges.push_back(make_pair(W[i][j], make_pair(i,j)));
 		}
 	}

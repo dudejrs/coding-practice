@@ -471,7 +471,7 @@ public class TSP_조합탐색 {
 
 		int cur = path.peek();
 
-		if(path.size() + CACHCE_DEPTH <= N) {
+		if(path.size() + CACHCE_DEPTH >= N) {
 			best = Math.min(best, currentLength + search7_dp(cur, visited));
 			return;
 		}
