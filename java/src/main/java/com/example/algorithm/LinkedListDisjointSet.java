@@ -40,7 +40,7 @@ public class LinkedListDisjointSet implements DisjointSet{
 		cur.next = groups.get(rootB);
 		cur = groups.get(rootB);
 		while(cur != null){
-			cur.representitive = groups.get(rootA);
+			cur.representitive = groups.get(rootA)	;
 			cur = cur.next;
 		}
 
