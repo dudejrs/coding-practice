@@ -31,7 +31,7 @@ namespace ProblemCase{
 			return oss.str();	
 		}
 	};
-
+	
 	void do_problem_case(){
 		using namespace std;
 		string words[2]= {"hello", "world"};
