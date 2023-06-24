@@ -72,7 +72,7 @@ void generateCandidates(){
 	}
 }
 
-void print_solution(int n, int** value){
+void print_solution(const int n, int** value){
 	cout << setw(4*n-5) << "[solution]" << endl;
 	for(int i=0; i<n; i++){
 		for(int j=0; j<n; j++){
@@ -80,6 +80,7 @@ void print_solution(int n, int** value){
 		}
 		cout << endl;
 	}
+	cout << endl;
 		
 }
 
@@ -181,14 +182,11 @@ void initialize(fstream& fd, int n, int** color, int** value, int*** hint, int& 
 
 	}
 
-
-
-
 }
 
 
-
 bool search(int n, int** color, int** value, int*** hint, int& q, int* sum, int* length, int* known){
+	
 	int y = -1, x = -1, minCands = 1023;
 	for(int i=0; i<n; i++)
 		for(int j=0; j<n; j++)
@@ -207,7 +205,7 @@ bool search(int n, int** color, int** value, int*** hint, int& q, int* sum, int*
 		return true;
 	}
 
-	for(int val = 1; val < 10; ++val){
+	for(int val = 1; val <= 9; ++val){
 		if(minCands & (1<<val)){
 			put(y,x,val,value,hint,known);
 			if(search(n, color, value, hint, q, sum, length, known)) return true;
