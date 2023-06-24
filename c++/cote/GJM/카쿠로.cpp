@@ -5,6 +5,8 @@
 
 #define N 20
 #define WHITE 1
+#define ROW 0
+#define COL 1
 
 using namespace std;
 
@@ -71,7 +73,7 @@ void generateCandidates(){
 }
 
 void print_solution(int n, int** value){
-	
+	cout << setw(4*n-5) << "[solution]" << endl;
 	for(int i=0; i<n; i++){
 		for(int j=0; j<n; j++){
 			cout << setw(4) << value[i][j] << " ";
@@ -107,6 +109,7 @@ int getCandCoord(int y, int x, int*** hint, int* sum, int* length, int* known){
 
 void initialize(fstream& fd, int n, int** color, int** value, int*** hint, int& q, int* sum, int* length, int* known){
 
+
 	for(int i=0; i<n; i++){
 		color[i] = new int[n];
 	}
@@ -119,7 +122,7 @@ void initialize(fstream& fd, int n, int** color, int** value, int*** hint, int& 
 	for(int i=0; i<n; i++){
 		hint[i] = new int* [n];
 		for(int j=0; j<n; j++){
-			hint[i][j] = new int [2];
+			hint[i][j] = new int [2]{-1, -1};
 		}
 	}
 
@@ -143,16 +146,42 @@ void initialize(fstream& fd, int n, int** color, int** value, int*** hint, int& 
 		stringstream ss(buf);
 
 		getline(ss, buf, ' ');
-		int x = stoi(buf);
-		getline(ss, buf, ' ');
 		int y = stoi(buf);
 		getline(ss, buf, ' ');
+		int x = stoi(buf);
+		getline(ss, buf, ' ');
 		int direction = stoi(buf);
-		hint[x-1][y-1][direction] = i;
+		hint[y-1][x-1][direction] = i;
 		getline(ss, buf, ' ');
 		sum[i] = stoi(buf);
 
+		int count = 0;
+		if(direction == ROW){
+			int cur = x;
+			
+			
+			while(count < 10 && cur < n){
+				if(color[y-1][cur] != WHITE) 
+					break;
+				cur++;
+				count++;
+			}
+
+		}else {
+			int cur = y;
+			while(count < 10 && cur < n){
+				if(color[cur][x-1] != WHITE) 
+					break;
+				cur++;
+				count++;
+			}
+
+		}
+		length[i] = count;
+
 	}
+
+
 
 
 }
@@ -178,13 +207,13 @@ bool search(int n, int** color, int** value, int*** hint, int& q, int* sum, int*
 		return true;
 	}
 
-	// for(int val = 1; val <= 9; ++val){
-	// 	if(minCands & (1<<val)){
-	// 		put(y,x,val,value,hint,known);
-	// 		if(search(n, color, value, hint, q, sum, length, known)) return true;
-	// 		remove(y,x,val,value,hint,known);
-	// 	}
-	// }
+	for(int val = 1; val < 10; ++val){
+		if(minCands & (1<<val)){
+			put(y,x,val,value,hint,known);
+			if(search(n, color, value, hint, q, sum, length, known)) return true;
+			remove(y,x,val,value,hint,known);
+		}
+	}
 
 	return false;
 
@@ -232,16 +261,16 @@ int main(void){
 		int**value = new int* [n];
 		int*** hint = new int** [n];
 		int q, sum[n*n], length[n*n], known[n*n];
+
+		// memset(known, 0, sizeof(known));
+
 		initialize(fd, n, color, value, hint, q, sum, length, known);		
-
-		for(int i=0; i<n; i++){
-			for(int j =0; j<n;j++){
-				cout << "("<< hint[i][j][0]<<","<< hint[i][j][2] << ") ";
-			}
-			cout << endl;
+		for(int i=0; i<q; i++){
+			cout << known[i] << ",";			
 		}
+		cout << endl;
 
-		// search(n , color ,value, hint, q, sum, length, known);
+		search(n , color ,value, hint, q, sum, length, known);
 
 		finalize(n, color, value, hint);
 
@@ -252,6 +281,8 @@ int main(void){
 
 		test_cases --;
 	}
+
+
 
 
 	return 0;
