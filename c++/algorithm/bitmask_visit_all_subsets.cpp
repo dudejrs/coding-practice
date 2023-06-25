@@ -49,7 +49,7 @@ int getSum(vector<int>& v, int mask){
 
 	return sum;
 }
-
+	
 
 void print_subsets(vector<int>& v, int mask){
 	int count = 0;
