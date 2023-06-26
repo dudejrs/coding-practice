@@ -19,7 +19,7 @@ struct VectorObject {
 	virtual vector<Line>::iterator end() =0;
 };
 
-struct VectorRectangle : VectorObject {
+struct VectorRectangle : VectorObject {	
 
 
 	VectorRectangle(int x, int y, int width, int height){
@@ -232,7 +232,7 @@ namespace CachingAdapter {
 			vector<Line> lines;
 	};
 
-
+	
 	static map<size_t,vector<Point>> cache;
 
 	struct LineToPointAdapter{
@@ -247,7 +247,7 @@ namespace CachingAdapter {
 			if(cache.find(line_hash) != cache.end())
 				return;
 
-
+			cout << "."<< endl;
 			int left = min(line.start.x, line.end.x);
 			int right = max(line.start.x, line.end.x);
 			int top = min(line.start.y, line.end.y);
@@ -293,7 +293,7 @@ namespace CachingAdapter {
 
 	vector<shared_ptr<VectorObject>> vectorObjects{
 		make_shared<VectorRectangle>(10,10,5,5),
-		make_shared<VectorRectangle>(0,0,5,5)
+		make_shared<VectorRectangle>(10,10,5,5)
 	};
 
 
