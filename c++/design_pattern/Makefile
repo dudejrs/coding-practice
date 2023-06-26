@@ -12,8 +12,7 @@ CPP_TARGET:= $(CPP_SOURCES:.cpp=)
 all : $(CPP_TARGET)
 
 $(CPP_TARGET):$(CPP_SOURCES)
-	$(CC) $@.cpp $(FLAGS) -I /Users/kimdeokyoung/boost_1_81_0  -o $@.out
-
+	$(CC) $@.cpp $(FLAGS) -I ${BOOST_PATH}  -o $@.out
 
 clean : 
 	rm -f *.o

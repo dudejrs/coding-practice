@@ -238,8 +238,7 @@ namespace CachingAdapter {
 	struct LineToPointAdapter{
 		typedef vector<Point> Points;
 
-		LineToPointAdapter(Line line){
-			// static map<size_t,vector<Point>> cache;			
+		LineToPointAdapter(Line line){			
 			static boost::hash<Line> hash;
 
 			line_hash = hash(line);
