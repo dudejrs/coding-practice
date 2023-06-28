@@ -27,20 +27,24 @@ namespace Pimpl {
 	/* implementation */
 
 	struct Person::PersonImpl{
-
+		void greet(Person* p);
 	};
 
-	Person::Person(string name) {
-
+	Person::Person(string name) : impl(new PersonImpl) {
+		this->name = name;
 	}
 
 	void Person::greet(){
+		impl->greet(this);
+	}
 
+	void Person::PersonImpl::greet(Person* p){
+		cout << "Hello " << p->name << endl;
 	}
 
 	void main() {
-		// Person p1("Tom");
-		// p1.greet();
+		Person p1("Tom");
+		p1.greet();
 	}
 
 };
