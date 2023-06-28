@@ -55,18 +55,18 @@ namespace Bridge{
 
 	
 	struct Renderer {
-		virtual void render_circle(float x, float y, float radius){};
+		virtual void render_circle(float x, float y, float radius) = 0;
 	};
 
-	struct VectorRenderer : Renderer {
-		void render_circle(float x, float y, float radius)override{
-			cout << "Drawing a vector circle of radius " << radius << " at ("<<x <<","<<"y"<<")" << endl;
+	struct VectorRenderer : Renderer{
+		void render_circle(float x, float y, float radius) override{
+			cout << "Drawing a vector circle of radius " << radius << " at ("<<x <<","<<y<<")" << endl;
 		}
 	};
 
 	struct RasterRenderer : Renderer {
-		void render_circle(float x, float y, float radius)override{
-			cout << "Rastering circle of radius " << radius << " at ("<<x <<","<<"y"<<")" << endl;
+		void render_circle(float x, float y, float radius) override{
+			cout << "Rastering circle of radius " << radius << " at ("<<x <<","<<y<<")" << endl;
 		}
 	};
 
@@ -91,7 +91,7 @@ namespace Bridge{
 			radius *= factor;
 		}
 
-		Circle(Renderer renderer, float x, float y, float radius) 
+		Circle(Renderer& renderer, float x, float y, float radius) 
 		: Shape(renderer), x(x), y(y), radius(radius){
 
 		}
