@@ -16,6 +16,7 @@ public class 카쿠로{
 	private static int[] sum;
 	private static int[] length;
 	private static int[] known;
+	private static int[][][] candidates = new int[10][46][1024];
 
 
 	private static void initialize(BufferedReader rd) throws IOException{
@@ -54,6 +55,63 @@ public class 카쿠로{
 
 		return;
 	}
+
+	private static int getSize(int mask){
+		int count =0;
+		int cur = 0;
+		while(cur < 10){
+			if((mask & 1) == 1 ) {
+				count++;
+			}
+			mask = mask >> 1;
+			cur++;
+		}
+
+		return count;
+	}
+
+	private static int getSum(int mask){
+		int sum = 0;
+
+		int cur =0;
+		while(cur < 10){
+			if((mask & 1) == 1){
+				sum += cur;
+			}
+			mask = mask >> 1;
+			cur++;
+		}
+
+		return sum;
+	}
+
+	private static int getCandidates(int len, int sum, int known){
+		int allSets = 0 ;
+
+		for(int set =0; set < 1024; set += 2){
+			if(getSum(set) == sum && getSize(set) == len && (known & set) == known){
+				allSets |= set;
+			}
+		}
+		return allSets & (~known);
+	}
+
+	private static void generateCandidates(){
+		Arrays.fill(candidates, 0);
+
+		for(int set=0; set < 1024; set += 2){
+			int subset = set;
+			int sum = getSum(set);
+			int len = getSize(set);
+
+			while(true){
+				candidates[len][sum][subset] |= (set & ~subset) ;
+				if(subset == 0) break;
+				subset = (subset-1) & subset;
+			}
+		}
+	}
+
 
 	private static void solve(){
 		return;
