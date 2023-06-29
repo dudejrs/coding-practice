@@ -7,6 +7,8 @@ import java.util.*;
 public class 카쿠로{
 
 	private static final int WHITE = 1;
+	private static final int ROW = 0;
+	private static final int COL = 1;
 
 	private static int n;
 	private static int q;
@@ -18,6 +20,15 @@ public class 카쿠로{
 	private static int[] known;
 	private static int[][][] candidates = new int[10][46][1024];
 
+
+	private static void printSolution(){
+		for(int i=0; i<n; i++){
+			for(int j=0; j<n; j++){
+				System.out.printf("%4d", value[i][j]);
+			}
+			System.out.println("");
+		}
+	}
 
 	private static void initialize(BufferedReader rd) throws IOException{
 
@@ -51,6 +62,26 @@ public class 카쿠로{
 			
 			hint[y-1][x-1][direction] = i;
 			sum[i] = tmp[3];
+
+			int count =0;
+			if(direction == ROW){
+				int cur =x;
+				while(count < 10 && cur <n){
+					if(color[y-1][cur] != WHITE)
+						break;
+					count++;
+					cur++;
+				}
+			}else {
+				int cur =y;
+				while(count < 10 && cur <n){
+					if(color[cur][x-1] != WHITE)
+						break;
+					count++;
+					cur++;
+				}				
+			}
+			length[i] = count;
 		}
 
 		return;
@@ -75,7 +106,7 @@ public class 카쿠로{
 
 		int cur =0;
 		while(cur < 10){
-			if((mask & 1) == 1){
+			if((mask & 1) != 0){
 				sum += cur;
 			}
 			mask = mask >> 1;
@@ -97,7 +128,10 @@ public class 카쿠로{
 	}
 
 	private static void generateCandidates(){
-		Arrays.fill(candidates, 0);
+		
+		for(int i =0; i<10; i++)
+			for(int j=0; j<46; j++)
+				Arrays.fill(candidates[i][j], 0);
 
 		for(int set=0; set < 1024; set += 2){
 			int subset = set;
@@ -105,25 +139,67 @@ public class 카쿠로{
 			int len = getSize(set);
 
 			while(true){
-				candidates[len][sum][subset] |= (set & ~subset) ;
+				candidates[len][sum][subset] |= (set & (~subset)) ;
 				if(subset == 0) break;
+
 				subset = (subset-1) & subset;
 			}
 		}
 	}
 
-
-	private static void solve(){
-		return;
+	private static void put(int y, int x, int val){
+		for(int h=0; h<2; h++){
+			known[hint[y][x][h]] |= (1 << val);
+		}
+		value[y][x] = val;
 	}
 
-	private static void printSolution(){
-		for(int i=0; i<n; i++){
-			for(int j=0; j<n; j++){
-				System.out.print(value[i][j]+" ");
-			}
-			System.out.println("");
+	private static void remove(int y, int x, int val){
+		for(int h=0; h<2; h++){
+			known[hint[y][x][h]] &= ~(1<< val);
 		}
+
+		value[y][x] = 0;
+	}
+
+	private static int getCandHint(int hint){
+		System.out.println(hint+","+length[hint]+","+sum[hint]+","+known[hint]);
+		return candidates[length[hint]][sum[hint]][known[hint]];
+	}
+	private static int getCandCoord(int y, int x){
+		return getCandHint(hint[y][x][0]) & getCandHint(hint[y][x][1]);
+	}
+
+	private static boolean search(){
+		int y= -1, x= -1, minCands = 1023;
+
+		for(int i=0; i<n; i++)
+			for(int j=0; j<n; j++)
+				if(color[i][j] == WHITE && value[i][j] == 0){
+					int cands = getCandCoord(i,j);
+					if(getSize(minCands) > getSize(cands)){
+						minCands = cands;
+						y = i; x= j;
+					}
+				}
+
+
+		if(minCands == 0) return true;	
+
+		if(y == -1){
+			printSolution();
+			return true;
+		}
+
+		for(int val= 1; val <=9; ++val){
+			if((minCands & (1<<val)) != 0){
+				put(y, x, val);
+				if(search())return true;
+				remove(y, x, val);
+			}
+		}
+
+		return false;
 	}
 
 	public static void main(String... args) throws IOException{
@@ -133,11 +209,12 @@ public class 카쿠로{
 
 		int testCases = Integer.parseInt(rd.readLine());
 
+		generateCandidates();
+
 		while(testCases > 0) {
 
 			initialize(rd);
-			solve();
-			printSolution();
+			search();
 
 
 			testCases --;
