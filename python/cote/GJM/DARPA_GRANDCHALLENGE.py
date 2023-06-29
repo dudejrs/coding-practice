@@ -47,7 +47,7 @@ if __name__ == "__main__" :
 
 	for _ in range(TEST_CASE) :
 		locations = initialize()
-		cameras = random.randrange(2,N)
+		cameras = random.randrange(2,N)	
 		print(search(locations, cameras))
 	
 
