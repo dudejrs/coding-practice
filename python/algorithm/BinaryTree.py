@@ -30,21 +30,43 @@ class BinaryTreeBuilder :
 		self.tree = BinaryTree(root);
 		self.last = root
 
+	def _lmc(self, node) :
+		cur = node
+		while cur.left :
+			cur = cur.left
+		return cur
+
+	def _depth(self, node):
+		ret=0
+		if node.left :
+			ret = max(ret, self._depth(node.left))
+		if node.right :
+			ret = max(ret, self._depth(node.right))
+		return ret
+
 	def insert(self, val) :
+		
 		cur = self.last
 		parent = cur.parent
-		newnode = Node(val,cur)
+		newnode = Node(val)
 
-		if not cur.left : 
+		if cur == self.tree.root :
 			self.set_leftchild(cur, newnode)
-		elif not cur.right : 
-			self.set_rightchild(cur, newnode)
-		elif (parent.left == cur) :
-			self.set_leftchild(parent.right, newnode)
-		else : 
-			self.set_leftchild(parent.left.left, newnode)
+		elif cur == parent.left :
+			self.set_rightchild(parent, newnode);
+		else :
+			cur = parent
+			while True :
+				if self._depth(cur.left) == self._depth(cur.right) :
+					break
+				cur = parent.parent
+
+			cur = self._lmc(cur)
+			self.set_leftchild(cur, newnode)
+			
 
 		self.last = newnode
+
 		return self
 
 	def set_root(self, value) :
