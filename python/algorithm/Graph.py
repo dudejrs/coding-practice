@@ -92,7 +92,6 @@ if __name__ == "__main__" :
 	graph1 = MatrixGraph(generate_matrix(5))
 	print(graph1)
 	graph2 = LinkedListGraph(generate_matrix(5))
-
 	print(graph2)
 
 	pass;
