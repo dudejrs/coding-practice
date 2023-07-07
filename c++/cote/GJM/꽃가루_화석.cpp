@@ -109,7 +109,7 @@ double solve(vector<Point>& hull1, vector<Point>& hull2){
 	decompose(hull1, upper, lower);
 	decompose(hull2, upper, lower);
 
-	if (lo < hi) return 0;
+	if (hi < lo) return 0;
 
 	for(int i= 0; i< 100; i++){
 		double aab = (2* lo + hi) / 3;
