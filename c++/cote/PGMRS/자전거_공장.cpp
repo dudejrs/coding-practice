@@ -55,7 +55,7 @@ int solve(vector<pair<int,int>>& cost, vector<pair<int,int>>& order){
 			
 			ret += cur_produce * price;
 			products += cur_produce;
-			left_order -= cur_produce;
+			left_order -= cur_produce;	
 
 			if(month_order[m] > 0){
 				int product_delivered = min(month_order[m], products);
