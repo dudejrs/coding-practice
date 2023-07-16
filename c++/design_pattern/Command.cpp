@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <initializer_list>
 
 using namespace std;
 
@@ -47,7 +48,7 @@ namespace CommandImplementation {
 	};
 
 
-
+// 도메인 객체
 	class CommandInvoker {
  		Command* on_start_;
  		Command* on_finish_;
@@ -74,15 +75,235 @@ namespace CommandImplementation {
 	}
 };
 namespace CommandImplementation2 {
+
+	struct BankAccount {
+
+		int balance = 0;
+		int overdraft_limit = -500;
+
+		void deposit(int amount){
+			balance += amount;
+			cout << "[deposit] "<< amount << ", balance is now " << balance << endl;
+		};
+
+		void withdraw(int amount) {
+			if( balance - amount < overdraft_limit) return;
+			balance += amount;
+			cout << "[withdraw] "<< amount << ", balance is now " << balance << endl;
+
+		}
+
+	};
+
+	struct Command {
+
+
+		virtual void call() const =0;
+	};
+
+	struct BankAccountCommand  : public Command{
+
+		BankAccount& account;
+		int amount;
+		enum Action {DEPOSIT, WITHDRAW} action;
+
+		BankAccountCommand(BankAccount& account, Action action, int amount) : account(account), action(action), amount(amount){}
+
+		void call() const override {
+			switch(action){
+				case DEPOSIT :
+					account.deposit(amount);
+					break;
+				case WITHDRAW :
+					account.withdraw(amount);
+					break;
+			} 
+		}
+	};
+
 	void main(){
+		BankAccount ba;
+		BankAccountCommand cmd(ba, BankAccountCommand::DEPOSIT, 1000);
+		cmd.call();
 	}
 };
 namespace CommandWithUndo {
+
+	struct BankAccount {
+		
+		int balance = 0; 
+		int overdraft_limit = -500;
+
+		bool deposit(int amount){
+			balance += amount;
+			cout << "[deposit] "<< amount << ", balance is now " << balance << endl;
+			return true;
+		}
+
+		bool withdraw(int amount) {
+			if( balance - amount < -500 ) return false;
+			balance -= amount;
+			cout << "[withdraw] "<< amount << ", balance is now " << balance << endl;
+			return true;
+		}
+	};
+
+	struct Command {
+		bool succeeded;
+		virtual void call() =0;
+		virtual void undo() =0;
+	};
+
+	struct ReversibleBankAccountCommand  : Command{
+
+		BankAccount& account;
+		enum Action{DEPOSIT, WITHDRAW} action;
+		int amount;
+		bool succeeded = false;
+
+		ReversibleBankAccountCommand(BankAccount& account, Action action, int amount )
+			: account(account), action(action), amount(amount){}
+
+		void call()  override{
+			switch(action){
+				case DEPOSIT :
+					succeeded = account.deposit(amount);
+					break;
+				case WITHDRAW :
+					succeeded = account.withdraw(amount);
+					break;
+			} 			
+		}
+
+		void undo()  override {
+			switch(action){
+				case DEPOSIT :
+					if(succeeded)
+						account.withdraw(amount);
+					break;
+				case WITHDRAW :
+					if(succeeded) 
+						account.deposit(amount);
+					break;
+			}
+			succeeded = false;
+		}
+
+	};
+
 	void main(){
+
+		BankAccount ba;
+		ReversibleBankAccountCommand cmd(ba, ReversibleBankAccountCommand::DEPOSIT, 500);
+		ReversibleBankAccountCommand cmd2(ba, ReversibleBankAccountCommand::WITHDRAW, 500);
+		ReversibleBankAccountCommand cmd3(ba, ReversibleBankAccountCommand::WITHDRAW, 2500);
+
+		cmd.call();
+		cmd2.call();
+		cmd2.undo();
+		cmd3.call();
+		cmd3.undo();
 	}
 };
 namespace CompositeCommand {
+
+	struct BankAccount {
+		int balance = 0; 
+		int overdraft_limit = -500;
+
+		bool deposit(int amount){
+			balance += amount;
+			cout << "[deposit] "<< amount << ", balance is now " << balance << endl;
+			return true;
+		}
+
+		bool withdraw(int amount) {
+			if( balance - amount < -500 ) return false;
+			balance -= amount;
+			cout << "[withdraw] "<< amount << ", balance is now " << balance << endl;
+			return true;
+		}
+	};
+
+	struct Command {
+		bool succeeded;
+		virtual void call() = 0;
+		virtual void undo() = 0;
+
+	};
+
+	struct BankAccountCommand  : Command{
+
+		BankAccount& account;
+		enum Action{DEPOSIT, WITHDRAW} action;
+		int amount;
+		bool succeeded = false;
+
+		BankAccountCommand(BankAccount& account, Action action, int amount )
+			: account(account), action(action), amount(amount){}
+
+		void call()  override{
+			switch(action){
+				case DEPOSIT :
+					succeeded = account.deposit(amount);
+					break;
+				case WITHDRAW :
+					succeeded = account.withdraw(amount);
+					break;
+			} 			
+		}
+
+		void undo()  override {
+			switch(action){
+				case DEPOSIT :
+					if(succeeded)
+						account.withdraw(amount);
+					break;
+				case WITHDRAW :
+					if(succeeded) 
+						account.deposit(amount);
+					break;
+			}
+			succeeded = false;
+		}
+
+	};
+
+	struct CompositeBankAccountCommand : Command, vector<BankAccountCommand>{
+		CompositeBankAccountCommand (const initializer_list<value_type>& items )
+			: vector<BankAccountCommand>(items){}
+
+		void call() override {
+			bool ok = true;
+			for(auto& cmd : *this){
+				if(ok){
+					cmd.call();
+					ok = cmd.succeeded;
+				}else {
+					cmd.succeeded = false;
+				}
+			}
+
+		}
+
+		void undo() override {
+			for(auto it = rbegin(); it != rend(); ++it){
+				it->undo();
+			}
+		}
+	};
+
 	void main(){
+		BankAccount ba1, ba2;
+		CompositeBankAccountCommand cmd {
+			BankAccountCommand(ba1, BankAccountCommand::Action::WITHDRAW, 100),
+			BankAccountCommand(ba2, BankAccountCommand::Action::DEPOSIT, 500),
+			BankAccountCommand(ba2, BankAccountCommand::Action::WITHDRAW, 1000),
+			BankAccountCommand(ba1, BankAccountCommand::Action::DEPOSIT, 100)
+		};
+
+		cmd.call();
+		cmd.undo();
 	}
 };
 namespace CommandQuerySeperation{
@@ -92,10 +313,15 @@ namespace CommandQuerySeperation{
 
 int main(void){
 
+	cout << "[CommandImplementation]" << endl;
 	CommandImplementation::main();
+	cout << endl<< "[CommandImplementation2]" << endl;
 	CommandImplementation2	::main();
+	cout << endl<< "[CommandWithUndo]" << endl;
 	CommandWithUndo::main();
+	cout << endl<< "[CompositeCommand]" << endl;
 	CompositeCommand::main();
+	cout << endl<< "[CommandQuerySeperation]" << endl;
 	CommandQuerySeperation::main();
 
 
