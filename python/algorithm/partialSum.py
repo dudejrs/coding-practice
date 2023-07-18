@@ -12,10 +12,14 @@ def partial_sum(t) :
 
 	return ret
 
+def range_sum(t, a, b) :
+	pSum = partial_sum(t)
+	return pSum[b]- pSum[a-1];
 if __name__ == "__main__" :
 	n = 10
 	for _ in range(TEST_CASES) :
 		t = [ random.randrange(1,10) for i in range(n)]
-		print(partial_sum(t))
+		(a, b) = random.smaple(range(n))
+		print(range_sum(t, a, b))
 
 
