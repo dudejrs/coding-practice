@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <queue>
 #include <cmath>
 
 #define N 50000000
@@ -19,35 +20,57 @@ struct RNG {
 	}
 };
 
-int offline (const vector<int>& signals, int k){
-	vector<long long> psum(signals.size());
+vector<int> split(const string& s){
+	vector<int> ret;
+	stringstream ss(s);
+	string buf;
 
-	psum[0] = signals[0];
+	while(getline(ss, buf, ' ')){
+		ret.push_back(stoi(buf));
+	}
 
-	for(int i=0; i< signals.size(); i++)
-		psum[i] = psum[i-1] +signals[i];
 
-	int ret =0, tail =0;
-	for(int head =0; head <psum.size(); head++){
-		while (tail +1 < psum.size() && psum[head] + k > psum[tail] ) 
-			tail++;
+	return ret;
+}
 
-		if(psum[head] + k == psum[tail]) 
+int solve(int n, int k){
+
+	RNG r;
+
+	int ret = 0;
+	long long psum =0;
+	queue<long long> q;
+
+	for(int i=0; i< n; i++){
+		psum += r.next();
+		q.push(psum);
+
+		while(q.front() + k < psum)
+			q.pop();
+		if(q.front() + k == psum)
 			ret++;
 	}
 	return ret;
 }
 
 int main(void){
-	
-	int n = 100;
 
-	RNG r;
+	fstream fd("data/외계신호분석.txt");
+	string buf;
 
-	vector<int> signals(n);
-	for(int i=0; i<n ;i++)
-		signals.push_back(r.next());
-	cout << solve(offline(signals, k));
+	getline(fd, buf);
+	int test_cases = stoi(buf);
+
+	while(test_cases > 0){
+
+		getline(fd, buf);
+
+		vector<int> s = split(buf);
+
+
+		cout << solve(s[1],s[0]) << endl;
+		test_cases--;
+	}
 
 
 	return 0;
