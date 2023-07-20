@@ -23,21 +23,11 @@ vector<int> get_partial_match(const string& m){
 	int M = m.size();
 	vector<int> pi(M, 0);
 
-	int begin = 1, matched = 0;
-
-	while(begin + matched <M){
-
-		if(m[begin + matched] == m[matched]) {
-			matched ++;
-			pi[begin + matched -1] = matched;
-		} else {
-			if(matched == 0) begin++;
-			else {
-				begin += matched - pi[matched-1];
-				matched = pi[matched-1];
-			}
+	for(int being=1; begin<M; begin++){
+		for(int i=0; i<M; i++){
+			if(m[begin+i] != m[i]) break;
+			pi[begin+i] = max(pi[begin+i], i+1);
 		}
-
 	}
 	return pi;
 }
