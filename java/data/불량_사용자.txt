@@ -1,0 +1,7 @@
+3
+frodo fradi crodo abc123 frodoc
+fr*d* abc1**
+frodo fradi crodo abc123 frodoc
+*rodo *rodo ******
+frodo fradi crodo abc123 frodoc
+fr*d* *rodo ****** ******
