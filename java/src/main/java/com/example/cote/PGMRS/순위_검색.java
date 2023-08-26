@@ -1,6 +1,7 @@
 package com.example.cote.PGMRS;
 
 import java.util.*;
+import java.util.function.*;
 
 public class 순위_검색{
 	
@@ -62,13 +63,79 @@ public class 순위_검색{
 		return ret;
 	}
 
-	private Map<String, List<Integer>> buildSorcesMap(String[] info){
-		Map<String, List<Integer>> sorcesMap = new HashMap<>();
+	private static void forEachKey(int index, String prefix, String[] tokens, Consumer<String> action){
+		if(index == tokens.length -1 ){
+			action.accept(prefix);
+			return;
+		}
 
-		return sorcesMap;
+		forEachKey(index+1, prefix + tokens[index], tokens, action);
+		forEachKey(index+1, prefix + "-", tokens, action);
 	}
+
+	private static Map<String, List<Integer>> buildScoresMap(String[] info){
+		Map<String, List<Integer>> scoresMap = new HashMap<>();
+
+		for(String s : info){
+			String[] tokens = s.split(" ");
+			int score = Integer.parseInt(tokens[tokens.length -1]);
+			forEachKey(0, "", tokens, key -> {
+				scoresMap.putIfAbsent(key, new ArrayList<>());
+				scoresMap.get(key).add(score);
+			});
+		}
+
+		for(List<Integer> list : scoresMap.values()){
+			Collections.sort(list);
+		}
+
+		return scoresMap;
+	}
+
+	private static int binarySearch(int score, List<Integer> scores) {
+		int start = 0;
+		int end = scores.size() -1;
+
+		while(end > start){
+			int mid = (start + end)/2;
+
+			if(scores.get(mid) >= score){
+				end = mid;
+			}else {
+				start = mid+1;
+			}
+		}
+
+		if(scores.get(start) < score){
+			return scores.size();
+		}
+
+		return start;
+	}
+
+	private static int count(String query, Map<String, List<Integer>> scoresMap){
+		String[] tokens = query.split(" (and )?");
+		String key = String.join("", Arrays.copyOf(tokens, tokens.length -1));
+
+		if(!scoresMap.containsKey(key)) return 0;
+
+		List<Integer> scores = scoresMap.get(key);
+		int score = Integer.parseInt(tokens[tokens.length -1]);
+
+		return scores.size()- binarySearch(score, scoresMap.get(key));
+	}
+
 	private static int[] solve(String[] info, String[] query){
-		return new int[] {};
+
+		Map<String, List<Integer>> scoresMap = buildScoresMap(info);
+
+		int[] ret = new int[query.length];
+
+		for(int i=0; i<ret.length; i++){
+			ret[i] = count(query[i], scoresMap);
+		}
+
+		return ret;
 	}
 
 	public static void main(String... args){
