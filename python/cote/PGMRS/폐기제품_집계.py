@@ -155,9 +155,6 @@ if __name__ == "__main__" :
 	
 	random.seed(43)
 	
-
-	
-
 	with open("data/폐기제품_집계.txt") as fd :
 		test_cases = int(fd.readline().strip())
 
