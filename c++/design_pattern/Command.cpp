@@ -307,7 +307,75 @@ namespace CompositeCommand {
 	}
 };
 namespace CommandQuerySeperation{
+
+	struct CreatureCommand;
+	struct CreatureQuery;
+
+	class Creature {
+		int strength, agility;
+		public : 
+			Creature(int strength, int agility) : strength(strength), agility(agility) {}
+			void process_command(const CreatureCommand& command);
+			int process_query(const CreatureQuery& q);
+	};
+
+	enum class CreatureAbility{ STRENGTH, AGILITY };
+
+	struct CreatureCommand {
+
+		enum Action{SET, INCREASE_BY, DECREASE_BY} action;
+		CreatureAbility ability;
+		int amount;
+	};
+
+	struct CreatureQuery {
+		CreatureAbility ability;
+	};
+
+	void Creature::process_command(const CreatureCommand& cmd){
+		int* ability;
+		switch(cmd.ability){
+			case CreatureAbility::STRENGTH :
+				ability = &strength;
+				break;
+			case CreatureAbility::AGILITY :
+				ability = &agility;
+				break;
+		}
+
+		switch(cmd.action){
+			case CreatureCommand::INCREASE_BY :
+				*ability += cmd.amount;
+				break;
+			case CreatureCommand::DECREASE_BY :
+				*ability -= cmd.amount;
+				break;
+			case CreatureCommand::SET :
+				*ability = cmd.amount;
+				break;
+		}
+	}
+
+	int Creature::process_query(const CreatureQuery& q){
+		switch(q.ability){
+			case CreatureAbility::STRENGTH :
+				return strength;
+			case CreatureAbility::AGILITY :
+				return agility;
+		}
+		return 0;
+	}
+
+
 	void main(){
+		int result = 0;
+
+		Creature creature{10,20};
+		CreatureCommand cmd {CreatureCommand::INCREASE_BY, CreatureAbility::STRENGTH, 10};
+		CreatureQuery q {CreatureAbility::STRENGTH};
+		creature.process_command(cmd);
+		result = creature.process_query(q);
+		cout << "creature_strength : " << result << endl;
 	}
 };
 
