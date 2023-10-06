@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <boost/signals2/signal.hpp>
 
 using namespace std;
 
@@ -267,9 +268,70 @@ namespace MediatorWithHierahicalComponent {
 
 
 
-namespace MediatorWithBoostSignal {
+namespace EventHandlerMediator {
+
+	template<typename P>
+	using signal = boost::signals2::signal<P>;
+
+	struct EventData{
+		virtual ~EventData() = default;
+		virtual void print() const = 0;
+	};
+
+	struct PlayerScoreData : EventData {
+		string player_name;
+		int goals_scored;
+
+		PlayerScoreData(const string& player_name, const int goals_scored) :
+			player_name(player_name), goals_scored(goals_scored){}
+
+		void print() const override{
+			cout << player_name << "has scored (thier "<< goals_scored <<" goal."<< endl;
+		}
+	};
+
+	struct Game {
+		signal<void(EventData*)> events;
+	};
+
+	struct Player {
+		string name;
+		int goals_scored = 0;
+		Game& game;
+
+		Player(const string& name, Game& game) : name(name), game(game){}
+
+		void score() {
+			goals_scored += 1;
+			PlayerScoreData ps(name, goals_scored);
+			game.events(&ps);
+			
+		};
+	};
+
+	struct Coach{
+		Game& game;
+		explicit Coach(Game& game) : game(game){
+			game.events.connect([](EventData* e){
+					PlayerScoreData* ps = dynamic_cast<PlayerScoreData*>(e);
+					if(ps && ps->goals_scored < 3)
+						cout << "coach says : well done. " <<ps->player_name <<"!" << endl;
+			});
+		}
+	};
+
+
 	void main(void){
-		cout <<"[MediatorWithBoostSignal]" << endl;
+		cout <<"[EventHandlerMediator]" << endl;
+
+		Game game;
+		Player player("James", game);
+		Coach coach{game};
+
+		player.score();
+		player.score();
+		player.score();
+
 		cout << endl;
 
 	}
@@ -283,7 +345,7 @@ int main(void){
 	cout << endl;
 	MediatorWithHierahicalComponent::main();
 	cout << endl;
-	MediatorWithBoostSignal::main();
+	EventHandlerMediator::main();
 	cout << endl;
 
 	return 0;
