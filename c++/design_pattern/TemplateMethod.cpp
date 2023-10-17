@@ -1,4 +1,5 @@
 #include <iostream>
+#include <functional>
 
 using namespace std;
 
@@ -51,14 +52,66 @@ namespace TemplateMethod {
 	};
 
 	void main(void){
-
+		cout << "[TemplateMethod]" << endl;
 		Chess cs;
 		cs.run();
+		cout << endl;
+
+	}
+}
+
+namespace FunctionalTemplateMethod {
+
+	struct Customer {
+
+		Customer(int id) : id(id), name("Bob"), balance(12345){}
+
+			int id;
+			string name;
+			int balance;
+	};
+
+	struct Database {
+		static Customer* get_customer(int id){return new Customer(id);}
+	};
+
+
+	struct OnlineBanking {
+
+		OnlineBanking(function<void(Customer*)> f) :
+			make_customer_happy(f) {}
+
+		void processCustomer(int id){
+			Customer* c = Database::get_customer(id);
+			make_customer_happy(c);
+		}
+
+		private :
+			function<void(Customer*)> make_customer_happy;
+	};
+
+	void main(void){
+		cout << "[FunctionalTemplateMethod]" << endl;
+
+		OnlineBanking hello_banking([](Customer* c){
+			cout << "Hello " << c->name <<endl;
+		});
+		hello_banking.processCustomer(1234);
+
+		OnlineBanking deposit_banking([](Customer* c){
+			c->balance += 1000000000;
+			cout << "Now your Balance is " << c->balance << endl;
+		});
+
+		deposit_banking.processCustomer(1234);
+
+		cout << endl;
 
 	}
 }
 
 int main(void){
 	TemplateMethod::main();
+	FunctionalTemplateMethod::main();
 }
 
