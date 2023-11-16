@@ -210,23 +210,82 @@ public class Builder {
 
 	private static class HierarchicalBuilder {
 
+
 		private abstract class Pizza{
 			public enum Topping {HAM, MUSHROOOM, ONION, PEPPER, SAUSAGE};
 			private Set<Topping> toppings;
+			abstract static class Builder<T extends Builder<T>>{
+				Enum<Set<Topping> toppings = EnumSet.noneOf(Topping.class);
+
+				public T addTopping(Topping topping){
+					toppings.add(Object.requireNonNull(topping));
+					return self();
+				}
+
+				abstract Pizza build();
+				protected abstract T self();
+			}
 		}
 
 		private class NyPizza extends Pizza {
 			public enum Size {SMALL, MEDIUM, LARGE};
 			private Size size;
+
+			public static class Builder extends Pizza.Builder<Builder> {
+				private final Size size;
+
+				public Builder(size size){
+					this.size= Objects.requireNonNull(size);
+				}
+
+				@Override
+				public NyPizze build(){
+					return new NyPizze(this);
+				}
+
+				@Override
+				protected Bilder self() {return this;}
+			}
+
+			private NyPizze(Builder builder){
+				super(builder);
+				size = builder.size();
+			}
 		}
 
 		private class Calzone extends Pizza{
 			private boolean sauceInside;
+
+			public static class Builder extends Pizza.Builder<Builder> {
+				private boolean sauceInside = false;
+
+				public Builder sauceInside() {
+					sauceInside = true;
+					return this;
+				}
+
+				@Override 
+				public Calzone build(){
+					return new Calzone(this);
+				}
+
+				@Override
+				protected Builder self() {
+					return this;
+				}
+			}
+
+			private Calzone(Builder builder){
+				super(builder);
+				sauceInside = builder.sauceInside;
+			}	
 		}
 
-
 		public static void main(String... args){
-
+			NyPizze pizza = new NyPizze.Builder(SMALL)
+				.addTopping(SAUSAGE). addTopping(ONION).build();
+			Calzone calzone = new Calzone.Builder()
+				.addTopping(HAM).sauceInside().build();
 		}
 	}
 
