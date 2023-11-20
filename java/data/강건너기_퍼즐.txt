@@ -1,0 +1,30 @@
+3
+2
+4 farmer fox goose beans
+1 farmer
+3
+2 fox goose
+2 goose beans
+3 fox goose beans
+0
+7
+
+2
+4 lazy arrogant brave1 brave2
+4 lazy arrogant brave1 brave2
+1
+1 lazy
+4
+1 lazy
+2 arrogant lazy
+2 arrogant brave1
+2 arrogant brave2
+7
+
+2
+2 joker batman
+2 joker batman
+0
+1
+2 joker batman
+-1
