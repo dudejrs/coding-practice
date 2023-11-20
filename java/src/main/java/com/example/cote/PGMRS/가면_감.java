@@ -6,20 +6,9 @@ import static java.util.stream.Collectors.*;
 import java.io.*;
 import java.nio.file.*;
 
-public class 가면_감 {
+public class 가면_감{
 
 	private static int solve(List<List<Integer>> replies){
-
-		boolean[] visited = new boolean[replies.size()];
-		visited[0] = true;
-
-		Stack<Integer> s = new Stack();
-
-		while(!s.isEmpty()){
-			int cur = s.peek();
-		}
-
-
 
 		return 0;
 	}
