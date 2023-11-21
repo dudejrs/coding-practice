@@ -8,7 +8,6 @@
 3 fox goose beans
 0
 7
-
 2
 4 lazy arrogant brave1 brave2
 4 lazy arrogant brave1 brave2
@@ -20,7 +19,6 @@
 2 arrogant brave1
 2 arrogant brave2
 7
-
 2
 2 joker batman
 2 joker batman
