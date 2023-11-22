@@ -27,7 +27,7 @@ namespace Conventional_Singleton{
 };
 
 
-namespace SingletonWithSincronization{
+namespace SingletonWithSyncronization{
 	struct Database{
 		private : 
 			static boost::atomic<Database*> instance;
@@ -57,6 +57,7 @@ namespace SingletonWithSincronization{
 
 
 int main(void){
+
 
 	return 0;
 }
