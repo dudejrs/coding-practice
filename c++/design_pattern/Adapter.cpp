@@ -61,8 +61,8 @@ vector<Point> RectToPoints(VectorRectangle obj){
 
 		int left = min(line.start.x, line.end.x);
 		int right = max(line.start.x, line.end.x);
-		int top = min(line.start.y, line.end.y);
-		int bottom = max(line.start.y, line.end.y);
+		int bottom = min(line.start.y, line.end.y);
+		int top = max(line.start.y, line.end.y);
 
 		int dx = right-left;
 		int dy = line.end.y - line.start.y;
@@ -70,7 +70,7 @@ vector<Point> RectToPoints(VectorRectangle obj){
 
 		// 수직 수평인 선분들만 다룸
 		if( dx == 0 ){
-			for(int y = top; y <= bottom; ++y){
+			for(int y = bottom; y <= top; ++y){
 				points.emplace_back(Point{left,y});
 			}
 		} else if (dy == 0){
