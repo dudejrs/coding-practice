@@ -1,0 +1,29 @@
+3
+muzi ryan frodo neo
+8
+muzi frodo
+muzi frodo
+ryan muzi
+ryan muzi
+ryan muzi
+frodo muzi
+frodo ryan
+neo muzi
+2
+joy brad alessandro conan david
+5
+alessandro brad
+alessandro joy
+alessandro conan
+david alessandro
+alessandro david
+4
+a b c
+6
+a b
+b a
+c a 
+a c 
+a c
+c a
+0
