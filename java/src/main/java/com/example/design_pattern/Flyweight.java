@@ -114,23 +114,47 @@ public class Flyweight {
 
 	private static class Flyweight2 {
 
-		private class User {
+		private static class User {
 			
 			private static int seed = 0;
-			private static Map<Integer,String> names;
-			private static Map<String, Integer> keys;
+			private static Map<Integer,String> names = new HashMap<>();
+			private static Map<String, Integer> keys = new HashMap<>();
 
 			private int firstName;
-			private int secondName;	
-			
+			private int lastName;	
+
+			User(String firstName, String lastName){
+				this.firstName = add(firstName);
+				this.lastName = add(lastName);
+			}
+
+			public static int add(String s){
+				if(!names.containsValue(s)){
+					int key = ++seed;
+					names.put(key, s);
+					keys.put(s, key);
+				}
+
+				return keys.get(s);
+			}
+
+			public String getFristName(){
+				return names.get(firstName);
+			}
+
+			public String getLastName(){
+				return names.get(lastName);
+			}
+
 			@Override 
 			public String toString(){
-				return firstName+" "+secondName;
+				return getFristName()+" "+getLastName();
 			}
 		}
 
 		public static void main(){
-
+			User a = new User("John", "Doe");
+			System.out.println(a);
 		}
 	}
 
