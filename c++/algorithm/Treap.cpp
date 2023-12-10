@@ -17,12 +17,12 @@ struct Node {
 	}
 
 	void setLeft(Node* newLeft){
-		left = newLeft++;
+		left = newLeft;
 		calcSize();
 	}
 
 	void setRight(Node* newRight){
-		right = newRight++;
+		right = newRight;
 		calcSize();
 	}
 
