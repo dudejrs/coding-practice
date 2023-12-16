@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <cassert>
 
 using namespace std;
 
@@ -30,6 +31,11 @@ struct Node {
 		size = 1;
 		if(left) size += left->size;
 		if(right) size += right->size;
+	}
+
+	T min() {
+		if(!left) return key;
+		return left->min();
 	}
 };
 
@@ -75,6 +81,8 @@ Node<T>* insert(Node<T>* root, Node<T>* node){
 
 template <typename T>
 Node<T>* merge (Node<T>* a, Node<T>* b){
+	assert(a->max() < b->min());
+
 	if (a == nullptr) return b;
 	if (b == nullptr) return a;
 	if (a->priority < b->priority){
