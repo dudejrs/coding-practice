@@ -37,6 +37,11 @@ struct Node {
 		if(!left) return key;
 		return left->min();
 	}
+	
+	T max() {
+		if(!right) return key;
+		return right->max();
+	}
 };
 
 template <typename T>
@@ -89,7 +94,7 @@ Node<T>* merge (Node<T>* a, Node<T>* b){
 		b->setLeft(merge(a, b->left));
 		return b;
 	}
-	a->setLeft(merge(a->right, b));
+	a->setRight(merge(a->right, b));
 	return a;
 }
 
@@ -114,7 +119,7 @@ template <typename T>
 Node<T>* kth(Node<T>* root, int k){
 	int left_size = 0;
 	if(root->left != nullptr) left_size = root->left->size;
-	if(left_size <= k) return kth(root->left, k);
+	if(k <= left_size) return kth(root->left, k);
 	if(left_size + 1 == k) return root;
 	return kth(root->right, k);
 }
