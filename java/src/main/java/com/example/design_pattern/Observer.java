@@ -71,7 +71,77 @@ public class Observer {
 		}
 	}
 
+	public static class PublisherSubscriberPattern {
+
+		public static interface Publisher <T>{
+			void subscribe(Subscriber<? super T> subscriber);
+		}
+
+		public static interface Subscriber <T> {
+			void onNext(T t);
+		}
+
+		public static class SimpleCell implements Publisher<Integer>, Subscriber<Integer> {
+			private int value = 0;
+			private String name;
+			private List<Subscriber> subscribers = new ArrayList<>();
+
+
+			public SimpleCell(String name){
+				this.name = name;
+			}
+
+			@Override
+			public void subscribe(Subscriber< ? super Integer> subscriber){
+				subscribers.add(subscriber);
+			}
+
+			@Override
+			public void onNext(Integer value){
+				this.value = value;
+				System.out.println(String.format("[%s] value : %d", name, value));
+				notifyAllSubscribers();
+			}
+
+			private void notifyAllSubscribers(){
+				subscribers.forEach(subscriber -> subscriber.onNext(value));
+			}
+		}
+
+		public static class ArithmeticCell extends SimpleCell {
+
+			private int left = 0;
+			private int right = 0;
+
+			public ArithmeticCell(String name){
+				super(name);
+			}
+
+			public void setLeft(int left){
+				this.left = left;
+				onNext(left + right);
+			}
+
+			public void setRight(int right){
+				this.right = right;
+				onNext(left + right);
+			}
+		}
+
+		public static void main(){
+			ArithmeticCell c3 = new ArithmeticCell("C3");
+			SimpleCell c1 = new SimpleCell("C1");
+			SimpleCell c2 = new SimpleCell("C2");
+
+			c1.subscribe(c3::setLeft);
+			c2.subscribe(c3::setRight);
+			c1.onNext(1);
+			c2.onNext(2);
+		}
+	}
+
 	public static void main(String... args){
 		Observer1.main();
+		PublisherSubscriberPattern.main();
 	}
 }
