@@ -102,14 +102,8 @@ public class Iterator_ {
 
 			for(Node<String> p : family){
 				System.out.print(p.value+ " ");
-
 			}
 
-			// Iterator<Node<String>> iterator = family.iterator();
-			// while(iterator.hasNext()){
-			// 	Node<String> cur = iterator.next();
-			// 	System.out.print(cur.value+" ");
-			// }
 			System.out.println();
 
 		}
