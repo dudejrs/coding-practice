@@ -104,7 +104,7 @@
 
 2. 컴파일
 	```sh
-	kotlin -d target -include-runtime algorithm/binaryTree.kt 
+	kotlinc -d target -include-runtime algorithm/binaryTree.kt 
 	```
 
 3. 실행
