@@ -109,7 +109,7 @@
 
 3. 실행
 	```sh
-	java -cp target com.example.algorithm.BinaryTreeKt
+	kotlin -classpath target com.example.algorithm.BinaryTreeKt
 	```
 
 
