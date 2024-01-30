@@ -1,5 +1,7 @@
 package com.example.design_pattern;
 
+import java.util.*;
+
 
 public class Mediator {
 
@@ -75,7 +77,78 @@ public class Mediator {
 	}
 
 	private static class CollectionMediator {
+
+		private static class Person {
+			public String name;
+			public ChatRoom chatroom;
+			public List<String> chatLogs = new ArrayList<>();
+
+
+			Person(String name){
+				this.name = name;
+			}
+
+			public void say(String message){
+				if(chatroom != null){
+					chatroom.boradcast(name, message);
+				}
+			}
+			public void privateMessageTo(String whom, String message){
+				if(chatroom != null){
+					chatroom.message(name, whom, message);
+				}
+			}			
+			public void receiveFrom(String whom, String message){
+				System.out.println(String.format("[%s's session] %s : %s",name, whom, message));
+			}
+		}
+
+		private static class ChatRoom {
+
+			List<Person> people = new ArrayList<>();
+			
+			public void join(Person p){
+				String joinMsg = String.format("%s joins the chat", p.name);
+				p.chatroom = this;
+				boradcast("rooms", joinMsg);
+				people.add(p);
+			}
+
+			public void boradcast(String from, String message){
+
+				for (Person p : people){
+					if (!from.equals(p.name)){
+						p.receiveFrom(from, message);
+					}
+				}
+			}
+
+			public void message(String from, String to, String message){
+				Optional<Person> optPerson = people.stream()
+							.filter( p -> to.equals(p.name))
+							.findFirst();
+
+				if(!optPerson.isEmpty()){
+					optPerson.get().receiveFrom(from, message);
+				}
+			}
+
+		}
+
 		public static void main(){
+
+			Person john = new Person("John");
+			Person jane = new Person("Jane");
+			Person simon = new Person("Simon");
+
+			ChatRoom chatroom = new ChatRoom();
+
+			chatroom.join(john);
+			chatroom.join(jane);
+			john.say("hi Jane!");
+			chatroom.join(simon);
+			john.say("hi Simon!");
+			john.privateMessageTo("Simon", "glad you could join us, Simon!");
 
 		}
 	}
