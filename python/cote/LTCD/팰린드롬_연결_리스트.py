@@ -2,9 +2,6 @@ from typing import *
 from collections import deque
 import random
 
-TEST_CASES = 10
-N = 100000
-
 class Node :
 	
 	def __init__(self, value, nextNode=None) :
