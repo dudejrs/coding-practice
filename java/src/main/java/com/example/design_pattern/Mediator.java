@@ -2,7 +2,6 @@ package com.example.design_pattern;
 
 import java.util.*;
 
-
 public class Mediator {
 
 	private static class BasicMediator {
@@ -154,8 +153,79 @@ public class Mediator {
 	}
 
 	private static class MediatorWithHierarchicalComponent {
+
+		private static interface Mediator_ {
+			void notify(BaseComponent sender, String event);
+		}
+
+		private static class BaseComponent {
+			protected Mediator_ mediator;
+
+			public void setMeidator(Mediator_ mediator){
+				this.mediator = mediator;
+			}
+		}
+
+		private static class ComponentA extends BaseComponent {
+			void doA() {
+				System.out.println("ComponentA does A");
+				if (mediator != null) mediator.notify(this, "A");
+			}
+
+			void doB() {
+				System.out.println("ComponentA does B");
+			}
+		}
+
+		private static class ComponentB extends BaseComponent {
+			void doC() {
+				System.out.println("ComponentA does C");
+			}
+
+			void doD() {
+				System.out.println("ComponentB does D");
+				if (mediator != null) mediator.notify(this, "D");
+			}
+		}
+
+		private static class ConcreterMediator implements Mediator_ {
+
+			ComponentA a;
+			ComponentB b;
+
+			ConcreterMediator(ComponentA a, ComponentB b){
+				this.a = a;
+				this.b  =b;
+				this.a.setMeidator(this);
+				this.b.setMeidator(this);
+			}
+
+			@Override
+			public void notify(BaseComponent sender, String event){
+				if (sender instanceof ComponentA) {
+					if ("A".equals(event)) {
+						System.out.println("Mediator react to A and trigger following operations: ");
+						this.b.doC();
+					}
+				}	
+				if (sender instanceof ComponentB) {
+					if ("D".equals(event)) {
+						System.out.println("Mediator react to B and trigger following operations: ");
+						this.a.doB();
+					}
+				}	
+			}
+		}
+
 		public static void main(){
 
+			ComponentA a = new ComponentA();
+			ComponentB b = new ComponentB();
+
+			ConcreterMediator mediator = new ConcreterMediator(a,b);
+
+			a.doA();
+			b.doD();
 		}
 	}
 	
