@@ -30,13 +30,13 @@ pair<int,int> solve(vector<int>& l){
 
 
 	for(int i= 1; i<ret.size(); i++){
-		if(ret[i].first - ret[i-1].first < min_val){
-			min_val = ret[i].first - ret[i-1].first;
+		if(abs(ret[i].first - ret[i-1].first) < min_val){
+			min_val = abs(ret[i].first - ret[i-1].first);
 			cur = i;
 		}
 	}
 	
-	int first = min(ret[cur].second, ret[cur-1].second);
+	int first = min(ret[cur].second, ret[cur-1].second) + 1;
 	int second = max(ret[cur].second, ret[cur-1].second);
 	
 	return make_pair(first, second);
