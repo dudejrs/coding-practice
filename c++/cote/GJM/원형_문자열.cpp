@@ -7,7 +7,6 @@
 
 using namespace std;
 
-
 string initialize(default_random_engine& gen){
 
 	string s;
@@ -67,6 +66,7 @@ vector<int> getSuffixArray(const string& s){
 	return perm;
 }
 
+// 원형 문자열으로 만들 수 있는 문자열 중 사전순으로 가장 앞에 오는 문자열을 찾아라 
 string solve(const string& s){
 
 	string s2 = s+s;
