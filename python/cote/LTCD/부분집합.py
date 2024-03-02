@@ -11,8 +11,8 @@ def solve(nums: List[int]) -> List[List[int]] :
 	def dfs(i: int, path: List[int]) :
 		ret.append(path)
 
-		for i in range(i, len(nums)) :
-			dfs(i + 1, [*path, nums[i]])
+		for j in range(i, len(nums)) :
+			dfs(j + 1, [*path, nums[i]])
 
 	dfs(0, [])
 
