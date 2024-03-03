@@ -58,6 +58,7 @@ func dfs(cur int, graph [][]int, traced []bool, visited []bool) bool {
 	}
 
 	traced[cur] = false
+	visited[cur] = true
 
 	return true
 }
