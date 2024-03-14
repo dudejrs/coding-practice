@@ -40,7 +40,7 @@ class DisjointSet :
 if __name__ == "__main__" :
 
 	tmp = DisjointSet(10)
-	tmp.merge(0,1)
+	tmp.merge(0, 1)
 	print(tmp.find(0))
 
 
