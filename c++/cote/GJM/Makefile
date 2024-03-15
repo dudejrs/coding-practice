@@ -1,5 +1,5 @@
 CC= g++
-FLAGS=-std=c++14
+FLAGS=-std=c++17
 CPP_SOURCES :=$(wildcard *.cpp)
 CPP_OBJECTS :=$(CPP_SOURCES:.cpp=.o)
 CPP_TARGET :=$(CPP_SOURCES:.cpp=)
