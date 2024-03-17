@@ -6,13 +6,11 @@ import java.io.*;
 
 public class 괄호_회전하기 {
 
-
 	private static boolean isMatched(int offset, String s){
 		char[] chars = s.toCharArray();
 		Stack<Character> stack = new Stack<>();
 
 		for(int i =0; i < s.length(); i++){
-
 			char c = chars[ (i+offset) % s.length() ];
 
 			switch(c){
@@ -29,8 +27,6 @@ public class 괄호_회전하기 {
 
 		return stack.isEmpty();
 	}
-
-
 
 	private static int solve(String s){
 		int count = 0;
