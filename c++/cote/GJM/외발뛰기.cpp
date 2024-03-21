@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 int cache[N][N];
 
 int** initialize(default_random_engine& gen){
@@ -24,7 +23,6 @@ int** initialize(default_random_engine& gen){
 			map[i][j] = dis(gen);
 		}
 	}
-
 
 	return map;
 }
@@ -55,7 +53,6 @@ int solve2(int** map, int x, int y){
 
 }
 
-
 int main(void){
 	default_random_engine gen(43);
 
@@ -74,10 +71,6 @@ int main(void){
 
 		delete[] map;
 	}
-
-
-
-
 
 	return 0;
 }
