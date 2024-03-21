@@ -1,5 +1,3 @@
-
-
 from typing import *
 
 def solve( s : str) -> str :
@@ -15,8 +13,6 @@ def solve( s : str) -> str :
 
 		return s[left+1 : right]
 
-
-
 	if (len(s) < 2) :
 		return ""
 	if s == s[::-1] :
@@ -27,7 +23,6 @@ def solve( s : str) -> str :
 		result = max(result, expand(i,i+1), expand(i,i+2), key=len)
 
 	return result
-
 
 if __name__ == "__main__" :
 
