@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <random>
-#define N 100
+#define N 10
 #define TEST_CASES 10
 #define MAX_EDGES 2
 
@@ -13,7 +14,7 @@ vector<vector<int>> initialize(default_random_engine& gen){
 
 	for (int i = 0; i < n; i++) {
 		for (int j = i + 1; j < n; j++) {
-			if (gen() % 10 > 8) continue;
+			if (gen() % 20 > 18) continue;
 			ret[i][j] = ret[j][i] = gen() % MAX_EDGES;
 		}
 	}
@@ -48,7 +49,7 @@ bool check(const vector<vector<int>>& adj) {
 }
 
 vector<int> solve(const vector<vector<int>>& adj) {
-	if (check(adj)) return {-1};
+	if (!check(adj)) return {-1};
 
 	vector<vector<int>> graph {adj};
 
