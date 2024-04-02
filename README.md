@@ -42,7 +42,7 @@
 		- 소스파일 컴파일
 			```sh
 			##a javac -d [컴파일 파일 저장할 디렉토리 위치] [실행할 java파일]
-			javac -d target src/main/com/example/algorithm/BinaryTree.java
+			javac -d target -cp src/main/* src/main/com/example/algorithm/BinaryTree.java
 			```
 		- 실행
 			```sh
