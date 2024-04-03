@@ -18,9 +18,7 @@ vector<int>& split(const string& s){
 		ret->push_back(stoi(tmp)); 
 	}
 
-
 	return *ret;
-
 }
 
 int solve(vector<int>& m, vector<int>& e, int n){
@@ -31,7 +29,7 @@ int solve(vector<int>& m, vector<int>& e, int n){
 		order.push_back(make_pair(e[i],m[i]));
 	}
 
-	sort(begin(order),end(order), [](pair<int,int> a, pair<int,int> b){return a.first > b.first;});
+	sort(begin(order),end(order), [](pair<int,int>& a, pair<int,int>& b){return a.first > b.first;});
 	int ret = 0;
 	int beginEat = 0;
 	for(int i=0; i<n;i++){
