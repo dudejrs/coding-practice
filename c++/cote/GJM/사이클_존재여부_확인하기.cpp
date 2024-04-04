@@ -35,7 +35,7 @@ bool dfs(int cur, vector<vector<bool>>& graph, vector<bool>& visited, vector<int
 				}
 			}	
 
-			if(auto it = find(begin(path), end(path), next); it != end(path)) {
+			else if(auto it = find(begin(path), end(path), next); it != end(path)) {
 				return false;
 			}
 		} 
