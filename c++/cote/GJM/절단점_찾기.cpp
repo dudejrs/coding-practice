@@ -71,7 +71,7 @@ int findCutVertex(int cur, bool is_root, vector<vector<int>>& adj, vector<int>& 
 			ret = min(ret, subtree);
 
 		} else {
-			ret = min(ret, discovered[cur]);
+			ret = min(ret, discovered[next]);
 		}
 	}
 

@@ -32,8 +32,6 @@ vector<vector<int>>& getBoard(fstream& fd, int xlim, int ylim){
 	vector<vector<int>>* board = new vector<vector<int>>();
 	string temp;
 
-
-
 	for(int i=0; i<ylim; i++){
 		getline(fd,temp);
 		board->push_back(vector<int>());
