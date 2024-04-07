@@ -1,0 +1,48 @@
+8
+/a /b /a/b /a/b/c
+3
+cd /a
+cd ..
+cd ..
+/
+
+/a /b /a/b /a/b/c
+1
+cd /a/b/c/d
+/
+
+/a /b /a/b /a/b/c
+3
+cd ~
+cd ./a
+cd b
+/a/b
+
+/a /b /a/b /a/b/c
+2
+mkdir ./a/b/c/d
+cd ~/a/b/c/d
+/a/b/c/d
+
+/a /b /a/b /a/b/c
+2
+mkdir ../a/b/c/d
+cd /a/b/c/d
+/
+
+/a /b /a/b /a/b/c
+2
+rmdir ~/a/b/c
+cd /a/b/c
+/
+
+/a /b /a/b /a/b/c
+1
+rmdir /
+/
+
+/a /b /a/b /a/b/c
+2
+rmdir /a
+cd /a/b
+/
