@@ -51,6 +51,7 @@ public class 사라지는_발판 {
 				loseTurns = Math.max(loseTurns, result.turns);
 			}
 		}
+		board[player.y()][player.x()] = 1;
 
 		if (win) {
 			return new Result(true, winTurns + 1);
