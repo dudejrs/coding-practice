@@ -8,6 +8,7 @@
 #define TEST_CASES 10
 
 using namespace std;
+using namespace std::chrono_literals;
 
 class State {
 	public :
@@ -103,6 +104,20 @@ array<array<int, 4>, 4> initialize(int n, function<int()>& generator) {
 	return cur.board;
 }
 
+int sgn(int x) {
+	if (!x) {
+		return 0;
+	}
+	return x > 0 ? 1 : -1;
+}
+
+int incr(int x) {
+	if (x < 0) {
+		return x - 1;
+	}
+	return x + 1;
+}
+
 int solve(array<array<int, 4>, 4>& board) {
 
 	State start {board};
@@ -111,21 +126,24 @@ int solve(array<array<int, 4>, 4>& board) {
 	StateMap costs;
 	queue<State> q;
 	q.push(start);
-	costs[start] = 0;
+	costs[start] = 1;
+	q.push(State::finished);
+	costs[State::finished] = -1;
 
 	while (!q.empty()) {
 		State cur = q.front();
 		q.pop();
 		int cost = costs[cur];
-		
+
 		for (auto& next : cur.getAdjacent()) {
-			if (costs.count(next) == 0) {
-				if(next == State::finished) {
-					return cost + 1;
-				}
-				costs[next] = cost + 1;
+			auto it = costs.find(next);
+			if (it == end(costs)) {
+				costs[next] = incr(cost);
 				q.push(next);
-			}
+			// 중간에서 만난 경우
+			} else if (sgn(it->second) != sgn(cost)) {
+				return abs(it->second) + abs(cost) - 1;
+			} 
 		}
 	}
 
