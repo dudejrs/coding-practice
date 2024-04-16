@@ -28,7 +28,7 @@ public class 유전_법칙 {
 			return "rr";
 		}
 
-		return find(n - 1, chunk);
+		return find(n - 1, p % chunk);
 	}
 
 	private static String[] solve(int[][] queries) {
