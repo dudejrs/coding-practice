@@ -41,8 +41,21 @@ int translate(vector<vector<int>>& state) {
 			ret = set(ret, i - 1, col);
 		}
 	}
-
 	return ret;
+}
+
+int sgn(int x) {
+	if(!x) {
+		return 0;
+	}
+	return x > 0 ? 1 : -1;
+}
+
+int incr(int x) {
+	if (x < 0) {
+		return x - 1;
+	}
+	return x + 1;
 }
 
 vector<vector<int>> retreive(int discs, int state) {
@@ -55,12 +68,15 @@ vector<vector<int>> retreive(int discs, int state) {
 	return ret;
 }
 
-int bfs(int discs, int start, int finished) {
-	vector<int> costs((1 << (discs * 2)), -1);
+int bi_directional_search(int discs, int start, int finished) {
+	vector<int> costs((1 << (discs * 2)), 0);
 
 	queue<int> q;
 	q.push(start);
-	costs[start] = 0;
+	q.push(finished);
+
+	costs[start] = 1;
+	costs[finished] = -1;
 
 	while(!q.empty()) {
 		int cur = q.front();
@@ -82,17 +98,12 @@ int bfs(int discs, int start, int finished) {
 				if (i != j && (top[j] == -1 || top[j] > top[i])) {
 					int next = set(cur, top[i], j);
 
-					if (costs[next] != -1) {
-						continue;
+					if (costs[next] == 0) {
+						costs[next] = incr(costs[cur]);
+						q.push(next);
+					} else if (sgn(costs[cur]) != sgn(costs[next])) {
+						return abs(costs[cur]) + abs(costs[next]) - 1;
 					}
-
-					costs[next] = costs[cur] + 1;
-
-					if (next == finished) {
-						return costs[next];
-					}
-
-					q.push(next);
 				}
 			}
 		}
@@ -105,7 +116,7 @@ int solve(int discs, vector<vector<int>>& initial, vector<vector<int>>& final) {
 	int start = translate(initial);
 	int finished = translate(final);
 
-	return bfs(discs, start, finished);
+	return bi_directional_search(discs, start, finished);
 }
 
 int main(void) {
