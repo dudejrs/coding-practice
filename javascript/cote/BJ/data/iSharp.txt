@@ -1,0 +1,30 @@
+7
+int& a*[]&, b, c*;
+3
+int&&[]* a;
+int& b;
+int&* c;
+Double[][] Array[];
+1
+Double[][][] Array;
+int a;
+1
+int a;
+int[] aba;
+1
+int[] aba;
+int abacabadabacabaeabacabadabacaba*;
+1
+int* abacabadabacabaeabacabadabacaba;
+dsafsd adsf[]&[]**&, dsaf&&&****, dsfa**&[]&&, rfsdgf**&&[]*, dasfs;
+5
+dsafsd&**[]&[] adsf;
+dsafsd****&&& dsaf;
+dsafsd&&[]&** dsfa;
+dsafsd*[]&&** rfsdgf;
+dsafsd dasfs;
+int[][][] a[], b[][], c[][][];
+3
+int[][][][] a;
+int[][][][][] b;
+int[][][][][][] c;
