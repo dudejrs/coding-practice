@@ -62,7 +62,7 @@ Graph initialize(int n, function<bool()> is_connected, function<double()> cost_g
 double solve(int start, int target, Graph& adj) {
 	vector<double> dist(adj.size(), numeric_limits<double>::max());
 
-	priority_queue<pair<double, int>, vector<pair<double, int>>, less<>> q;
+	priority_queue<pair<double, int>, vector<pair<double, int>>, greater<>> q;
 	dist[start] = 1.0;
 	q.push(pair{1.0, start});
 
