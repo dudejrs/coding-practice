@@ -5,8 +5,6 @@
 
 using namespace std;
 
-
-
 namespace InvasionVistiorCase {
 
 	struct Expression {
@@ -31,7 +29,6 @@ namespace InvasionVistiorCase {
 			right->print(oss);
 			oss << ")";
 		}
-
 	};
 
 	struct DoubleExpression : Expression {
@@ -63,7 +60,6 @@ namespace InvasionVistiorCase {
 	}
 	
 }
-
 
 namespace ReflectiveVistiorCase {
 
@@ -233,8 +229,6 @@ namespace ConventionalVisitorCase {
 		cout << endl;
 	}
 }
-
-
 
 int main(void){
 
