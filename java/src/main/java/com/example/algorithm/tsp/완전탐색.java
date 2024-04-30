@@ -1,4 +1,4 @@
-package com.example.algorithm;
+package com.example.algorithm.tsp;
 
 import java.util.Random;
 import java.util.List;

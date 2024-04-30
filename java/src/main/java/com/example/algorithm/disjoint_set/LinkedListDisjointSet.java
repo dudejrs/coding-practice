@@ -1,7 +1,7 @@
-package com.example.algorithm;
+package com.example.algorithm.disjoint_set;
 
 import java.util.*;
-import com.example.algorithm.*;
+import com.example.algorithm.disjoint_set.*;
 import java.util.stream.*;
 
 public class LinkedListDisjointSet implements DisjointSet{

@@ -19,7 +19,7 @@ def test_sort (sort) :
 @test_sort
 def insertion_sort(l):
 	for i in range(len(l)) : 
-		cur = i-1
+		cur = i
 		while(0 < cur and l[cur-1] > l[cur]) :
 			l[cur], l[cur-1] = l[cur-1], l[cur]
 			cur-=1
