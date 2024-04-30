@@ -1,7 +1,6 @@
 #include <iostream>
 #include <random>
 #include <set>
-#include <queue>
 #include <vector>
 #include <functional>
 #include <algorithm>
@@ -12,6 +11,47 @@
 #define TEST_CASES 10
 
 using namespace std;
+
+struct DisjointSet {
+
+	DisjointSet(int n): parent(n, -1), rank(n, 0), size(n) {
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+		}
+	}
+
+	int find(int x) {
+		if (parent[x] == x) {
+			return x;
+		}
+		return parent[x] = find(parent[x]);
+	}
+
+	void merge(int x, int y) {
+		x = find(x);
+		y = find(y);
+
+		if (x == y) {
+			return;
+		}
+
+		if (rank[y] < rank[x]) {
+			swap(x, y);
+		}
+		parent[x] = y;
+		
+		if (rank[x] == rank[y]) {
+			rank[y]++;
+		}
+
+		return;
+	}
+
+	private :
+		vector<int> parent;
+		vector<int> rank;
+		int size;
+};
 
 vector<vector<int>> _adjacent(int n, vector<array<int, 3>>& edges) {
 	vector<vector<int>> ret(n);
@@ -76,85 +116,54 @@ vector<array<int, 3>> initialize(int n, default_random_engine& gen, function<flo
 	return ret;
 }
 
-vector<vector<pair<int, int>>> adjacent(int n, vector<array<int, 3>>& edges) {
-	vector<vector<pair<int, int>>> adj(n);
-
-	for (auto [a, b, speed] : edges) {
-		adj[a].push_back({b, speed});
-		adj[b].push_back({a, speed});
-	}
-
-	return adj;
-}
-
-vector<int> weight(vector<array<int, 3>>& edges) {
+vector<int> weight(const vector<array<int, 3>>& edges) {
 	vector<int> ret;
 
-	for (auto [a, b, weight] : edges) {
-		ret.push_back(weight);
+	for (auto [a, b, cost] : edges) {
+		ret.push_back(cost);
 	}
 
 	return ret;
 }
 
-// 0번과 n-1번을 잇는 경로 중 사용 가중치 범위가 [low, hi)안의 경로가 있는지 
-bool has_path(int low, int high, vector<vector<pair<int, int>>>& adj) {
-	int n = adj.size();
-	vector<bool> visited(n, false);
-	queue<int> q;
-	q.push(0);
+int minUpperBound(int lowWeight, int n, vector<array<int, 3>>& edges) {
+	DisjointSet s(n);
 
-	while(!q.empty()) {
-		 int cur = q.front();
-		 q.pop();
-		 visited[cur] = true;
+	for (auto [a, b, cost] : edges) {
+		if (cost < lowWeight) {
+			continue;
+		}
 
-		 if (cur == adj.size() - 1) {
-		 	return true;
-		 }
+		s.merge(a, b);
 
-		 for (auto [next, weight] : adj[cur]) {
-		 	if (visited[next]|| low > weight || weight >= high) {
-		 		continue;
-		 	}
-		 	q.push(next);
-		 }
-	}
-
-	return false;
-}
-
-// 가중치가 low 이상인 간선으로 시작점과 도착점을 연결하는 경로의 최소 상한 
-int minUpperBound(int low, vector<int>& weights, vector<vector<pair<int, int>>>& adj) {
-	int lo = low, hi = weights.size();
-
-	while (lo + 1 < hi) {
-		int mid = (lo + hi) / 2;
-		if (has_path(weights[low], weights[mid], adj)) {
-			hi = mid;
-		} else {
-			lo = mid;
+		if (s.find(0) == s.find(n - 1)) {
+			return cost;
 		}
 	}
 
-	if (hi == weights.size()) {
-		return numeric_limits<int>::max();
-	}
-
-	return weights[lo];
+	return numeric_limits<int>::max();
 }
+
 
 // 0번에서 n-1번까지의 최소너비 경로의 너비 
 int solve(int n, vector<array<int, 3>>& edges) {
-	vector<vector<pair<int, int>>> adj {adjacent(n, edges)};
 	vector<int> weights {weight(edges)};
+	
+	sort(begin(weights), end(weights));
+	sort(begin(edges), end(edges), [](auto e1, auto e2){
+		if (e1[2] != e2[2]) {
+			return e1[2] < e2[2];
+		}
+		if (e1[0] != e2[0]){
+			return e1[0] < e2[0];
+		}
+
+		return e1[1] < e2[1];
+	});
 
 	int ret = numeric_limits<int>::max();
-
-	sort(begin(weights), end(weights));
-
-	for(int i = 0; i < weights.size(); i++) {
-		ret = min(ret, minUpperBound(i, weights, adj) - weights[i]);
+	for (auto weight : weights) {
+		ret = min(ret, minUpperBound(weight, n, edges) - weight);
 	}
 
 	return ret;
