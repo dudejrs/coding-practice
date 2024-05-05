@@ -24,8 +24,6 @@ Database& Database::getInstance(){
 			db = new Database();
 			instance.store(db, boost::memory_order_release);
 		}
-
-		db = new Database();
 	}
 
 	return *db;
