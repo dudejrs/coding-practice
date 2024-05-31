@@ -25,18 +25,23 @@ int** initialize(default_random_engine& gen,int n){
 	return map;
 }
 
-int maximum(int y, int x, int** map, int n){
-	int& ret = cache[y][x];
-	if (ret != -1) return ret;
-	if (y == n-1) return map[y][x];	
-	return ret = max(maximum(y+1,x,map,n), maximum(y+1,x+1,map,n)) + map[y][x];
+void calculate(int** map, int n){
+	for (int x = 0; x < n; x++) {
+		cache[n - 1][x] = map[n - 1][x];
+	}
+
+	for (int y = n - 2; y >= 0; y--) {
+		for (int x = 0; x < y + 1; x++) {
+			cache[y][x] = max(cache[y + 1][x], cache[y + 1][x + 1]) + map[y][x];
+		}
+	}
 }
 
 int count (int y, int x, int** map, int n){
-	if (y == n-1) return 1;
+	if (y == n - 1) return 1;
 
-	int left = maximum(y + 1, x, map,n);
-	int right = maximum(y + 1, x + 1, map, n);
+	int left = cache[y + 1][x];
+	int right = cache[y + 1][x + 1];
 	
 	if (left > right){
 		return count(y + 1, x, map, n);
@@ -47,6 +52,7 @@ int count (int y, int x, int** map, int n){
 }
 
 int solve(int** map, int n){
+	calculate(map, n);
 	return count(0,0,map,n);
 }
 
