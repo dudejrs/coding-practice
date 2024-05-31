@@ -39,7 +39,7 @@ int count (int y, int x, int** map, int n){
 	int left = maximum(y+1,x,map,n);
 	int right = maximum(y+1,x+1,map,n);
 	
-	if(left > right ){
+	if (left > right){
 		return count(y+1, x, map, n);
 	}else if (left < right){
 		return count(y+1, x+1, map, n);
