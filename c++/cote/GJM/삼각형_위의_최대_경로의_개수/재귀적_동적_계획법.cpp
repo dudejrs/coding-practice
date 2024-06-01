@@ -7,8 +7,8 @@
 
 using namespace std;
 
-
 int cache[MAX_N][MAX_N];
+int count_cache[MAX_N][MAX_N];
 
 int** initialize(default_random_engine& gen,int n){
 
@@ -35,18 +35,26 @@ int maximum(int y, int x, int** map, int n){
 int count (int y, int x, int** map, int n){
 	if (y == n-1) return 1;
 
+	int& ret = count_cache[y][x];
+
+	if (ret != -1) {
+		return ret;
+	}
+
 	int left = maximum(y + 1, x, map,n);
 	int right = maximum(y + 1, x + 1, map, n);
 	
 	if (left > right){
-		return count(y + 1, x, map, n);
+		return ret = count(y + 1, x, map, n);
 	} else if (left < right){
-		return count(y + 1, x + 1, map, n);
+		return ret = count(y + 1, x + 1, map, n);
 	}
-	return count(y+1, x, map, n)+ count(y+1, x+1, map, n);
+	return ret = count(y+1, x, map, n)+ count(y+1, x+1, map, n);
 }
 
 int solve(int** map, int n){
+	memset(cache,-1,sizeof(cache));
+	memset(count_cache, -1, sizeof(count_cache));
 	return count(0,0,map,n);
 }
 
@@ -54,7 +62,6 @@ int main(void){
 	default_random_engine gen(43);
 	for (int i = 0; i < TEST_CASE; i++) {
 
-		memset(cache,-1,sizeof(cache));
 		int n = gen() % MAX_N;
 		int** map = initialize(gen,n);
 
