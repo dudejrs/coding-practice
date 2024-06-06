@@ -96,7 +96,6 @@ void solve1(int** map, int*deg, int n, int d, int p, vector<int>& query){
 	cout<< endl;
 }
 
-
 double search2(int** map, int* deg, int cur, int days, int n, int d, int q){
 	if(days == d){
 		return (cur == q)? 1.: 0.;
@@ -107,7 +106,6 @@ double search2(int** map, int* deg, int cur, int days, int n, int d, int q){
 	
 	ret = 0.;
 	
-
 	for(int i=0; i<n; i++){
 		if(map[cur][i] != 0 ){
 			ret += search2(map, deg, i, days+1, n, d, q) / deg[cur];
@@ -117,7 +115,6 @@ double search2(int** map, int* deg, int cur, int days, int n, int d, int q){
 	return ret;
 }
 
-
 void solve2(int** map, int*deg, int n, int d, int p, vector<int>& query){
 	for(auto q : query){
 		memset(cache, -1, sizeof(cache));
@@ -125,7 +122,6 @@ void solve2(int** map, int*deg, int n, int d, int p, vector<int>& query){
 	}
 	cout<< endl;
 }
-
 
 int main(void){
 	fstream fd("data/두니발_박사의_탈옥.txt");
@@ -145,7 +141,6 @@ int main(void){
 		solve1(map, deg, v[0], v[1], v[2], query);
 		solve2(map, deg, v[0], v[1], v[2], query);
 
-
 		for(int i=0; i<v[0]; i++){
 			delete[] map[i];
 		}
@@ -155,8 +150,6 @@ int main(void){
 
 		test_cases --;
 	}
-
-
 
 	return 0;
 }
