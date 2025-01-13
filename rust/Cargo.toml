@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+	"algorithm",
+	"design_pattern",
+	"cote"
+]

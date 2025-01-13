@@ -275,3 +275,8 @@ go.work
 
 # BlueJ files
 *.ctxt
+
+
+# Added by cargo
+
+/target
