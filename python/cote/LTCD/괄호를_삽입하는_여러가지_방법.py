@@ -1,6 +1,5 @@
 from typing import List
 
-
 def solve(expression: str) -> List[int] :
 	def compute(left, right, op) :
 		ret = [] 

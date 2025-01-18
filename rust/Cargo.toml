@@ -1,7 +1,4 @@
 [workspace]
 
-members = [
-	"algorithm",
-	"design_pattern",
-	"cote"
-]
+members = ["cote/LTCD" 
+	, "util"]

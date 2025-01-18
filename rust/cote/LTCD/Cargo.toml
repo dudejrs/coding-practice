@@ -1,0 +1,7 @@
+[package]
+name = "LTCD"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+util = { version = "0.1.0", path = "../../util" }
