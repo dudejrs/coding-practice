@@ -20,10 +20,3 @@ def solve(expression: str) -> List[int] :
 			ret.extend(compute(left, right, v))
 
 	return ret
-
-if __name__ == "__main__" :
-	with open('./data/괄호를_삽입하는_여러가지_방법.txt') as f :
-		for _ in range(int(f.readline())) :
-			expression = f.readline().strip()
-			answer = list(map(int, f.readline().strip().split(" ")))
-			print(answer, solve(expression))
