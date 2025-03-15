@@ -9,6 +9,10 @@ readme = "README.md"
 python = "^3.10"
 pytest = "^8.3.4"
 
+[tool.black]
+line-length = 100 
+target-version = ['py38', 'py39']  
+skip-string-normalization = true  
 
 [build-system]
 requires = ["poetry-core"]
