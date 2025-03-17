@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["kimdeokyoung <dudejrss@naver.com>"]
 readme = "README.md"
+package-mode = false 
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -11,7 +12,7 @@ pytest = "^8.3.4"
 
 [tool.black]
 line-length = 100 
-target-version = ['py38', 'py39']  
+target-version = ['py310']  
 skip-string-normalization = true  
 
 [build-system]
