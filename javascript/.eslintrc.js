@@ -1,6 +1,6 @@
 module.exports = {
 	root: true,
-	extends: ["airbnb"],
+	extends: ["airbnb", "prettier"],
 	rules : {
 		"max-classes-per-file" : "off",
 	}

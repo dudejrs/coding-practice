@@ -15,7 +15,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "target": "es2021",
-     "types": [
+    "types": [
       "node"
     ],
     "sourceMap": true,

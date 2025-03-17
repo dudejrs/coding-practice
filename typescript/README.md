@@ -13,7 +13,7 @@
 	```
 2. 실행 
 	```sh
-	node binaryTree.js
+	ts-node binaryTree.ts
 	```
 
 ### 2. 테스트 코드가 있는 경우 
@@ -26,8 +26,9 @@
 ### 2. 코드 작성
 ### 3. ESLint 적용 
 ```sh
-npx eslint [실행할 파일명]
+npm eslint [실행할 파일명]
 ```
+
 ### 4. Prettier 적용 
 ```sh 
 prettier --write .
