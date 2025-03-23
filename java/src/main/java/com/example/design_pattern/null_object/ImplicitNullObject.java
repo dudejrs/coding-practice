@@ -1,58 +1,59 @@
 package com.example.design_pattern.null_object;
 
 public class ImplicitNullObject {
-	
-	public static interface Logger {
-		void info(final String s);
-		void warn(final String s);
-	}
 
-	public static class OptionalLogger implements Logger {
+  public static interface Logger {
+    void info(final String s);
 
-		private Logger logger;
+    void warn(final String s);
+  }
 
-		OptionalLogger(Logger logger) {
-			this.logger = logger;
-		}
+  public static class OptionalLogger implements Logger {
 
-		@Override
-		public void info(final String s) {
-			if (logger != null){
-				logger.info(s);
-			}
-		}
+    private Logger logger;
 
-		@Override
-		public void warn(final String s) {
-			if (logger != null){
-				logger.warn(s);
-			}			
-		}
-	}
+    OptionalLogger(Logger logger) {
+      this.logger = logger;
+    }
 
-	public static class BankAccount {
-		private String name;
-		private int balance; 
-		private Logger logger;
+    @Override
+    public void info(final String s) {
+      if (logger != null) {
+        logger.info(s);
+      }
+    }
 
-		BankAccount(final String name, final int balance, final Logger logger) {
-			this.name = name;
-			this.balance = balance;
-			this.logger = new OptionalLogger(logger);
-		}
+    @Override
+    public void warn(final String s) {
+      if (logger != null) {
+        logger.warn(s);
+      }
+    }
+  }
 
-		BankAccount(final String name, final int balance) {
-			this(name, balance, null);
-		}
+  public static class BankAccount {
+    private String name;
+    private int balance;
+    private Logger logger;
 
-		public void deposit(int amount) {
-			balance += amount;
-			logger.info(String.format("Deposited $%d to %s, balance is now $%d", amount, name, balance));
-		}
-	}
+    BankAccount(final String name, final int balance, final Logger logger) {
+      this.name = name;
+      this.balance = balance;
+      this.logger = new OptionalLogger(logger);
+    }
 
-	public static void main(String... args){
-		BankAccount ba1 = new BankAccount("John", 10000);
-		ba1.deposit(5000);
-	}
+    BankAccount(final String name, final int balance) {
+      this(name, balance, null);
+    }
+
+    public void deposit(int amount) {
+      balance += amount;
+      logger.info(String.format("Deposited $%d to %s, balance is now $%d", amount, name, balance));
+    }
+  }
+
+  public static void main(String... args) {
+    BankAccount ba1 = new BankAccount("John", 10000);
+    ba1.deposit(5000);
+  }
 }

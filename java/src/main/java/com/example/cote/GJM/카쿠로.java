@@ -4,222 +4,212 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-public class 카쿠로{
+public class 카쿠로 {
 
-	private static final int WHITE = 1;
-	private static final int ROW = 0;
-	private static final int COL = 1;
+  private static final int WHITE = 1;
+  private static final int ROW = 0;
+  private static final int COL = 1;
 
-	private static int n;
-	private static int q;
-	private static int[][] color;
-	private static int[][] value;
-	private static int[][][] hint;
-	private static int[] sum;
-	private static int[] length;
-	private static int[] known;
-	private static int[][][] candidates = new int[10][46][1024];
+  private static int n;
+  private static int q;
+  private static int[][] color;
+  private static int[][] value;
+  private static int[][][] hint;
+  private static int[] sum;
+  private static int[] length;
+  private static int[] known;
+  private static int[][][] candidates = new int[10][46][1024];
 
+  private static void printSolution() {
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        System.out.printf("%4d", value[i][j]);
+      }
+      System.out.println("");
+    }
+  }
 
-	private static void printSolution(){
-		for(int i=0; i<n; i++){
-			for(int j=0; j<n; j++){
-				System.out.printf("%4d", value[i][j]);
-			}
-			System.out.println("");
-		}
-	}
+  private static void initialize(BufferedReader rd) throws IOException {
 
-	private static void initialize(BufferedReader rd) throws IOException{
+    n = Integer.parseInt(rd.readLine());
 
-		n = Integer.parseInt(rd.readLine());
+    color = new int[n][n];
+    value = new int[n][n];
+    hint = new int[n][n][2];
 
-		color = new int[n][n];
-		value = new int[n][n];
-		hint = new int[n][n][2];
+    for (int i = 0; i < n; i++) {
 
-		for(int i=0; i<n; i++){
-			
-			int[] tmp = Arrays.stream(rd.readLine().split(" "))
-							.mapToInt(Integer::parseInt)
-							.toArray();
-			for(int j=0; j<n; j++)
-				color[i][j] = tmp[j];
-		}
+      int[] tmp = Arrays.stream(rd.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+      for (int j = 0; j < n; j++) color[i][j] = tmp[j];
+    }
 
-		q = Integer.parseInt(rd.readLine());
-		sum = new int[q];
-		length = new int[q];
-		known = new int[q];
+    q = Integer.parseInt(rd.readLine());
+    sum = new int[q];
+    length = new int[q];
+    known = new int[q];
 
-		for(int i=0; i<q; i++){
-			int[] tmp = Arrays.stream(rd.readLine().split(" "))
-							.mapToInt(Integer::parseInt)
-							.toArray();
-			int y = tmp[0];
-			int x = tmp[1];
-			int direction = tmp[2];
-			
-			hint[y-1][x-1][direction] = i;
-			sum[i] = tmp[3];
+    for (int i = 0; i < q; i++) {
+      int[] tmp = Arrays.stream(rd.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+      int y = tmp[0];
+      int x = tmp[1];
+      int direction = tmp[2];
 
-			int count =0;
-			if(direction == ROW){
-				int cur =x;
-				while(count < 10 && cur <n){
-					if(color[y-1][cur] != WHITE)
-						break;
-					count++;
-					cur++;
-				}
-			}else {
-				int cur =y;
-				while(count < 10 && cur <n){
-					if(color[cur][x-1] != WHITE)
-						break;
-					count++;
-					cur++;
-				}				
-			}
-			length[i] = count;
-		}
+      hint[y - 1][x - 1][direction] = i;
+      sum[i] = tmp[3];
 
-		return;
-	}
+      int count = 0;
+      if (direction == ROW) {
+        int cur = x;
+        while (count < 10 && cur < n) {
+          if (color[y - 1][cur] != WHITE) break;
+          count++;
+          cur++;
+        }
+      } else {
+        int cur = y;
+        while (count < 10 && cur < n) {
+          if (color[cur][x - 1] != WHITE) break;
+          count++;
+          cur++;
+        }
+      }
+      length[i] = count;
+    }
 
-	private static int getSize(int mask){
-		int count =0;
-		int cur = 0;
-		while(cur < 10){
-			if((mask & 1) == 1 ) {
-				count++;
-			}
-			mask = mask >> 1;
-			cur++;
-		}
+    return;
+  }
 
-		return count;
-	}
+  private static int getSize(int mask) {
+    int count = 0;
+    int cur = 0;
+    while (cur < 10) {
+      if ((mask & 1) == 1) {
+        count++;
+      }
+      mask = mask >> 1;
+      cur++;
+    }
 
-	private static int getSum(int mask){
-		int sum = 0;
+    return count;
+  }
 
-		int cur =0;
-		while(cur < 10){
-			if((mask & 1) != 0){
-				sum += cur;
-			}
-			mask = mask >> 1;
-			cur++;
-		}
+  private static int getSum(int mask) {
+    int sum = 0;
 
-		return sum;
-	}
+    int cur = 0;
+    while (cur < 10) {
+      if ((mask & 1) != 0) {
+        sum += cur;
+      }
+      mask = mask >> 1;
+      cur++;
+    }
 
-	private static int getCandidates(int len, int sum, int known){
-		int allSets = 0 ;
+    return sum;
+  }
 
-		for(int set =0; set < 1024; set += 2){
-			if(getSum(set) == sum && getSize(set) == len && (known & set) == known){
-				allSets |= set;
-			}
-		}
-		return allSets & (~known);
-	}
+  private static int getCandidates(int len, int sum, int known) {
+    int allSets = 0;
 
-	private static void generateCandidates(){
-		
-		for(int i =0; i<10; i++)
-			for(int j=0; j<46; j++)
-				Arrays.fill(candidates[i][j], 0);
+    for (int set = 0; set < 1024; set += 2) {
+      if (getSum(set) == sum && getSize(set) == len && (known & set) == known) {
+        allSets |= set;
+      }
+    }
+    return allSets & (~known);
+  }
 
-		for(int set=0; set < 1024; set += 2){
-			int subset = set;
-			int sum = getSum(set);
-			int len = getSize(set);
+  private static void generateCandidates() {
 
-			while(true){
-				candidates[len][sum][subset] |= (set & (~subset)) ;
-				if(subset == 0) break;
+    for (int i = 0; i < 10; i++) for (int j = 0; j < 46; j++) Arrays.fill(candidates[i][j], 0);
 
-				subset = (subset-1) & subset;
-			}
-		}
-	}
+    for (int set = 0; set < 1024; set += 2) {
+      int subset = set;
+      int sum = getSum(set);
+      int len = getSize(set);
 
-	private static void put(int y, int x, int val){
-		for(int h=0; h<2; h++){
-			known[hint[y][x][h]] |= (1 << val);
-		}
-		value[y][x] = val;
-	}
+      while (true) {
+        candidates[len][sum][subset] |= (set & (~subset));
+        if (subset == 0) break;
 
-	private static void remove(int y, int x, int val){
-		for(int h=0; h<2; h++){
-			known[hint[y][x][h]] &= ~(1<< val);
-		}
+        subset = (subset - 1) & subset;
+      }
+    }
+  }
 
-		value[y][x] = 0;
-	}
+  private static void put(int y, int x, int val) {
+    for (int h = 0; h < 2; h++) {
+      known[hint[y][x][h]] |= (1 << val);
+    }
+    value[y][x] = val;
+  }
 
-	private static int getCandHint(int hint){
-		System.out.println(hint+","+length[hint]+","+sum[hint]+","+known[hint]);
-		return candidates[length[hint]][sum[hint]][known[hint]];
-	}
-	private static int getCandCoord(int y, int x){
-		return getCandHint(hint[y][x][0]) & getCandHint(hint[y][x][1]);
-	}
+  private static void remove(int y, int x, int val) {
+    for (int h = 0; h < 2; h++) {
+      known[hint[y][x][h]] &= ~(1 << val);
+    }
 
-	private static boolean search(){
-		int y= -1, x= -1, minCands = 1023;
+    value[y][x] = 0;
+  }
 
-		for(int i=0; i<n; i++)
-			for(int j=0; j<n; j++)
-				if(color[i][j] == WHITE && value[i][j] == 0){
-					int cands = getCandCoord(i,j);
-					if(getSize(minCands) > getSize(cands)){
-						minCands = cands;
-						y = i; x= j;
-					}
-				}
+  private static int getCandHint(int hint) {
+    System.out.println(hint + "," + length[hint] + "," + sum[hint] + "," + known[hint]);
+    return candidates[length[hint]][sum[hint]][known[hint]];
+  }
 
+  private static int getCandCoord(int y, int x) {
+    return getCandHint(hint[y][x][0]) & getCandHint(hint[y][x][1]);
+  }
 
-		if(minCands == 0) return true;	
+  private static boolean search() {
+    int y = -1, x = -1, minCands = 1023;
 
-		if(y == -1){
-			printSolution();
-			return true;
-		}
+    for (int i = 0; i < n; i++)
+      for (int j = 0; j < n; j++)
+        if (color[i][j] == WHITE && value[i][j] == 0) {
+          int cands = getCandCoord(i, j);
+          if (getSize(minCands) > getSize(cands)) {
+            minCands = cands;
+            y = i;
+            x = j;
+          }
+        }
 
-		for(int val= 1; val <=9; ++val){
-			if((minCands & (1<<val)) != 0){
-				put(y, x, val);
-				if(search())return true;
-				remove(y, x, val);
-			}
-		}
+    if (minCands == 0) return true;
 
-		return false;
-	}
+    if (y == -1) {
+      printSolution();
+      return true;
+    }
 
-	public static void main(String... args) throws IOException{
+    for (int val = 1; val <= 9; ++val) {
+      if ((minCands & (1 << val)) != 0) {
+        put(y, x, val);
+        if (search()) return true;
+        remove(y, x, val);
+      }
+    }
 
-		Path p = Paths.get(System.getProperty("user.dir")+ "/data/카쿠로.txt");
-		BufferedReader rd = Files.newBufferedReader(p);
+    return false;
+  }
 
-		int testCases = Integer.parseInt(rd.readLine());
+  public static void main(String... args) throws IOException {
 
-		generateCandidates();
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/카쿠로.txt");
+    BufferedReader rd = Files.newBufferedReader(p);
 
-		while(testCases > 0) {
+    int testCases = Integer.parseInt(rd.readLine());
 
-			initialize(rd);
-			search();
+    generateCandidates();
 
+    while (testCases > 0) {
 
-			testCases --;
-		}
+      initialize(rd);
+      search();
 
-		return;
-	}
+      testCases--;
+    }
+
+    return;
+  }
 }

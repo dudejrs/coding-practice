@@ -22,13 +22,13 @@
 
 ## 코드 작성 요령 
 
-### 1. 테스트 코드 작성
-### 2. 코드 작성
-### 3. ESLint 적용 
-```sh
-npx eslint [실행할 파일명]
-```
-### 4. Prettier 적용 
-```sh 
-prettier --write .
-```
+1. 테스트 코드 작성
+2. 코드 작성
+3. ESLint 적용 
+	```sh
+	npx eslint [실행할 파일명]
+	```
+4. Prettier 적용 
+	```sh 
+	prettier --write .
+	```

@@ -1,110 +1,101 @@
 package com.example.cote.PGMRS;
 
-import java.util.*;
 import java.io.*;
 import java.nio.file.*;
+import java.util.*;
 
 public class 사라지는_발판 {
 
-	private static final int MAX_BOARD_ROW = 5;
-	private static final int MAX_BOARD_COL = 5;
+  private static final int MAX_BOARD_ROW = 5;
+  private static final int MAX_BOARD_COL = 5;
 
-	private static record Coord (int y, int x){
-	}
+  private static record Coord(int y, int x) {}
 
-	private static record Result (boolean win, int turns){
-	}
+  private static record Result(boolean win, int turns) {}
 
-	private static final int[] dx = {0, 0, -1, 1};
-	private static final int[] dy = {-1, 1, 0, 0};
-	
-	private static Result game(Coord player, Coord opponenet, int[][] board) {
+  private static final int[] dx = {0, 0, -1, 1};
+  private static final int[] dy = {-1, 1, 0, 0};
 
-		if (board[player.y()][player.x()] == 0) {
-			return new Result(false, 0);
-		}
+  private static Result game(Coord player, Coord opponenet, int[][] board) {
 
-		boolean win = false; 
-		int winTurns = Integer.MAX_VALUE;
-		int loseTurns = Integer.MIN_VALUE;
+    if (board[player.y()][player.x()] == 0) {
+      return new Result(false, 0);
+    }
 
-		board[player.y()][player.x()] = 0;
+    boolean win = false;
+    int winTurns = Integer.MAX_VALUE;
+    int loseTurns = Integer.MIN_VALUE;
 
-		for (int d = 0; d < 4; d++) {
-			int nx = player.x() + dx[d];
-			int ny = player.y() + dy[d];
+    board[player.y()][player.x()] = 0;
 
-			if (ny < 0 || ny >= board.length || nx < 0 || nx >= board[ny].length) {
-				continue;
-			}
+    for (int d = 0; d < 4; d++) {
+      int nx = player.x() + dx[d];
+      int ny = player.y() + dy[d];
 
-			if (board[ny][nx] == 0) {
-				continue;
-			}
+      if (ny < 0 || ny >= board.length || nx < 0 || nx >= board[ny].length) {
+        continue;
+      }
 
-			Result result = game(opponenet, new Coord(ny, nx), board);
+      if (board[ny][nx] == 0) {
+        continue;
+      }
 
-			if (!result.win) {
-				win = true;
-				winTurns = Math.min(winTurns, result.turns);
-			} else if (!win) {
-				loseTurns = Math.max(loseTurns, result.turns);
-			}
-		}
-		board[player.y()][player.x()] = 1;
+      Result result = game(opponenet, new Coord(ny, nx), board);
 
-		if (win) {
-			return new Result(true, winTurns + 1);
-		}
+      if (!result.win) {
+        win = true;
+        winTurns = Math.min(winTurns, result.turns);
+      } else if (!win) {
+        loseTurns = Math.max(loseTurns, result.turns);
+      }
+    }
+    board[player.y()][player.x()] = 1;
 
-		if (loseTurns == Integer.MIN_VALUE) {
-			return new Result(false, 0);
-		}
+    if (win) {
+      return new Result(true, winTurns + 1);
+    }
 
-		return new Result(false, loseTurns + 1);
-	}	
+    if (loseTurns == Integer.MIN_VALUE) {
+      return new Result(false, 0);
+    }
 
-	private static int solve(int[][] board, int[] aloc, int[] bloc) {
+    return new Result(false, loseTurns + 1);
+  }
 
-		return game(
-			new Coord(aloc[0],aloc[1]),
-			new Coord(bloc[0], bloc[1]),
-			board).turns;
-	}
+  private static int solve(int[][] board, int[] aloc, int[] bloc) {
 
-	public static void main(String... args) throws IOException {
+    return game(new Coord(aloc[0], aloc[1]), new Coord(bloc[0], bloc[1]), board).turns;
+  }
 
-		Path p = Paths.get(System.getProperty("user.dir") + "/data/사라지는_발판.txt");
-		BufferedReader reader = Files.newBufferedReader(p);
+  public static void main(String... args) throws IOException {
 
-		int testCases = Integer.parseInt(reader.readLine());
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/사라지는_발판.txt");
+    BufferedReader reader = Files.newBufferedReader(p);
 
-		while (testCases --> 0) {
-			int[] nums = Arrays.stream(reader.readLine().split(" "))
-				.mapToInt(Integer::parseInt)
-				.toArray(); 
+    int testCases = Integer.parseInt(reader.readLine());
 
-			int[][] board = new int[nums[0]][nums[1]];
+    while (testCases-- > 0) {
+      int[] nums =
+          Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-			for (int i = 0; i < board.length; i++){
-				board[i] = Arrays.stream(reader.readLine().split(" "))
-					.mapToInt(Integer::parseInt)
-					.toArray();
-			}
+      int[][] board = new int[nums[0]][nums[1]];
 
-			int[] aloc = Arrays.stream(reader.readLine().split(" "))
-				.mapToInt(Integer::parseInt)
-				.toArray();
+      for (int i = 0; i < board.length; i++) {
+        board[i] =
+            Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+      }
 
-			int[] bloc = Arrays.stream(reader.readLine().split(" "))
-				.mapToInt(Integer::parseInt)
-				.toArray();
+      int[] aloc =
+          Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-			int answer = Integer.parseInt(reader.readLine());
+      int[] bloc =
+          Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-			int ret = solve(board, aloc, bloc);
+      int answer = Integer.parseInt(reader.readLine());
 
-			System.out.printf("%d %d\n", answer, ret);
-		}
-	}
+      int ret = solve(board, aloc, bloc);
+
+      System.out.printf("%d %d\n", answer, ret);
+    }
+  }
 }

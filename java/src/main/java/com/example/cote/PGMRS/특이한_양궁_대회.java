@@ -1,93 +1,91 @@
 package com.example.cote.PGMRS;
 
-import java.util.*;
 import java.io.*;
 import java.nio.file.*;
+import java.util.*;
 
 public class 특이한_양궁_대회 {
 
-	private static int scoreDiff(int[] other, int[] mine) {
-		int ret = 0;
+  private static int scoreDiff(int[] other, int[] mine) {
+    int ret = 0;
 
-		for (int i = 0; i < other.length; i++) {
-			if (other[i] == 0 && mine[i] == 0) continue;
+    for (int i = 0; i < other.length; i++) {
+      if (other[i] == 0 && mine[i] == 0) continue;
 
-			if (other[i] >= mine[i]) {
-				ret -= 10 - i;
-			} else {
-				ret += 10 - i;
-			}
-		}
+      if (other[i] >= mine[i]) {
+        ret -= 10 - i;
+      } else {
+        ret += 10 - i;
+      }
+    }
 
-		return ret;
-	}
+    return ret;
+  }
 
-	// 가장 큰 점ㅅ 차이로 우승할 수 있는 방법이 여러가지인 경우, 더 낮은 점수를 더 많이 맞춘 경우를 채택 
-	private static boolean isPrior(int[] base, int[] comp) {
-		for (int i = 10; i >= 0; i--) {
-			if (comp[i] == base[i]) continue;
-			return comp[i] > base[i];
-		}
+  // 가장 큰 점ㅅ 차이로 우승할 수 있는 방법이 여러가지인 경우, 더 낮은 점수를 더 많이 맞춘 경우를 채택
+  private static boolean isPrior(int[] base, int[] comp) {
+    for (int i = 10; i >= 0; i--) {
+      if (comp[i] == base[i]) continue;
+      return comp[i] > base[i];
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	private static int[] search(int cur, int[] hits, int n, int[] other) {
-		
-		if (cur == hits.length) {
-			if (n > 0) return null;
-			if (scoreDiff(other, hits) <= 0) return null;
+  private static int[] search(int cur, int[] hits, int n, int[] other) {
 
-			return Arrays.copyOf(hits, hits.length);
-		}
+    if (cur == hits.length) {
+      if (n > 0) return null;
+      if (scoreDiff(other, hits) <= 0) return null;
 
-		int maxDiff = 0;
-		int[] result = null;
+      return Arrays.copyOf(hits, hits.length);
+    }
 
-		for (int i = 0; i <= n; i++) {
-			hits[cur] = i;
-			int[] mine = search(cur + 1, hits, n - i, other);
-			
-			if (mine == null) continue;
+    int maxDiff = 0;
+    int[] result = null;
 
-			int diff = scoreDiff(other, mine);
-			if (diff > maxDiff ||  (diff == maxDiff && isPrior(result, mine))) {
-				maxDiff = diff;
-				result = mine;
-			}
-		}
+    for (int i = 0; i <= n; i++) {
+      hits[cur] = i;
+      int[] mine = search(cur + 1, hits, n - i, other);
 
-		return result;
-	}
+      if (mine == null) continue;
 
-	private static int[] solve(int[] info) {
-		int n = Arrays.stream(info).sum();
-		int[] best = search(0, new int[11], n, info);
+      int diff = scoreDiff(other, mine);
+      if (diff > maxDiff || (diff == maxDiff && isPrior(result, mine))) {
+        maxDiff = diff;
+        result = mine;
+      }
+    }
 
-		if (best == null) {
-			return new int[] {-1};
-		}
+    return result;
+  }
 
-		return best;
-	}
-	
-	public static void main(String... args) throws IOException {
+  private static int[] solve(int[] info) {
+    int n = Arrays.stream(info).sum();
+    int[] best = search(0, new int[11], n, info);
 
-		Path p = Paths.get(System.getProperty("user.dir") + "/data/특이한_양궁_대회.txt");
-		BufferedReader reader = Files.newBufferedReader(p);
+    if (best == null) {
+      return new int[] {-1};
+    }
 
-		int testCases = Integer.parseInt(reader.readLine());
+    return best;
+  }
 
-		while (testCases --> 0) {
-			int[] info = Arrays.stream(reader.readLine().split(" "))
-				.mapToInt(Integer::parseInt)
-				.toArray();
+  public static void main(String... args) throws IOException {
 
-			int[] answer = Arrays.stream(reader.readLine().split(" "))
-				.mapToInt(Integer::parseInt)
-				.toArray();
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/특이한_양궁_대회.txt");
+    BufferedReader reader = Files.newBufferedReader(p);
 
-			System.out.printf("%s %s\n", Arrays.toString(answer), Arrays.toString(solve(info)));
-		}
-	}
+    int testCases = Integer.parseInt(reader.readLine());
+
+    while (testCases-- > 0) {
+      int[] info =
+          Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+      int[] answer =
+          Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+      System.out.printf("%s %s\n", Arrays.toString(answer), Arrays.toString(solve(info)));
+    }
+  }
 }

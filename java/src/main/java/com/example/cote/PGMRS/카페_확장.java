@@ -1,64 +1,59 @@
 package com.example.cote.PGMRS;
 
-import java.util.*;
 import java.io.*;
 import java.nio.file.*;
+import java.util.*;
 
 public class 카페_확장 {
 
-	private static record Order(
-		int time,
-		int duration
-	) {}
-		
-	private static int solve(int[] menu, int[] order, int k) {
-		Order[] orders= new Order[order.length];
-		for (int i = 0; i < order.length; i++) {
-			orders[i] = new Order(k * i, menu[order[i]]);
-		}
+  private static record Order(int time, int duration) {}
 
-		int max = 0, time = 0, end = 0;
+  private static int solve(int[] menu, int[] order, int k) {
+    Order[] orders = new Order[order.length];
+    for (int i = 0; i < order.length; i++) {
+      orders[i] = new Order(k * i, menu[order[i]]);
+    }
 
-		for (int start = 0; start < orders.length; start ++) {
-			
-			Order cur = orders[start];
+    int max = 0, time = 0, end = 0;
 
-			if (time < cur.time()) {
-				time = cur.time();
-			}
+    for (int start = 0; start < orders.length; start++) {
 
-			time += cur.duration();
+      Order cur = orders[start];
 
-			while (end < orders.length && orders[end].time < time) {
-				end ++;
-			}
+      if (time < cur.time()) {
+        time = cur.time();
+      }
 
-			max = Math.max(max, end - start);
-		}	
+      time += cur.duration();
 
-		return max;
-	}
+      while (end < orders.length && orders[end].time < time) {
+        end++;
+      }
 
-	public static void main(String... args) throws IOException{
-		Path p = Paths.get(System.getProperty("user.dir") + "/data/카페_확장.txt");
-		BufferedReader reader = Files.newBufferedReader(p);
+      max = Math.max(max, end - start);
+    }
 
-		int testCases = Integer.parseInt(reader.readLine());
+    return max;
+  }
 
-		for( int it = 0; it < testCases; it++) {
-			int[] menu = Arrays.stream(reader.readLine().split(" "))
-				.mapToInt(Integer::parseInt)
-				.toArray();
+  public static void main(String... args) throws IOException {
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/카페_확장.txt");
+    BufferedReader reader = Files.newBufferedReader(p);
 
-			int[] order = Arrays.stream(reader.readLine().split(" "))
-				.mapToInt(Integer::parseInt)
-				.toArray();
+    int testCases = Integer.parseInt(reader.readLine());
 
-			int k = Integer.parseInt(reader.readLine());
+    for (int it = 0; it < testCases; it++) {
+      int[] menu =
+          Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-			int answer = Integer.parseInt(reader.readLine());
+      int[] order =
+          Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-			System.out.printf("%d %d\n", answer, solve(menu, order, k));
-		}
-	}
+      int k = Integer.parseInt(reader.readLine());
+
+      int answer = Integer.parseInt(reader.readLine());
+
+      System.out.printf("%d %d\n", answer, solve(menu, order, k));
+    }
+  }
 }

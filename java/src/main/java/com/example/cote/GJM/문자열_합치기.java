@@ -1,6 +1,5 @@
 package com.example.cote.GJM;
 
-
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -8,48 +7,44 @@ import java.util.stream.*;
 
 public class 문자열_합치기 {
 
-	private static List<Integer> parseList(String[] s){
-		return Arrays.stream(s)
-					 .map(Integer::parseInt)
-					 .collect(Collectors.toList());
-	}
+  private static List<Integer> parseList(String[] s) {
+    return Arrays.stream(s).map(Integer::parseInt).collect(Collectors.toList());
+  }
 
-	private static int solve(List<Integer> v, int n){
-		PriorityQueue<Integer> pq = new PriorityQueue<>();
-		
-		for(Integer item : v){
-			pq.add(item);
-		}
-		int ret = 0;
+  private static int solve(List<Integer> v, int n) {
+    PriorityQueue<Integer> pq = new PriorityQueue<>();
 
-		while(pq.size() > 1){
-			int m1 = pq.poll();
-			int m2 = pq.poll();
-			ret += m1 + m2;	
-			pq.add(m1+m2);
-		}
+    for (Integer item : v) {
+      pq.add(item);
+    }
+    int ret = 0;
 
-		return ret;
-	}
+    while (pq.size() > 1) {
+      int m1 = pq.poll();
+      int m2 = pq.poll();
+      ret += m1 + m2;
+      pq.add(m1 + m2);
+    }
 
-	public static void main(String[] args) throws IOException{
+    return ret;
+  }
 
-		Path p = Paths.get(System.getProperty("user.dir")+"/data/문자열_합치기.txt");
-		BufferedReader reader = Files.newBufferedReader(p);
+  public static void main(String[] args) throws IOException {
 
-		int test_cases = Integer.parseInt(reader.readLine());
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/문자열_합치기.txt");
+    BufferedReader reader = Files.newBufferedReader(p);
 
-		while(test_cases > 0){
+    int test_cases = Integer.parseInt(reader.readLine());
 
-			int n = Integer.parseInt(reader.readLine());
-			List<Integer> v = parseList(reader.readLine().split(" "));
-			System.out.println(solve(v,n));
+    while (test_cases > 0) {
 
-			test_cases--;
-		}
+      int n = Integer.parseInt(reader.readLine());
+      List<Integer> v = parseList(reader.readLine().split(" "));
+      System.out.println(solve(v, n));
 
+      test_cases--;
+    }
 
-		return;
-	}
-
+    return;
+  }
 }

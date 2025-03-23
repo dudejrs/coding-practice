@@ -1,61 +1,58 @@
 package com.example.cote.PGMRS;
 
-import java.util.*;
-import java.nio.file.*;
 import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 public class 불량_사용자 {
 
+  private static void count(
+      int cur, String[][] bans, Set<String> set, Set<Set<String>> combinations) {
 
-	private static void count(int cur, String[][] bans, Set<String> set ,Set<Set<String>> combinations){
-		
-		if(cur == bans.length) {
-			combinations.add(new HashSet<>(set));
-			return;
-		}
+    if (cur == bans.length) {
+      combinations.add(new HashSet<>(set));
+      return;
+    }
 
-		for(int i=0; i< bans[cur].length; i++){
-			
-			String s = bans[cur][i];
-			if(set.contains(s)) continue;
+    for (int i = 0; i < bans[cur].length; i++) {
 
-			set.add(s);
-			
-			count(cur+1, bans, set, combinations);
-			set.remove(s);
+      String s = bans[cur][i];
+      if (set.contains(s)) continue;
 
-		}
-	}
+      set.add(s);
 
-	private static int solve(String[] userID, String[] bannedID){
+      count(cur + 1, bans, set, combinations);
+      set.remove(s);
+    }
+  }
 
-		String[][] bans = Arrays.stream(bannedID)
-								.map(r -> r.replace('*','.'))
-								.map(r -> Arrays.stream(userID)
-													.filter(id -> id.matches(r))
-													.toArray(String[]::new))
-								.toArray(String[][]::new);
+  private static int solve(String[] userID, String[] bannedID) {
 
-		Set<Set<String>> combinations = new HashSet<>();
-		count(0, bans, new HashSet<>(), combinations);
+    String[][] bans =
+        Arrays.stream(bannedID)
+            .map(r -> r.replace('*', '.'))
+            .map(r -> Arrays.stream(userID).filter(id -> id.matches(r)).toArray(String[]::new))
+            .toArray(String[][]::new);
 
-		return combinations.size();
-	}
+    Set<Set<String>> combinations = new HashSet<>();
+    count(0, bans, new HashSet<>(), combinations);
 
+    return combinations.size();
+  }
 
-	public static void main(String... args) throws IOException{
+  public static void main(String... args) throws IOException {
 
-		Path p = Paths.get(System.getProperty("user.dir")+ "/data/불량_사용자.txt");
-		BufferedReader rd = Files.newBufferedReader(p);
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/불량_사용자.txt");
+    BufferedReader rd = Files.newBufferedReader(p);
 
-		int testCases = Integer.parseInt(rd.readLine());
+    int testCases = Integer.parseInt(rd.readLine());
 
-		while(testCases > 0){
-			String[] userID = rd.readLine().split(" ");
-			String[] bannedID = rd.readLine().split(" ");
+    while (testCases > 0) {
+      String[] userID = rd.readLine().split(" ");
+      String[] bannedID = rd.readLine().split(" ");
 
-			System.out.println(solve(userID, bannedID));
-			testCases--;
-		}
-	}
+      System.out.println(solve(userID, bannedID));
+      testCases--;
+    }
+  }
 }

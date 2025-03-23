@@ -1,219 +1,217 @@
 package com.example.design_pattern;
 
-
 import java.util.*;
 
 public class Proxy {
-	
-	private static class Proxy_ {
 
-		private static interface ServiceInterface {
-			void operation();
-		}
+  private static class Proxy_ {
 
-		private static class Service implements ServiceInterface {
-			public void operation(){
-			}
-		}
+    private static interface ServiceInterface {
+      void operation();
+    }
 
-		private static class ServiceProxy implements ServiceInterface {
-			
-			ServiceInterface service;
+    private static class Service implements ServiceInterface {
+      public void operation() {}
+    }
 
-			ServiceProxy(ServiceInterface service){
-				this.service = service;
-			}
+    private static class ServiceProxy implements ServiceInterface {
 
-			private boolean checkAccess(){
-				System.out.println("Proxy : checking access prior to firing real request.");
-				return true;
-			}
+      ServiceInterface service;
 
-			private void logAccess(){
-				System.out.println("Proxy : Logging the time of request");
-			}
+      ServiceProxy(ServiceInterface service) {
+        this.service = service;
+      }
 
-			public void operation(){
-				if(checkAccess()){
-					service.operation();
-					logAccess();
-				}
-			}
-		}
+      private boolean checkAccess() {
+        System.out.println("Proxy : checking access prior to firing real request.");
+        return true;
+      }
 
-		public static void main(){
-			ServiceInterface proxy = new ServiceProxy(new Service());
-			proxy.operation();
-		}		
-	}
+      private void logAccess() {
+        System.out.println("Proxy : Logging the time of request");
+      }
 
-	private static class AttributeProxy{
+      public void operation() {
+        if (checkAccess()) {
+          service.operation();
+          logAccess();
+        }
+      }
+    }
 
-		private static class Property <T> {
-			T value;
+    public static void main() {
+      ServiceInterface proxy = new ServiceProxy(new Service());
+      proxy.operation();
+    }
+  }
 
-			Property(T value){
-				this.value = value;
-			}
+  private static class AttributeProxy {
 
-			T get(){
-				System.out.println("get : something to do");
-				return value;
-			}
+    private static class Property<T> {
+      T value;
 
-			void set(T value){
-				System.out.println("set : something to do");
-				this.value = value;
-			}
-		}
+      Property(T value) {
+        this.value = value;
+      }
 
-		private static class Creature {
-			private Property<Integer> strength;
-			private Property<Integer> agility;
+      T get() {
+        System.out.println("get : something to do");
+        return value;
+      }
 
-			Creature(int strength, int agility){
-				this.strength = new Property<Integer>(strength);
-				this.agility = new Property<Integer>(agility);
-			}
+      void set(T value) {
+        System.out.println("set : something to do");
+        this.value = value;
+      }
+    }
 
-			public void setStrength(int strength){
-				this.strength.set(strength);
-			}
+    private static class Creature {
+      private Property<Integer> strength;
+      private Property<Integer> agility;
 
-			public void setAgility(int agility){
-				this.agility.set(agility);
-			}
+      Creature(int strength, int agility) {
+        this.strength = new Property<Integer>(strength);
+        this.agility = new Property<Integer>(agility);
+      }
 
-			public int getStrength(){
-				return strength.get();
-			}
+      public void setStrength(int strength) {
+        this.strength.set(strength);
+      }
 
-			public int getAgility(){
-				return agility.get();
-			}
-		}
+      public void setAgility(int agility) {
+        this.agility.set(agility);
+      }
 
-		public static void main(){
-			Creature creature = new Creature(10,20);
-			int str = creature.getStrength();
-			creature.setAgility(10);
-		}
-	}
+      public int getStrength() {
+        return strength.get();
+      }
 
-	private static class CachedProxy {
+      public int getAgility() {
+        return agility.get();
+      }
+    }
 
-		private class VideoInfo{}
-		private class VideoData{}
+    public static void main() {
+      Creature creature = new Creature(10, 20);
+      int str = creature.getStrength();
+      creature.setAgility(10);
+    }
+  }
 
-		private interface YoutubeService {
-			List<String> getVideos();
-			VideoInfo getVideoInfo(int id);
-			void download(int id);
-		}
+  private static class CachedProxy {
 
-		private class YoutubeServiceImpl implements YoutubeService{
-			public List<String> getVideos(){
-				return List.of();
-			}
+    private class VideoInfo {}
 
-			public VideoInfo getVideoInfo(int id){
-				return new VideoInfo();
-			}
+    private class VideoData {}
 
-			public void download(int id){
-			}
-		}
+    private interface YoutubeService {
+      List<String> getVideos();
 
-		private class YoutubeServiceProxy implements YoutubeService{
-			
-			YoutubeService service;
+      VideoInfo getVideoInfo(int id);
 
-			private List<String> ids;
-			private Map<Integer,VideoInfo> infos;
-			private List<Integer> downloaded;
-			private boolean needReset;
+      void download(int id);
+    }
 
-			YoutubeServiceProxy(YoutubeService service){
-				this.service = service;
-				infos = new HashMap<>();
-				downloaded = new LinkedList<>();
-				needReset = false;
-			}
+    private class YoutubeServiceImpl implements YoutubeService {
+      public List<String> getVideos() {
+        return List.of();
+      }
 
-			public List<String> getVideos(){
-				if(ids == null || needReset){
-					return ids= service.getVideos();
-				}
-				return ids;
-			}
+      public VideoInfo getVideoInfo(int id) {
+        return new VideoInfo();
+      }
 
-			public VideoInfo getVideoInfo(int id){
-				if(!infos.containsKey(id) || needReset){
-					VideoInfo info = service.getVideoInfo(id);
-					infos.put(id, info);
-				}
-				return infos.get(id);
-			}
+      public void download(int id) {}
+    }
 
-			public void download(int id){
-				if(!downloaded.contains(id) || needReset){
-					service.download(id);
-					downloaded.add(id);
-				}
-			}
-		}
+    private class YoutubeServiceProxy implements YoutubeService {
 
-		public static void main(){
+      YoutubeService service;
 
-		}
-	}
+      private List<String> ids;
+      private Map<Integer, VideoInfo> infos;
+      private List<Integer> downloaded;
+      private boolean needReset;
 
-	private static class VirtualProxy {
+      YoutubeServiceProxy(YoutubeService service) {
+        this.service = service;
+        infos = new HashMap<>();
+        downloaded = new LinkedList<>();
+        needReset = false;
+      }
 
-		private static interface Image {
-			void draw();
-		}
+      public List<String> getVideos() {
+        if (ids == null || needReset) {
+          return ids = service.getVideos();
+        }
+        return ids;
+      }
 
-		private static class Bitmap implements Image {
-			Bitmap(String filename){
-				System.out.println("Loading image from "+filename);
-			}
+      public VideoInfo getVideoInfo(int id) {
+        if (!infos.containsKey(id) || needReset) {
+          VideoInfo info = service.getVideoInfo(id);
+          infos.put(id, info);
+        }
+        return infos.get(id);
+      }
 
-			public void draw(){
-				System.out.println("Drawing image");
-			}
-		}
+      public void download(int id) {
+        if (!downloaded.contains(id) || needReset) {
+          service.download(id);
+          downloaded.add(id);
+        }
+      }
+    }
 
-		private static class LazyBitmap implements Image {
-			
-			private String filename;
-			private Bitmap bitmap;
+    public static void main() {}
+  }
 
-			LazyBitmap(String filename){
-				this.filename = filename;
-				System.out.println("Lazy Bitmap from "+ filename);
-			}
+  private static class VirtualProxy {
 
-			public void draw(){
-				System.out.println("About to draw the image");
-				if(bitmap == null){
-					bitmap = new Bitmap(filename);
-				}
-				bitmap.draw();
-				System.out.println("Complete drawing the image");
-			}
-		}
+    private static interface Image {
+      void draw();
+    }
 
-		public static void main(){
-			Image bitmap = new LazyBitmap("pokemon.png");
-			bitmap.draw();
-		}
-	}
+    private static class Bitmap implements Image {
+      Bitmap(String filename) {
+        System.out.println("Loading image from " + filename);
+      }
 
-	public static void main(String... args){
-		Proxy_.main();
-		AttributeProxy.main();
-		CachedProxy.main();
-		VirtualProxy.main();
-	}
+      public void draw() {
+        System.out.println("Drawing image");
+      }
+    }
+
+    private static class LazyBitmap implements Image {
+
+      private String filename;
+      private Bitmap bitmap;
+
+      LazyBitmap(String filename) {
+        this.filename = filename;
+        System.out.println("Lazy Bitmap from " + filename);
+      }
+
+      public void draw() {
+        System.out.println("About to draw the image");
+        if (bitmap == null) {
+          bitmap = new Bitmap(filename);
+        }
+        bitmap.draw();
+        System.out.println("Complete drawing the image");
+      }
+    }
+
+    public static void main() {
+      Image bitmap = new LazyBitmap("pokemon.png");
+      bitmap.draw();
+    }
+  }
+
+  public static void main(String... args) {
+    Proxy_.main();
+    AttributeProxy.main();
+    CachedProxy.main();
+    VirtualProxy.main();
+  }
 }

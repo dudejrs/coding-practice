@@ -1,79 +1,78 @@
 package com.example.cote.PGMRS;
 
-
-import java.util.*;
 import java.io.*;
 import java.nio.file.*;
+import java.util.*;
 
-public class 단어_변환 {	
+public class 단어_변환 {
 
-	private static final int MAX_WORDS_LENGTH = 10;
+  private static final int MAX_WORDS_LENGTH = 10;
 
-	public static record State (String word, int step){}
+  public static record State(String word, int step) {}
 
-	private static boolean isConvertable(String src, String dst) {
-		
-		char[] srcArr = src.toCharArray();
-		char[] dstArr = dst.toCharArray();
+  private static boolean isConvertable(String src, String dst) {
 
-		int diff = 0;
+    char[] srcArr = src.toCharArray();
+    char[] dstArr = dst.toCharArray();
 
-		for (int i = 0; i < srcArr.length; i++) {
-			if (srcArr[i] != dstArr[i]) diff++;
-		}
+    int diff = 0;
 
-		return diff == 1;
-	}
+    for (int i = 0; i < srcArr.length; i++) {
+      if (srcArr[i] != dstArr[i]) diff++;
+    }
 
-	private static int solve(String begin, String target, String[] words) {
+    return diff == 1;
+  }
 
-		boolean[] isVisited = new boolean[words.length];
+  private static int solve(String begin, String target, String[] words) {
 
-		Queue<State> queue =new LinkedList<> ();
-		queue.add(new State(begin, 0));
+    boolean[] isVisited = new boolean[words.length];
 
-		while (!queue.isEmpty()) {
-			State state = queue.poll();
+    Queue<State> queue = new LinkedList<>();
+    queue.add(new State(begin, 0));
 
-			if (state.word.equals(target)){
-				return state.step;
-			}
+    while (!queue.isEmpty()) {
+      State state = queue.poll();
 
-			for (int i = 0; i < words.length; i++) {
-				String next = words[i];
+      if (state.word.equals(target)) {
+        return state.step;
+      }
 
-				if (!isConvertable(state.word, next)){
-					continue;
-				}
+      for (int i = 0; i < words.length; i++) {
+        String next = words[i];
 
-				if (isVisited[i]) {
-					continue;
-				}
+        if (!isConvertable(state.word, next)) {
+          continue;
+        }
 
-				isVisited[i] = true;
-				queue.add(new State(next, state.step + 1));
-			}
-		}
-		return 0;
-	}
+        if (isVisited[i]) {
+          continue;
+        }
 
-	public static void main(String... args) throws IOException{
+        isVisited[i] = true;
+        queue.add(new State(next, state.step + 1));
+      }
+    }
+    return 0;
+  }
 
-		Path p = Paths.get(System.getProperty("user.dir")+"/data/단어_변환.txt");
-		BufferedReader reader = Files.newBufferedReader(p);
+  public static void main(String... args) throws IOException {
 
-		int testCases = Integer.parseInt(reader.readLine());
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/단어_변환.txt");
+    BufferedReader reader = Files.newBufferedReader(p);
 
-		while (testCases > 0) {
-			String begin = reader.readLine();
-			String target = reader.readLine();
+    int testCases = Integer.parseInt(reader.readLine());
 
-			String[] words = reader.readLine().split(" ");
-			int answer = Integer.parseInt(reader.readLine());
+    while (testCases > 0) {
+      String begin = reader.readLine();
+      String target = reader.readLine();
 
-			System.out.printf("%d %d\n", answer, solve(begin, target, words));
+      String[] words = reader.readLine().split(" ");
+      int answer = Integer.parseInt(reader.readLine());
 
-			testCases--;
-		}
-	}
+      System.out.printf("%d %d\n", answer, solve(begin, target, words));
+
+      testCases--;
+    }
+  }
 }

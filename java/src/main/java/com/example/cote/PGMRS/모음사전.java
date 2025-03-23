@@ -1,52 +1,49 @@
 package com.example.cote.PGMRS;
 
-
-import java.util.*;
-import java.nio.file.*;
 import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
-public class 모음사전{
-	
-	private static final char[] CHARS = {'A','E','I','O','U'};
-	private static final int N = 5;
+public class 모음사전 {
 
+  private static final char[] CHARS = {'A', 'E', 'I', 'O', 'U'};
+  private static final int N = 5;
 
-	private static int generate(String curString, String target){
-		
-		if(curString.length() == N) return 0 ;
+  private static int generate(String curString, String target) {
 
-		int ret = 0;
+    if (curString.length() == N) return 0;
 
-		for(int i=0; i< 5; i++){
-			if ((curString+CHARS[i]).equals(target)) return ret + 1;
-			if ((curString+CHARS[i]).compareTo(target) > 0) continue;
-			ret += generate(curString+CHARS[i], target) + 1;
-		}
-		if(curString.length()==1) System.out.println(curString+" : "+ret);
+    int ret = 0;
 
-		return ret;
-	}
+    for (int i = 0; i < 5; i++) {
+      if ((curString + CHARS[i]).equals(target)) return ret + 1;
+      if ((curString + CHARS[i]).compareTo(target) > 0) continue;
+      ret += generate(curString + CHARS[i], target) + 1;
+    }
+    if (curString.length() == 1) System.out.println(curString + " : " + ret);
 
-	private static final int solve(String target){
+    return ret;
+  }
 
-		return generate("", target);
-	}
+  private static final int solve(String target) {
 
-	public static void main(String... args) throws IOException{
+    return generate("", target);
+  }
 
-		Path p = Paths.get(System.getProperty("user.dir")+ "/data/모음사전.txt");
-		BufferedReader rd = Files.newBufferedReader(p);
+  public static void main(String... args) throws IOException {
 
-		int testCases = Integer.parseInt(rd.readLine());
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/모음사전.txt");
+    BufferedReader rd = Files.newBufferedReader(p);
 
-		while(testCases > 0){
+    int testCases = Integer.parseInt(rd.readLine());
 
-			String target = rd.readLine();
+    while (testCases > 0) {
 
-			System.out.println(solve(target));
+      String target = rd.readLine();
 
-			testCases--;
-		}
+      System.out.println(solve(target));
 
-	}
+      testCases--;
+    }
+  }
 }

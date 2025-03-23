@@ -3,112 +3,109 @@ package com.example.design_pattern.momento;
 import java.util.*;
 
 public class HierarchicalMomento {
-	
-	private static class CareTaker {
-		private Stack<Momento> stack = new Stack<>();
 
-		public void undo() {
-			Momento m = stack.pop();
-			m.restore();
-		}
-		public void save(Momento m){
-			stack.push(m);
-		}
-	}
+  private static class CareTaker {
+    private Stack<Momento> stack = new Stack<>();
 
-	private static interface Originator {
-		void save();
-	}
+    public void undo() {
+      Momento m = stack.pop();
+      m.restore();
+    }
 
-	private static interface Momento {
-		void restore();
-	}
+    public void save(Momento m) {
+      stack.push(m);
+    }
+  }
 
-	private static class ConcreteOriginatorA implements Originator{
+  private static interface Originator {
+    void save();
+  }
 
-		private static record MomentoA(
-			ConcreteOriginatorA origin,
-			int value
-		) implements Momento {
+  private static interface Momento {
+    void restore();
+  }
 
-			@Override
-			public void restore() {
-				origin().setValue(value);
-			}
-		}
+  private static class ConcreteOriginatorA implements Originator {
 
-		private int value = 0;
-		private CareTaker careTaker;
+    private static record MomentoA(ConcreteOriginatorA origin, int value) implements Momento {
 
-		ConcreteOriginatorA(int value, CareTaker careTaker) {
-			this.value = value;
-			this.careTaker = careTaker;
-		}
+      @Override
+      public void restore() {
+        origin().setValue(value);
+      }
+    }
 
-		@Override
-		public void save() {
-			careTaker.save(new MomentoA(this, value));
-		}
+    private int value = 0;
+    private CareTaker careTaker;
 
-		@Override
-		public String toString(){
-			return Integer.toString(value);
-		}
-		public void setValue(int value){
-			this.value = value;
-		}
-	}
+    ConcreteOriginatorA(int value, CareTaker careTaker) {
+      this.value = value;
+      this.careTaker = careTaker;
+    }
 
-	private static class ConcreteOriginatorB implements Originator {
+    @Override
+    public void save() {
+      careTaker.save(new MomentoA(this, value));
+    }
 
-		private static record MomentoB(
-			ConcreteOriginatorB origin,
-			String value
-		) implements Momento {
+    @Override
+    public String toString() {
+      return Integer.toString(value);
+    }
 
-			@Override
-			public void restore() {
-				origin().setValue(value);
-			}
-		}
+    public void setValue(int value) {
+      this.value = value;
+    }
+  }
 
-		private String value;
-		private CareTaker careTaker;
+  private static class ConcreteOriginatorB implements Originator {
 
-		ConcreteOriginatorB(String value, CareTaker careTaker) {
-			this.value = value;
-			this.careTaker = careTaker;
-		}
-		@Override
-		public void save() {
-			careTaker.save(new MomentoB(this, value));
-		}
+    private static record MomentoB(ConcreteOriginatorB origin, String value) implements Momento {
 
-		@Override
-		public String toString(){
-			return value;
-		}
-		public void setValue(String value) {
-			this.value = value;
-		}
-	}
+      @Override
+      public void restore() {
+        origin().setValue(value);
+      }
+    }
 
-	public static void main(String... args) {
+    private String value;
+    private CareTaker careTaker;
 
-		CareTaker careTaker = new CareTaker();
+    ConcreteOriginatorB(String value, CareTaker careTaker) {
+      this.value = value;
+      this.careTaker = careTaker;
+    }
 
-		ConcreteOriginatorA a = new ConcreteOriginatorA(0, careTaker);
-		ConcreteOriginatorB b = new ConcreteOriginatorB("B", careTaker);
-		a.save();
-		b.save();
+    @Override
+    public void save() {
+      careTaker.save(new MomentoB(this, value));
+    }
 
-		a.setValue(1);
-		b.setValue("A");
+    @Override
+    public String toString() {
+      return value;
+    }
 
-		careTaker.undo();
+    public void setValue(String value) {
+      this.value = value;
+    }
+  }
 
-		System.out.println(a); // 1
-		System.out.println(b); // B
+  public static void main(String... args) {
 
-	}
+    CareTaker careTaker = new CareTaker();
+
+    ConcreteOriginatorA a = new ConcreteOriginatorA(0, careTaker);
+    ConcreteOriginatorB b = new ConcreteOriginatorB("B", careTaker);
+    a.save();
+    b.save();
+
+    a.setValue(1);
+    b.setValue("A");
+
+    careTaker.undo();
+
+    System.out.println(a); // 1
+    System.out.println(b); // B
+  }
 }

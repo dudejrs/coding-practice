@@ -1,87 +1,80 @@
 package com.example.cote.PGMRS;
 
-
-import java.nio.file.*;
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 
 public class 순위 {
 
-	private static int countForward(int cur, boolean[][] graph, boolean[] visited){
-		int count = 1;
-		visited[cur] = true;
+  private static int countForward(int cur, boolean[][] graph, boolean[] visited) {
+    int count = 1;
+    visited[cur] = true;
 
-		for(int i=0; i<graph.length; i++){
-			if(!graph[cur][i] || visited[i]) continue;
-			count += countForward(i, graph, visited);
-		}
+    for (int i = 0; i < graph.length; i++) {
+      if (!graph[cur][i] || visited[i]) continue;
+      count += countForward(i, graph, visited);
+    }
 
+    return count;
+  }
 
-		return count;
-	}
+  private static int countBackward(int cur, boolean[][] graph, boolean[] visited) {
+    int count = 1;
+    visited[cur] = true;
 
-	private static int countBackward(int cur, boolean[][] graph, boolean[] visited){
-		int count = 1;
-		visited[cur] = true;
+    for (int i = 0; i < graph.length; i++) {
+      if (!graph[i][cur] || visited[i]) continue;
+      count += countBackward(i, graph, visited);
+    }
 
-		for(int i=0; i<graph.length; i++){
-			if(!graph[i][cur] || visited[i]) continue;
-				count += countBackward(i, graph, visited);
-		}
+    return count;
+  }
 
+  private static int solve(int n, int[][] edges) {
 
-		return count;
-	}
+    boolean[][] graph = new boolean[n][n];
 
-	private static int solve(int n, int[][] edges){
+    for (int[] edge : edges) {
+      graph[edge[0] - 1][edge[1] - 1] = true;
+    }
 
-		boolean[][] graph = new boolean[n][n];
+    int count = 0;
 
-		for(int[] edge: edges) {
-			graph[edge[0]-1][edge[1]-1] = true;
-		}
+    for (int i = 0; i < n; i++) {
 
-		int count = 0;
+      int wins = countForward(i, graph, new boolean[n]) - 1;
+      int loses = countBackward(i, graph, new boolean[n]) - 1;
 
-		for(int i=0; i<n; i++){
+      if (wins + loses == n - 1) {
+        count++;
+      }
+    }
 
-			int wins = countForward(i,graph, new boolean[n]) - 1 ;
-			int loses = countBackward(i,graph, new boolean[n]) - 1;
+    return count;
+  }
 
-			if(wins + loses == n-1 ){
-				count++;
-			}
+  public static void main(String... args) throws IOException {
 
-		}
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/순위.txt");
+    BufferedReader rd = Files.newBufferedReader(p);
 
-		return count;
-	} 
-	
-	public static void main(String... args) throws IOException{
+    int testCases = Integer.parseInt(rd.readLine());
 
-		Path p = Paths.get(System.getProperty("user.dir")+"/data/순위.txt");
-		BufferedReader rd = Files.newBufferedReader(p);
+    while (testCases > 0) {
 
-		int testCases = Integer.parseInt(rd.readLine());
+      int n = Integer.parseInt(rd.readLine());
+      int numEdges = Integer.parseInt(rd.readLine());
+      int[][] edges = new int[numEdges][2];
 
-		while(testCases > 0){
+      for (int i = 0; i < numEdges; i++) {
+        edges[i] = Arrays.stream(rd.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+      }
 
-			int n = Integer.parseInt(rd.readLine());
-			int numEdges = Integer.parseInt(rd.readLine());
-			int[][] edges = new int [numEdges][2];
+      int answer = Integer.parseInt(rd.readLine());
 
-			for(int i =0; i<numEdges; i++){
-				edges[i] = Arrays.stream(rd.readLine().split(" "))
-									.mapToInt(Integer::parseInt)
-									.toArray();
-			}
+      System.out.println(solve(n, edges) + " " + answer);
 
-			int answer = Integer.parseInt(rd.readLine());
-
-			System.out.println( solve(n, edges) +" "+ answer);
-
-			testCases--;
-		}
-
-	}
+      testCases--;
+    }
+  }
 }

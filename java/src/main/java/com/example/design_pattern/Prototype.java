@@ -3,256 +3,255 @@ package com.example.design_pattern;
 import java.util.*;
 
 public class Prototype {
-	
- 	private static class Prototype1{
 
- 		private static class Address implements Cloneable{
- 			private String street;
- 			private String city;
- 			private int suite;
+  private static class Prototype1 {
 
- 			Address(String street, String city, int suite){
- 				this.street = street;
- 				this.city = city;
- 				this.suite = suite;
- 			}
+    private static class Address implements Cloneable {
+      private String street;
+      private String city;
+      private int suite;
 
- 			public void setSuite(int suite){
- 				this.suite = suite;
- 			}
+      Address(String street, String city, int suite) {
+        this.street = street;
+        this.city = city;
+        this.suite = suite;
+      }
 
- 			@Override
- 			public Address clone(){
- 				try{
- 					return (Address) super.clone();
- 				}catch(CloneNotSupportedException e){
- 					return null;
- 				}
- 			}
+      public void setSuite(int suite) {
+        this.suite = suite;
+      }
 
- 			@Override
- 			public String toString(){
- 				return String.format("%s %s %d", street, city, suite);
- 			}
- 		}
+      @Override
+      public Address clone() {
+        try {
+          return (Address) super.clone();
+        } catch (CloneNotSupportedException e) {
+          return null;
+        }
+      }
 
- 		private static class Contact implements Cloneable{
- 			private String name;
- 			private Address address;
+      @Override
+      public String toString() {
+        return String.format("%s %s %d", street, city, suite);
+      }
+    }
 
- 			Contact(String name, Address address) {
- 				this.name = name;
- 				this.address = address;
- 			}
+    private static class Contact implements Cloneable {
+      private String name;
+      private Address address;
 
- 			public void setName(String name){
- 				this.name = name;
- 			}
+      Contact(String name, Address address) {
+        this.name = name;
+        this.address = address;
+      }
 
- 			public void setSuite(int suite){
- 				address.setSuite(suite);
- 			}
+      public void setName(String name) {
+        this.name = name;
+      }
 
- 			private void setAddress(Address address){
- 				this.address = address;
- 			}
+      public void setSuite(int suite) {
+        address.setSuite(suite);
+      }
 
- 			@Override
- 			public Contact clone(){
- 				try{
- 					Address clonedAddress = address.clone();
- 					Contact contact = (Contact) super.clone();
- 					contact.setAddress(clonedAddress);
- 					return contact;
- 				}catch(CloneNotSupportedException e){
- 					return null;
- 				}
- 			}
+      private void setAddress(Address address) {
+        this.address = address;
+      }
 
- 			@Override
- 			public String toString(){
- 				return String.format("%s %s", name , address);
- 			}
- 		}
+      @Override
+      public Contact clone() {
+        try {
+          Address clonedAddress = address.clone();
+          Contact contact = (Contact) super.clone();
+          contact.setAddress(clonedAddress);
+          return contact;
+        } catch (CloneNotSupportedException e) {
+          return null;
+        }
+      }
 
- 		public static void main(String... args){
- 			Address workerAddress = new Address("123 East Dr", "London", 0);
- 			Contact workerEntry = new Contact("worker", workerAddress);
+      @Override
+      public String toString() {
+        return String.format("%s %s", name, address);
+      }
+    }
 
- 			Contact johnEntry = workerEntry.clone();
- 			johnEntry.setName("John Doe");
- 			johnEntry.setSuite(10);
+    public static void main(String... args) {
+      Address workerAddress = new Address("123 East Dr", "London", 0);
+      Contact workerEntry = new Contact("worker", workerAddress);
 
- 			Contact janeEntry = workerEntry.clone();
- 			janeEntry.setName("Jane Doe");
- 			janeEntry.setSuite(11);
+      Contact johnEntry = workerEntry.clone();
+      johnEntry.setName("John Doe");
+      johnEntry.setSuite(10);
 
- 			System.out.println(johnEntry);
- 			System.out.println(janeEntry);
- 		}
- 	}
+      Contact janeEntry = workerEntry.clone();
+      janeEntry.setName("Jane Doe");
+      janeEntry.setSuite(11);
 
- 	private static class PrototypeFactory{
+      System.out.println(johnEntry);
+      System.out.println(janeEntry);
+    }
+  }
 
- 		 private static class Address implements Cloneable{
- 			private String street;
- 			private String city;
- 			private int suite;
+  private static class PrototypeFactory {
 
- 			Address(String street, String city, int suite){
- 				this.street = street;
- 				this.city = city;
- 				this.suite = suite;
- 			}
+    private static class Address implements Cloneable {
+      private String street;
+      private String city;
+      private int suite;
 
- 			public void setSuite(int suite){
- 				this.suite = suite;
- 			}
+      Address(String street, String city, int suite) {
+        this.street = street;
+        this.city = city;
+        this.suite = suite;
+      }
 
- 			@Override 
- 			public Address clone(){
- 				try{
- 					return (Address) super.clone();
- 				}catch (CloneNotSupportedException e){
- 					return null;
- 				}
- 			}
+      public void setSuite(int suite) {
+        this.suite = suite;
+      }
 
- 			@Override
- 			public String toString(){
- 				return String.format("%s %s %d", street, city, suite);
- 			}
- 		}
+      @Override
+      public Address clone() {
+        try {
+          return (Address) super.clone();
+        } catch (CloneNotSupportedException e) {
+          return null;
+        }
+      }
 
- 		private static class Contact implements Cloneable{
- 			private String name;
- 			private Address address;
+      @Override
+      public String toString() {
+        return String.format("%s %s %d", street, city, suite);
+      }
+    }
 
- 			Contact(String name, Address address) {
- 				this.name = name;
- 				this.address = address;
- 			}
- 			Contact(String name, String street, String city, int suite){
- 				this.name = name; 
- 				this.address = new Address(street, city, suite);
- 			}
+    private static class Contact implements Cloneable {
+      private String name;
+      private Address address;
 
- 			public void setSuite(int suite){
- 				address.setSuite(suite);
- 			}
+      Contact(String name, Address address) {
+        this.name = name;
+        this.address = address;
+      }
 
- 			public void setName(String name){
- 				this.name = name;
- 			}
+      Contact(String name, String street, String city, int suite) {
+        this.name = name;
+        this.address = new Address(street, city, suite);
+      }
 
- 			@Override
- 			public Contact clone(){
- 				try {
- 					Address clonedAddress = address.clone();
- 					Contact contact = (Contact) super.clone();
- 					return contact;
+      public void setSuite(int suite) {
+        address.setSuite(suite);
+      }
 
- 				}catch( CloneNotSupportedException e){
- 					return null;
- 				}
- 			}
+      public void setName(String name) {
+        this.name = name;
+      }
 
- 			@Override
- 			public String toString(){
- 				return String.format("%s %s", name, address);
- 			}
- 		}
+      @Override
+      public Contact clone() {
+        try {
+          Address clonedAddress = address.clone();
+          Contact contact = (Contact) super.clone();
+          return contact;
 
- 		private static class EmploymentFactory{
- 			private static Contact main = new Contact("main employee", "123 East Dr", "London", 0);
- 			private static Contact aux = new Contact("aux employee", "1238 East Dr", "London", 0);
+        } catch (CloneNotSupportedException e) {
+          return null;
+        }
+      }
 
- 			private EmploymentFactory(){
- 			}
+      @Override
+      public String toString() {
+        return String.format("%s %s", name, address);
+      }
+    }
 
- 			public static Contact newMainEmployee(String name, int suite){
- 				return newEmployee(main, name, suite);
- 			}
+    private static class EmploymentFactory {
+      private static Contact main = new Contact("main employee", "123 East Dr", "London", 0);
+      private static Contact aux = new Contact("aux employee", "1238 East Dr", "London", 0);
 
- 			public static Contact newAuxEmployee(String name, int suite){
- 				return newEmployee(aux, name, suite);
- 			}
+      private EmploymentFactory() {}
 
- 			private static Contact newEmployee(Contact proto, String name, int suite){
- 				Contact employee = proto.clone();
- 				employee.setName(name);
- 				employee.setSuite(suite);
- 				return employee;
- 			}
- 		}
+      public static Contact newMainEmployee(String name, int suite) {
+        return newEmployee(main, name, suite);
+      }
 
+      public static Contact newAuxEmployee(String name, int suite) {
+        return newEmployee(aux, name, suite);
+      }
 
- 		public static void main(String... args){
- 			System.out.println(EmploymentFactory.newMainEmployee("john doe", 10));
- 			System.out.println(EmploymentFactory.newAuxEmployee("jane doe", 11));
- 		}
- 	}
+      private static Contact newEmployee(Contact proto, String name, int suite) {
+        Contact employee = proto.clone();
+        employee.setName(name);
+        employee.setSuite(suite);
+        return employee;
+      }
+    }
 
- 	private static class PrototypeRegistery{
+    public static void main(String... args) {
+      System.out.println(EmploymentFactory.newMainEmployee("john doe", 10));
+      System.out.println(EmploymentFactory.newAuxEmployee("jane doe", 11));
+    }
+  }
 
-		private static enum Color {
-			RED, GREEN, BLUE;
-		}
+  private static class PrototypeRegistery {
 
- 		private static class Button implements Cloneable{
- 			private int x;
- 			private int y;
- 			private Color color;
+    private static enum Color {
+      RED,
+      GREEN,
+      BLUE;
+    }
 
+    private static class Button implements Cloneable {
+      private int x;
+      private int y;
+      private Color color;
 
- 			Button(int x, int y, Color color){
- 				this.x = x;
- 				this.y = y;
- 				this.color = color;
- 			}
+      Button(int x, int y, Color color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+      }
 
- 			@Override
- 			public Button clone(){
- 				try {
- 					return (Button) super.clone();
- 				} catch(CloneNotSupportedException ex){
- 					return null;
- 				}
- 			}
- 		}
+      @Override
+      public Button clone() {
+        try {
+          return (Button) super.clone();
+        } catch (CloneNotSupportedException ex) {
+          return null;
+        }
+      }
+    }
 
- 		private static class ButtonRegistery {
- 			Map<Color, Button> items;
+    private static class ButtonRegistery {
+      Map<Color, Button> items;
 
- 			ButtonRegistery(){
- 				items = new HashMap<>();
- 			}
+      ButtonRegistery() {
+        items = new HashMap<>();
+      }
 
- 			void addItem(Color color, Button button){
- 				items.put(color, button);
- 			}
+      void addItem(Color color, Button button) {
+        items.put(color, button);
+      }
 
- 			Button getByColor(Color color){
- 				Button button = items.get(color);
- 				return button.clone();
- 			}
- 		}
+      Button getByColor(Color color) {
+        Button button = items.get(color);
+        return button.clone();
+      }
+    }
 
- 		public static void main(String... args){
- 			Button button = new Button(10, 40, Color.RED);
+    public static void main(String... args) {
+      Button button = new Button(10, 40, Color.RED);
 
- 			ButtonRegistery registry = new ButtonRegistery();
- 			registry.addItem(Color.RED, button);
- 			Button button2 = registry.getByColor(Color.RED);
+      ButtonRegistery registry = new ButtonRegistery();
+      registry.addItem(Color.RED, button);
+      Button button2 = registry.getByColor(Color.RED);
 
- 			assert( button != button2);
- 		}
- 	}
+      assert (button != button2);
+    }
+  }
 
-
-	public static void main(String... args){
-		Prototype1.main();
-		PrototypeFactory.main();
-		PrototypeRegistery.main();
-	}
+  public static void main(String... args) {
+    Prototype1.main();
+    PrototypeFactory.main();
+    PrototypeRegistery.main();
+  }
 }

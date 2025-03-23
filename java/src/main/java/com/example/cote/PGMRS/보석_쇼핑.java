@@ -1,76 +1,71 @@
 package com.example.cote.PGMRS;
 
-
-import java.util.*;
-import java.nio.file.*;
 import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 public class 보석_쇼핑 {
 
-	private static class Range {
-		public final int start;
-		public final int end;
-		public final int length;
+  private static class Range {
+    public final int start;
+    public final int end;
+    public final int length;
 
-		Range(int start, int end){
-			this.start = start;
-			this.end = end; 
-			this.length = end - start; 
-		}
-	}
+    Range(int start, int end) {
+      this.start = start;
+      this.end = end;
+      this.length = end - start;
+    }
+  }
 
-	private static int[] solve(String[] gems){
+  private static int[] solve(String[] gems) {
 
-		Set<String> gemSet = new HashSet<>(List.of(gems));
-		Map<String, Integer> includes = new HashMap<>();
-		
-		Range cur = new Range(0,1);
-		Range answer = new Range(0, gems.length);
-		includes.put(gems[0], 1);
+    Set<String> gemSet = new HashSet<>(List.of(gems));
+    Map<String, Integer> includes = new HashMap<>();
 
-		while(cur.start < gems.length){
-			if(includes.keySet().size() == gemSet.size()){
-				if(cur.length < answer.length){
-					answer = cur;
-				}
+    Range cur = new Range(0, 1);
+    Range answer = new Range(0, gems.length);
+    includes.put(gems[0], 1);
 
-				includes.put(gems[cur.start], includes.get(gems[cur.start])-1);
+    while (cur.start < gems.length) {
+      if (includes.keySet().size() == gemSet.size()) {
+        if (cur.length < answer.length) {
+          answer = cur;
+        }
 
-				if(includes.get(gems[cur.start]) == 0){
-					includes.remove(gems[cur.start]);
-				}
+        includes.put(gems[cur.start], includes.get(gems[cur.start]) - 1);
 
-				cur = new Range(cur.start+1, cur.end);
-			}else if(cur.end < gems.length) {
-				cur = new Range(cur.start, cur.end + 1);
-				includes.put(gems[cur.end-1], includes.getOrDefault(gems[cur.end-1], 0)+1);
-			}else {
-				break;
-			}
-		}
+        if (includes.get(gems[cur.start]) == 0) {
+          includes.remove(gems[cur.start]);
+        }
 
-		return new int[]{answer.start+1, answer.end};
-	}
-	
-	public static void main(String... args)throws IOException{
+        cur = new Range(cur.start + 1, cur.end);
+      } else if (cur.end < gems.length) {
+        cur = new Range(cur.start, cur.end + 1);
+        includes.put(gems[cur.end - 1], includes.getOrDefault(gems[cur.end - 1], 0) + 1);
+      } else {
+        break;
+      }
+    }
 
-		Path p = Paths.get(System.getProperty("user.dir") + "/data/보석_쇼핑.txt");
-		BufferedReader rd = Files.newBufferedReader(p);
+    return new int[] {answer.start + 1, answer.end};
+  }
 
-		int testCases = Integer.parseInt(rd.readLine());
+  public static void main(String... args) throws IOException {
 
-		while(testCases > 0){
-			String[] gems = rd.readLine().split(" ");
-			int[] result = Arrays.stream(rd.readLine().split(" "))
-								.mapToInt(Integer::parseInt)
-								.toArray();
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/보석_쇼핑.txt");
+    BufferedReader rd = Files.newBufferedReader(p);
 
+    int testCases = Integer.parseInt(rd.readLine());
 
-			System.out.println("Solved : " + Arrays.toString(solve(gems)));
-			System.out.println("Answer : " + Arrays.toString(result));
+    while (testCases > 0) {
+      String[] gems = rd.readLine().split(" ");
+      int[] result = Arrays.stream(rd.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-			testCases--;
-		}
+      System.out.println("Solved : " + Arrays.toString(solve(gems)));
+      System.out.println("Answer : " + Arrays.toString(result));
 
-	}
+      testCases--;
+    }
+  }
 }

@@ -2,65 +2,64 @@ package com.example.design_pattern.template_method;
 
 public class SimpleTemplateMethod {
 
-	private static abstract class Game {
-		
-		protected int numberOfPlayers;
+  private abstract static class Game {
 
-		Game(int numberOfPlayers) {
-			this.numberOfPlayers = numberOfPlayers;
-		}
+    protected int numberOfPlayers;
 
-		abstract void start();
+    Game(int numberOfPlayers) {
+      this.numberOfPlayers = numberOfPlayers;
+    }
 
-		abstract boolean isFinished();
+    abstract void start();
 
-		abstract void takeTurns();
+    abstract boolean isFinished();
 
-		abstract int getWinner();
+    abstract void takeTurns();
 
-		public final void run() {
-			start();
+    abstract int getWinner();
 
-			while (!isFinished()) {
-				takeTurns();
-			}
+    public final void run() {
+      start();
 
-			System.out.printf("Player%d wins\n", getWinner());
-		}
+      while (!isFinished()) {
+        takeTurns();
+      }
 
-	}
+      System.out.printf("Player%d wins\n", getWinner());
+    }
+  }
 
-	private static class Chess extends Game{
-		private int currentPlayer = 0;
-		private int turns = 0; 
-		private final int maxTurns;
+  private static class Chess extends Game {
+    private int currentPlayer = 0;
+    private int turns = 0;
+    private final int maxTurns;
 
-		Chess(int maxTurns) {
-			super(2);
-			this.maxTurns = maxTurns;
-		}
+    Chess(int maxTurns) {
+      super(2);
+      this.maxTurns = maxTurns;
+    }
 
-		protected void start() {
-			System.out.println("Game started");
-		}
+    protected void start() {
+      System.out.println("Game started");
+    }
 
-		protected boolean isFinished() {
-			return turns == maxTurns;
-		}
+    protected boolean isFinished() {
+      return turns == maxTurns;
+    }
 
-		protected void takeTurns() {
-			System.out.printf("Turns %d taken by Player%d.\n", turns, currentPlayer);
-			turns++;
-			currentPlayer = (currentPlayer + 1) % numberOfPlayers;			
-		}
+    protected void takeTurns() {
+      System.out.printf("Turns %d taken by Player%d.\n", turns, currentPlayer);
+      turns++;
+      currentPlayer = (currentPlayer + 1) % numberOfPlayers;
+    }
 
-		protected int getWinner() {
-			return currentPlayer;
-		}
-	}
+    protected int getWinner() {
+      return currentPlayer;
+    }
+  }
 
-	public static void main(String... args) {
-		Game game = new Chess(10);
-		game.run();
-	}	
+  public static void main(String... args) {
+    Game game = new Chess(10);
+    game.run();
+  }
 }

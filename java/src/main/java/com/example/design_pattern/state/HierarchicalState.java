@@ -2,68 +2,64 @@ package com.example.design_pattern.state;
 
 public class HierarchicalState {
 
-	private static class LightSwitch {
+  private static class LightSwitch {
 
-		private State state = new OffState();
+    private State state = new OffState();
 
-		public void on() {
-			state.on(this);
-		}
+    public void on() {
+      state.on(this);
+    }
 
-		public void off() {
-			state.off(this);	
-		}
-	}
+    public void off() {
+      state.off(this);
+    }
+  }
 
-	private static interface State {
+  private static interface State {
 
-		void on(LightSwitch ls);
-		void off(LightSwitch ls);
-	
-	}
+    void on(LightSwitch ls);
 
-	private static class OnState implements State {
-	
-		OnState(){
-			System.out.println("Light turned on.");	
-		}
+    void off(LightSwitch ls);
+  }
 
-		@Override
-		public void on(LightSwitch ls) {
+  private static class OnState implements State {
 
-		}
-		@Override
-		public void off(LightSwitch ls) {
-			System.out.println("Switching light off...");
-			ls.state = new OffState();
-		}
-	}
+    OnState() {
+      System.out.println("Light turned on.");
+    }
 
-	private static class OffState implements State {
+    @Override
+    public void on(LightSwitch ls) {}
 
-		OffState(){
-			System.out.println("Light turned off.");	
-		}
+    @Override
+    public void off(LightSwitch ls) {
+      System.out.println("Switching light off...");
+      ls.state = new OffState();
+    }
+  }
 
-		@Override
-		public void on(LightSwitch ls) {
-			System.out.println("Switching light on...");
-			ls.state = new OnState();
-		}
+  private static class OffState implements State {
 
-		@Override
-		public void off(LightSwitch ls) {
-			
-		}
-	}
+    OffState() {
+      System.out.println("Light turned off.");
+    }
 
+    @Override
+    public void on(LightSwitch ls) {
+      System.out.println("Switching light on...");
+      ls.state = new OnState();
+    }
 
-	public static void main(String... args){
-		LightSwitch ls = new LightSwitch();
-		ls.on();
-		ls.on();
-		ls.off();
-		ls.off();
-		ls.on();
-	}
+    @Override
+    public void off(LightSwitch ls) {}
+  }
+
+  public static void main(String... args) {
+    LightSwitch ls = new LightSwitch();
+    ls.on();
+    ls.on();
+    ls.off();
+    ls.off();
+    ls.on();
+  }
 }

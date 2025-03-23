@@ -6,107 +6,101 @@ import java.util.*;
 
 public class 남극기지 {
 
-	private static class Point{
-		double y;
-		double x;
+  private static class Point {
+    double y;
+    double x;
 
-		Point(double y, double x){
-			this.y = y;
-			this.x = x;
-		}
-	}
+    Point(double y, double x) {
+      this.y = y;
+      this.x = x;
+    }
+  }
 
-	private static Point[] points;
-	private static double[][] distances;
+  private static Point[] points;
+  private static double[][] distances;
 
-	private static void calculateDistances(int n){
-		
-		distances = new double[n][n];
+  private static void calculateDistances(int n) {
 
-		for(int i= 0; i< n; i++){
-			for(int j=0; j<i; j++){
-				double tmp = Math.sqrt(Math.pow(points[i].x - points[j].x, 2)+Math.pow(points[i].y - points[j].y, 2));
-				distances[i][j] = tmp;
-				distances[j][i] = tmp;
-			}
-			distances[i][i] = -1;
-		}
-	}
+    distances = new double[n][n];
 
-	private static boolean decision(int n , double d){
-	
-		Queue<Integer> q = new LinkedList<>();
-		boolean[] visited = new boolean[n];
-		int seen = 0;
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < i; j++) {
+        double tmp =
+            Math.sqrt(
+                Math.pow(points[i].x - points[j].x, 2) + Math.pow(points[i].y - points[j].y, 2));
+        distances[i][j] = tmp;
+        distances[j][i] = tmp;
+      }
+      distances[i][i] = -1;
+    }
+  }
 
-		Arrays.fill(visited, false);
-		visited[0] = true;
-		q.offer(0);
+  private static boolean decision(int n, double d) {
 
-		while(!q.isEmpty()){
+    Queue<Integer> q = new LinkedList<>();
+    boolean[] visited = new boolean[n];
+    int seen = 0;
 
-			int cur = q.poll();
-			seen++;
+    Arrays.fill(visited, false);
+    visited[0] = true;
+    q.offer(0);
 
-			for(int i =0; i<n; i++){
-				if(!visited[i] && distances[cur][i] <= d){
-					visited[i] = true;
-					q.offer(i);
-				}
-			}
-		}
+    while (!q.isEmpty()) {
 
+      int cur = q.poll();
+      seen++;
 
-		return seen == n;
-	
-	}
+      for (int i = 0; i < n; i++) {
+        if (!visited[i] && distances[cur][i] <= d) {
+          visited[i] = true;
+          q.offer(i);
+        }
+      }
+    }
 
-	private static double optimize(int n){
-		
-		double lo = 0, hi = 987654321;
+    return seen == n;
+  }
 
-		for(int i =0; i<200; i++){
+  private static double optimize(int n) {
 
-			double mid = (lo+hi)/2;
+    double lo = 0, hi = 987654321;
 
-			if(decision(n, mid))
-				hi = mid;
-			else 
-				lo = mid;
+    for (int i = 0; i < 200; i++) {
 
-		}
+      double mid = (lo + hi) / 2;
 
+      if (decision(n, mid)) hi = mid;
+      else lo = mid;
+    }
 
-		return hi;
-	}
+    return hi;
+  }
 
-	public static void main(String... args) throws IOException{
+  public static void main(String... args) throws IOException {
 
-		Path p = Paths.get(System.getProperty("user.dir")+"/data/남극기지.txt");
-		BufferedReader rd = Files.newBufferedReader(p);
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/남극기지.txt");
+    BufferedReader rd = Files.newBufferedReader(p);
 
-		int testCases = Integer.parseInt(rd.readLine());
+    int testCases = Integer.parseInt(rd.readLine());
 
-		while(testCases > 0){
+    while (testCases > 0) {
 
-			int n = Integer.parseInt(rd.readLine());
-			
-			points = new Point[n];
-			for(int i =0; i<n; i++){
-				double[]  tmp = Arrays.stream(rd.readLine().split(" "))
-					.mapToDouble(Double::parseDouble)
-					.toArray();
-				points[i] = new Point(tmp[0], tmp[1]);
-			}
+      int n = Integer.parseInt(rd.readLine());
 
-			calculateDistances(n);
+      points = new Point[n];
+      for (int i = 0; i < n; i++) {
+        double[] tmp =
+            Arrays.stream(rd.readLine().split(" ")).mapToDouble(Double::parseDouble).toArray();
+        points[i] = new Point(tmp[0], tmp[1]);
+      }
 
-			System.out.printf("%.2f\n",optimize(n));
+      calculateDistances(n);
 
-			testCases--;
-		}
+      System.out.printf("%.2f\n", optimize(n));
 
-		return;
-	}
+      testCases--;
+    }
 
+    return;
+  }
 }

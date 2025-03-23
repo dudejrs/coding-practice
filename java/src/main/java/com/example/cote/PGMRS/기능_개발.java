@@ -1,78 +1,71 @@
 package com.example.cote.PGMRS;
 
-import java.nio.file.*;
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 
 public class 기능_개발 {
-	
-	private static final int MAX_TASK_LENGTH = 100;
-	private static final int MAX_PROGRESS = 100;
-	private static final int MAX_SPEED = 100;
 
-	private static int[] getInts(String s){
-		return Arrays.stream(s.split(" "))
-				.mapToInt(Integer::parseInt)
-				.toArray();
-	}
+  private static final int MAX_TASK_LENGTH = 100;
+  private static final int MAX_PROGRESS = 100;
+  private static final int MAX_SPEED = 100;
 
-	private static int[] solve(int[] progresses, int[] speeds){
+  private static int[] getInts(String s) {
+    return Arrays.stream(s.split(" ")).mapToInt(Integer::parseInt).toArray();
+  }
 
-		List<Integer> ret = new LinkedList<>();
-		Queue<Integer> queue = new LinkedList<>();
+  private static int[] solve(int[] progresses, int[] speeds) {
 
-		for(int i =0; i<progresses.length; i++){
-			queue.add(i);
-		}
+    List<Integer> ret = new LinkedList<>();
+    Queue<Integer> queue = new LinkedList<>();
 
-		int day = 0;
-		int count = 0;
+    for (int i = 0; i < progresses.length; i++) {
+      queue.add(i);
+    }
 
-		while(!queue.isEmpty()){
-			int i = queue.poll();
-			int completed_day = (int) Math.ceil((double) (100 - progresses[i]) / speeds[i]);
+    int day = 0;
+    int count = 0;
 
-			if( completed_day > day ){
-				if (day != 0){
-					ret.add(count);
-					count = 0;
-				}
-				day = completed_day;
-			}
+    while (!queue.isEmpty()) {
+      int i = queue.poll();
+      int completed_day = (int) Math.ceil((double) (100 - progresses[i]) / speeds[i]);
 
-			count ++;
-		}
+      if (completed_day > day) {
+        if (day != 0) {
+          ret.add(count);
+          count = 0;
+        }
+        day = completed_day;
+      }
 
-		ret.add(count);
+      count++;
+    }
 
+    ret.add(count);
 
-		return ret.stream()
-			.mapToInt(Integer::intValue)
-			.toArray();
-	}
+    return ret.stream().mapToInt(Integer::intValue).toArray();
+  }
 
-	public static void main(String... args) throws IOException{
+  public static void main(String... args) throws IOException {
 
-		Path p = Paths.get(System.getProperty("user.dir")+"/data/기능_개발.txt");
-		BufferedReader rd = Files.newBufferedReader(p);
+    Path p = Paths.get(System.getProperty("user.dir") + "/data/기능_개발.txt");
+    BufferedReader rd = Files.newBufferedReader(p);
 
-		int testCases = Integer.parseInt(rd.readLine());
+    int testCases = Integer.parseInt(rd.readLine());
 
-		while(testCases > 0){
-			int[] progresses = getInts(rd.readLine());
-			int[] speeds = getInts(rd.readLine());
+    while (testCases > 0) {
+      int[] progresses = getInts(rd.readLine());
+      int[] speeds = getInts(rd.readLine());
 
-			int[] answer = getInts(rd.readLine());
+      int[] answer = getInts(rd.readLine());
 
+      System.out.println("[Solved]");
+      System.out.println(Arrays.toString(solve(progresses, speeds)));
+      System.out.println("[Answer]");
+      System.out.println(Arrays.toString(answer));
+      System.out.println();
 
-			System.out.println("[Solved]");
-			System.out.println(Arrays.toString(solve(progresses, speeds)));
-			System.out.println("[Answer]");
-			System.out.println(Arrays.toString(answer));
-			System.out.println();
-
-			testCases--;
-		}
-
-	}
+      testCases--;
+    }
+  }
 }

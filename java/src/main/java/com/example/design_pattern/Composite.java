@@ -2,183 +2,179 @@ package com.example.design_pattern;
 
 import java.util.*;
 
-
 public class Composite {
 
-	private static class ArrayBasedAttribute {
-		
-		private static class Creature {
+  private static class ArrayBasedAttribute {
 
-			public enum Abilites {
-				STR, AGL, INTL, COUNT;
-			}
+    private static class Creature {
 
-			private EnumMap<Abilites, Integer> abilites;
+      public enum Abilites {
+        STR,
+        AGL,
+        INTL,
+        COUNT;
+      }
 
-			Creature(int strength, int agility, int intelligence){
-				abilites = new EnumMap<>(Abilites.class);
-				abilites.put(Abilites.STR, strength);
-				abilites.put(Abilites.AGL, agility);
-				abilites.put(Abilites.INTL, intelligence);
-			}
+      private EnumMap<Abilites, Integer> abilites;
 
-			public int sum() {
-				return abilites.values()
-						.stream()
-						.mapToInt(i->i)
-						.sum();
-			}
+      Creature(int strength, int agility, int intelligence) {
+        abilites = new EnumMap<>(Abilites.class);
+        abilites.put(Abilites.STR, strength);
+        abilites.put(Abilites.AGL, agility);
+        abilites.put(Abilites.INTL, intelligence);
+      }
 
-			public double average() {
-				return sum()/(abilites.size());
-			}
+      public int sum() {
+        return abilites.values().stream().mapToInt(i -> i).sum();
+      }
 
-			public int max() {
-				return abilites.values()
-							.stream()
-							.mapToInt(i->i)
-							.max()
-							.getAsInt();
-			}
-		}
+      public double average() {
+        return sum() / (abilites.size());
+      }
 
-		public static void main(){
-			Creature creature = new Creature(1,2,3);
-			System.out.println(creature.max());
-		}
-	}
+      public int max() {
+        return abilites.values().stream().mapToInt(i -> i).max().getAsInt();
+      }
+    }
 
-	private static class Composite_ {
+    public static void main() {
+      Creature creature = new Creature(1, 2, 3);
+      System.out.println(creature.max());
+    }
+  }
 
-		private static interface GraphicObject {
-			void draw();
-		}
+  private static class Composite_ {
 
-		private static class Circle implements GraphicObject{
-			@Override
-			public void draw(){
-				System.out.println("Circle");
-			}
-		}
+    private static interface GraphicObject {
+      void draw();
+    }
 
-		private static class Group implements GraphicObject{
-			private String name;
-			private List<GraphicObject> objects;
+    private static class Circle implements GraphicObject {
+      @Override
+      public void draw() {
+        System.out.println("Circle");
+      }
+    }
 
-			Group(String name){
-				this.name = name;
-				objects = new LinkedList<>();
-			}
+    private static class Group implements GraphicObject {
+      private String name;
+      private List<GraphicObject> objects;
 
-			public void add(GraphicObject object){
-				objects.add(object);
-			}
+      Group(String name) {
+        this.name = name;
+        objects = new LinkedList<>();
+      }
 
-			@Override
-			public void draw(){
-				System.out.printf("group <%s> contains : ",  name);
-				for (GraphicObject object :objects){
-					object.draw();
-				}
-			}
-		}
+      public void add(GraphicObject object) {
+        objects.add(object);
+      }
 
+      @Override
+      public void draw() {
+        System.out.printf("group <%s> contains : ", name);
+        for (GraphicObject object : objects) {
+          object.draw();
+        }
+      }
+    }
 
-		public static void main(){
-			Group root = new Group("root");
-			Group subGroup = new Group("sub");
-			Circle c1 = new Circle();
-			Circle c2 = new Circle();
+    public static void main() {
+      Group root = new Group("root");
+      Group subGroup = new Group("sub");
+      Circle c1 = new Circle();
+      Circle c2 = new Circle();
 
-			subGroup.add(c2);
-			root.add(c1);
-			root.add(subGroup);
-			root.draw();
-		}
-	}
+      subGroup.add(c2);
+      root.add(c1);
+      root.add(subGroup);
+      root.draw();
+    }
+  }
 
-	private static class TemplateBasedComposite {
+  private static class TemplateBasedComposite {
 
-		private static abstract class NeuronBase implements Iterable<Neuron>{
-			public <T extends NeuronBase> void connectTo(T other){
-				for(Neuron in : this){
-					for (Neuron out : other){
-						out.connect(in);
-					}
-				}
-			}
+    private abstract static class NeuronBase implements Iterable<Neuron> {
+      public <T extends NeuronBase> void connectTo(T other) {
+        for (Neuron in : this) {
+          for (Neuron out : other) {
+            out.connect(in);
+          }
+        }
+      }
 
-			public abstract Iterator<Neuron> iterator();
-		}
+      public abstract Iterator<Neuron> iterator();
+    }
 
-		private static class Neuron extends NeuronBase{
-			private static int number = 1;
-			private List<Neuron> in;
-			private List<Neuron> out;
-			private int id;
+    private static class Neuron extends NeuronBase {
+      private static int number = 1;
+      private List<Neuron> in;
+      private List<Neuron> out;
+      private int id;
 
-			private class SelfIterator implements Iterator<Neuron>{
-					private boolean hasNext = false;
-					@Override
-					public boolean hasNext(){
-						return hasNext;
-					}
+      private class SelfIterator implements Iterator<Neuron> {
+        private boolean hasNext = false;
 
-					@Override
-					public Neuron next(){
-						hasNext= false;
-						return Neuron.this;
-					}
+        @Override
+        public boolean hasNext() {
+          return hasNext;
+        }
 
-					@Override
-					public void remove(){}
-			}
+        @Override
+        public Neuron next() {
+          hasNext = false;
+          return Neuron.this;
+        }
 
-			Neuron(){
-				in = new LinkedList<>();
-				out = new LinkedList<>();
-				id = number++;
-			}
+        @Override
+        public void remove() {}
+      }
 
-			public void connect(Neuron other){
-				other.in.add(this);
-				out.add(other);
-			}
+      Neuron() {
+        in = new LinkedList<>();
+        out = new LinkedList<>();
+        id = number++;
+      }
 
-			@Override 
-			public Iterator<Neuron> iterator(){
-				return new SelfIterator();
-			}
-		}
+      public void connect(Neuron other) {
+        other.in.add(this);
+        out.add(other);
+      }
 
-		private static class NeuronLayer extends NeuronBase {
-			private List<Neuron> layer;
-			public NeuronLayer(int count){
-				this.layer = new LinkedList<>();
-				while(count > 0){
-					layer.add(new Neuron());
-					count --;
-				}
-			}
+      @Override
+      public Iterator<Neuron> iterator() {
+        return new SelfIterator();
+      }
+    }
 
-			@Override
-			public Iterator<Neuron> iterator() {
-				return layer.iterator();
-			}
-		}
+    private static class NeuronLayer extends NeuronBase {
+      private List<Neuron> layer;
 
-		public static void main(){
-			Neuron n1 = new Neuron();
-			Neuron n2 = new Neuron();
-			NeuronLayer layer = new NeuronLayer(5);
-			n1.connectTo(layer);
-			layer.connectTo(n2);
-		}
-	}
+      public NeuronLayer(int count) {
+        this.layer = new LinkedList<>();
+        while (count > 0) {
+          layer.add(new Neuron());
+          count--;
+        }
+      }
 
-	public static void main(String... args){
-		ArrayBasedAttribute.main();
-		Composite_.main();
-		TemplateBasedComposite.main();
-	}	
+      @Override
+      public Iterator<Neuron> iterator() {
+        return layer.iterator();
+      }
+    }
+
+    public static void main() {
+      Neuron n1 = new Neuron();
+      Neuron n2 = new Neuron();
+      NeuronLayer layer = new NeuronLayer(5);
+      n1.connectTo(layer);
+      layer.connectTo(n2);
+    }
+  }
+
+  public static void main(String... args) {
+    ArrayBasedAttribute.main();
+    Composite_.main();
+    TemplateBasedComposite.main();
+  }
 }

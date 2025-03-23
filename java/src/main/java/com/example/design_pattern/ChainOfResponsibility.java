@@ -1,191 +1,184 @@
 package com.example.design_pattern;
 
-
 public class ChainOfResponsibility {
 
-	private static class HandlerChain{
+  private static class HandlerChain {
 
-		private static class Request {
-			public String name;
+    private static class Request {
+      public String name;
 
-			Request(String name) {
-				this.name = name;
-			}
-		}
+      Request(String name) {
+        this.name = name;
+      }
+    }
 
-		private static interface Handler {
-			void setNext(Handler handler);
-			void handle(Request request);
-		}
+    private static interface Handler {
+      void setNext(Handler handler);
 
+      void handle(Request request);
+    }
 
-		private static class BaseHandler implements Handler {
+    private static class BaseHandler implements Handler {
 
-			private Handler next;
+      private Handler next;
 
-			@Override
-			public void setNext(Handler handler){
-				if(next == null){
-					next = handler;
-					return;
-				}
-				next.setNext(handler);
-			}
+      @Override
+      public void setNext(Handler handler) {
+        if (next == null) {
+          next = handler;
+          return;
+        }
+        next.setNext(handler);
+      }
 
-			@Override
-			public void handle(Request request){
-				if(next != null){
-					next.handle(request);
-				}else {
-					System.out.println("[BaseHandler] handling the "+ request.name);
-				}
-			}
+      @Override
+      public void handle(Request request) {
+        if (next != null) {
+          next.handle(request);
+        } else {
+          System.out.println("[BaseHandler] handling the " + request.name);
+        }
+      }
+    }
 
-		}
+    private static class ConcreteHandler extends BaseHandler {
 
-		private static class ConcreteHandler extends BaseHandler {
+      public String name;
 
-			public String name;
+      ConcreteHandler(String name) {
+        super();
+        this.name = name;
+      }
 
+      boolean canHandle(Request request) {
+        return true;
+      }
 
-			ConcreteHandler(String name){
-				super();
-				this.name = name;
-			}
+      @Override
+      public void handle(Request request) {
 
+        if (canHandle(request)) {
+          System.out.println(String.format("[%s] : handling the %s", name, request.name));
+        }
+        super.handle(request);
+      }
+    }
 
-			boolean canHandle(Request request){
-				return true;
-			}
+    public static void main() {
 
-			@Override
-			public void handle(Request request){
+      Request request = new Request("Request 1");
+      Handler handler1 = new ConcreteHandler("Handler 1");
+      Handler handler2 = new ConcreteHandler("Handler 2");
+      Handler handler3 = new ConcreteHandler("Handler 3");
 
-				if(canHandle(request)){
-					System.out.println(String.format("[%s] : handling the %s", name, request.name));
-				}
-				super.handle(request);
-			}
-		}
+      handler1.setNext(handler2);
+      handler1.setNext(handler3);
 
+      handler1.handle(request);
+    }
+  }
 
-		public static void main(){
+  private static class PointerChain {
 
-			Request request = new Request("Request 1");
-			Handler handler1 = new ConcreteHandler("Handler 1");
-			Handler handler2 = new ConcreteHandler("Handler 2");
-			Handler handler3 = new ConcreteHandler("Handler 3");
+    private static class Creature {
+      public String name;
+      public int attack;
+      public int defense;
 
-			handler1.setNext(handler2);
-			handler1.setNext(handler3);
+      Creature(String name, int attack, int defense) {
+        this.name = name;
+        this.attack = attack;
+        this.defense = defense;
+      }
 
-			handler1.handle(request);
-		}
-	}
+      @Override
+      public String toString() {
+        return String.format("[%s] attack-%d, defense-%d", name, attack, defense);
+      }
+    }
 
-	private static class PointerChain{
+    private static class CreatureModifier {
 
-		private static class Creature {
-			public String name;
-			public int attack;
-			public int defense;
+      protected Creature creature;
+      private CreatureModifier next;
 
-			Creature(String name, int attack, int defense){
-				this.name = name;
-				this.attack = attack;
-				this.defense = defense;
-			}
+      CreatureModifier(Creature creature) {
+        this.creature = creature;
+      }
 
-			@Override
-			public String toString(){
-				return String.format("[%s] attack-%d, defense-%d", name, attack, defense);
-			}
-		}
+      public void add(CreatureModifier modifier) {
+        if (next != null) {
+          next.add(modifier);
+          return;
+        }
+        this.next = modifier;
+      }
 
-		private static class CreatureModifier {
+      public void handle() {
+        if (next != null) {
+          next.handle();
+        }
+      }
+    }
 
-			protected Creature creature;
-			private CreatureModifier next;
+    private static class DoubleAttackModifier extends CreatureModifier {
 
-			CreatureModifier(Creature creature){
-				this.creature = creature;
-			}
+      DoubleAttackModifier(Creature creature) {
+        super(creature);
+      }
 
-			public void add(CreatureModifier modifier){
-				if(next != null){
-					next.add(modifier);
-					return;
-				}
-				this.next = modifier;
-			}
+      @Override
+      public void handle() {
+        super.creature.attack *= 2;
+        super.handle();
+      }
+    }
 
-			public void handle(){
-				if(next != null){
-					next.handle();
-				}
-			}
-		}
+    private static class IncreaseDefenseModifier extends CreatureModifier {
 
-		private static class DoubleAttackModifier extends CreatureModifier {
+      IncreaseDefenseModifier(Creature creature) {
+        super(creature);
+      }
 
-			DoubleAttackModifier(Creature creature){
-				super(creature);
-			}
+      @Override
+      public void handle() {
+        super.creature.defense += 1;
+        super.handle();
+      }
+    }
 
-			@Override 
-			public void handle(){
-				super.creature.attack *= 2;
-				super.handle();
-			}
-		}
+    private static class NoBonusModifier extends CreatureModifier {
+      NoBonusModifier(Creature creature) {
+        super(creature);
+      }
 
-		private static class IncreaseDefenseModifier extends CreatureModifier{
+      @Override
+      public void handle() {
+        // do nothing
+      }
+    }
 
-			IncreaseDefenseModifier(Creature creature){
-				super(creature);
-			}
+    public static void main() {
+      Creature goblin = new Creature("goblin", 1, 1);
+      CreatureModifier modifier1 = new DoubleAttackModifier(goblin);
+      CreatureModifier modifier2 = new DoubleAttackModifier(goblin);
+      CreatureModifier modifier3 = new IncreaseDefenseModifier(goblin);
+      CreatureModifier modifier4 = new NoBonusModifier(goblin);
+      CreatureModifier modifier5 = new IncreaseDefenseModifier(goblin);
 
-			@Override
-			public void handle(){
-				super.creature.defense += 1;
-				super.handle();
-			}
-		}
+      modifier1.add(modifier2);
+      modifier1.add(modifier3);
+      modifier1.add(modifier4);
+      modifier1.add(modifier5);
 
-		private static class NoBonusModifier extends CreatureModifier {
-			NoBonusModifier(Creature creature){
-				super(creature);
-			}
+      modifier1.handle();
 
-			@Override
-			public void handle(){
-				// do nothing
-			}
-		}
+      System.out.println(goblin);
+    }
+  }
 
-		public static void main(){
-			Creature goblin = new Creature("goblin", 1, 1);
-			CreatureModifier modifier1 = new DoubleAttackModifier(goblin);
-			CreatureModifier modifier2 = new DoubleAttackModifier(goblin);
-			CreatureModifier modifier3 = new IncreaseDefenseModifier(goblin);
-			CreatureModifier modifier4 = new NoBonusModifier(goblin);
-			CreatureModifier modifier5 = new IncreaseDefenseModifier(goblin);
-
-			modifier1.add(modifier2);
-			modifier1.add(modifier3);
-			modifier1.add(modifier4);
-			modifier1.add(modifier5);
-
-			modifier1.handle();
-
-			System.out.println(goblin);
-
-		}
-	}
-
-
-	public static void main(String... args){
-		HandlerChain.main();
-		PointerChain.main();
-	}
+  public static void main(String... args) {
+    HandlerChain.main();
+    PointerChain.main();
+  }
 }
