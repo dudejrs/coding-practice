@@ -1,7 +1,7 @@
-# Created by https://www.toptal.com/developers/gitignore/api/gradle,java
-# Edit at https://www.toptal.com/developers/gitignore?templates=gradle,java
+# Created by https://www.toptal.com/developers/gitignore/api/kotlin,gradle
+# Edit at https://www.toptal.com/developers/gitignore?templates=kotlin,gradle
 
-### Java ###
+### Kotlin ###
 # Compiled class file
 *.class
 
@@ -54,5 +54,8 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
-# End of https://www.toptal.com/developers/gitignore/api/gradle,java
+# End of https://www.toptal.com/developers/gitignore/api/kotlin,gradle
+
 gradle/
+META-INF/
+.kotlin

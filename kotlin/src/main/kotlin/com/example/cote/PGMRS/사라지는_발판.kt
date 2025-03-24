@@ -3,99 +3,109 @@ package com.example.cote.PGMRS
 import java.io.*
 import java.nio.file.*
 
-val MAX_BOARD_ROW = 5
-val MAX_BOARD_COL = 5
+object 사라지는_발판 {
 
-data class Result (
-	val win: Boolean,
-	val turns: Int
-	);
+    val MAX_BOARD_ROW = 5
+    val MAX_BOARD_COL = 5
 
-data class Coord (
-	val y: Int,
-	val x: Int
-	){
+    data class Result(val win: Boolean, val turns: Int)
 
-	fun move(m: Movement): Coord {
-		return Coord(y + m.dy, x + m.dx)
-	}
+    data class Coord(val y: Int, val x: Int) {
 
-	fun isValid(board: Array<Array<Int>>): Boolean {
-		return y >= 0 && y < board.size && x >= 0 && x < board[0].size
-	}
-}
+        fun move(m: Movement): Coord {
+            return Coord(y + m.dy, x + m.dx)
+        }
 
-enum class Movement (
-	val dy: Int,
-	val dx: Int
-	) {
-	UP(-1, 0), DOWN(1, 0), LEFT(0, -1), RIGHT(0, 1);
-}
+        fun isValid(board: Array<Array<Int>>): Boolean {
+            return y >= 0 && y < board.size && x >= 0 && x < board[0].size
+        }
+    }
 
-fun game(player: Coord, opponenet: Coord, board: Array<Array<Int>>): Result {
+    enum class Movement(val dy: Int, val dx: Int) {
+        UP(-1, 0),
+        DOWN(1, 0),
+        LEFT(0, -1),
+        RIGHT(0, 1)
+    }
 
-	if (board[player.y][player.x] == 0) {
-		return Result(false, 0)
-	}
+    fun game(
+        player: Coord,
+        opponenet: Coord,
+        board: Array<Array<Int>>
+    ): Result {
 
-	var playerWins = false
-	var loseTurns = 0
-	var winTurns = Int.MAX_VALUE
+        if (board[player.y][player.x] == 0) {
+            return Result(false, 0)
+        }
 
-	board[player.y][player.x] = 0;
+        var playerWins = false
+        var loseTurns = 0
+        var winTurns = Int.MAX_VALUE
 
-	for ( m in Movement.values()) {
-		val newCoord = player.move(m)
+        board[player.y][player.x] = 0
 
-		if (!newCoord.isValid(board)) {
-			continue
-		}
+        for (m in Movement.values()) {
+            val newCoord = player.move(m)
 
-		if (board[newCoord.y][newCoord.x] == 0) {
-			continue
-		}
+            if (!newCoord.isValid(board)) {
+                continue
+            }
 
-		val (opponenetWins, turns) = game(opponenet, newCoord, board)
+            if (board[newCoord.y][newCoord.x] == 0) {
+                continue
+            }
 
-		when {
-			!opponenetWins -> {
-				playerWins = true
-				winTurns = Math.min(winTurns, turns + 1)
-			}
-			!playerWins -> {
-				loseTurns = Math.max(loseTurns, turns + 1)
-			}
-		}
-	}
-	board[player.y][player.x] = 1;
+            val (opponenetWins, turns) = game(opponenet, newCoord, board)
 
-	return if (playerWins) Result(true, winTurns)
-		else Result(false, loseTurns)
-}
+            when {
+                !opponenetWins -> {
+                    playerWins = true
+                    winTurns = Math.min(winTurns, turns + 1)
+                }
+                !playerWins -> {
+                    loseTurns = Math.max(loseTurns, turns + 1)
+                }
+            }
+        }
+        board[player.y][player.x] = 1
 
-fun solve(board: Array<Array<Int>>, aLoc: List<Int>, bLoc: List<Int>): Int {
-	return game(Coord(aLoc[0], aLoc[1]),Coord(bLoc[0], bLoc[1]), board).turns
+        return if (playerWins) Result(true, winTurns)
+        else Result(false, loseTurns)
+    }
+
+    fun solve(board: Array<Array<Int>>, aLoc: List<Int>, bLoc: List<Int>): Int {
+        return game(Coord(aLoc[0], aLoc[1]), Coord(bLoc[0], bLoc[1]), board)
+            .turns
+    }
+
+    fun main() {
+        val reader =
+            with(
+                Paths.get(
+                    System.getProperty("user.dir") + "/data/사라지는_발판.txt")) {
+                    Files.newBufferedReader(this)
+                }
+
+        repeat(reader.readLine().toInt()) {
+            val nums = reader.readLine().split(" ").map(String::toInt)
+            val board =
+                List(nums[0]) {
+                        reader
+                            .readLine()
+                            .split(" ")
+                            .map(String::toInt)
+                            .toTypedArray()
+                    }
+                    .toTypedArray()
+            val aLoc = reader.readLine().split(" ").map(String::toInt)
+            val bLoc = reader.readLine().split(" ").map(String::toInt)
+            val answer = reader.readLine().toInt()
+
+            println("$answer ${solve(board, aLoc, bLoc)}")
+        }
+    }
 }
 
 fun main() {
-	val reader = with(Paths.get(System.getProperty("user.dir") + "/data/사라지는_발판.txt")) {
-		Files.newBufferedReader(this)
-	}
-
-	repeat (reader.readLine().toInt()) {
-		val nums = reader.readLine().split(" ")
-			.map(String::toInt)
-		val board = List(nums[0]) {
-			reader.readLine().split(" ")
-				.map(String::toInt)
-				.toTypedArray()
-		}.toTypedArray()
-		val aLoc = reader.readLine().split(" ")
-			.map(String::toInt)			
-		val bLoc = reader.readLine().split(" ")
-			.map(String::toInt)
-		val answer = reader.readLine().toInt()
-	
-		println("$answer ${solve(board, aLoc, bLoc)}")
-	}
+    사라지는_발판.main()
 }

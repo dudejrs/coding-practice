@@ -1,7 +1,5 @@
 # coding-practice
 
-
-
 ## 1. c++ 소스파일 실행 방법
 
 1. 각 소스파일 디렉터리로 이동
@@ -42,24 +40,3 @@
 		```sh
 		go run binaryTree.go
 		```
-
-## 6. kotlin 실행방법 
-
-1. kotlin 디렉토리로 이동 
-	```sh
-	cd ./kotlin
-	```
-
-2. 컴파일
-	```sh
-	kotlinc -d target -include-runtime algorithm/binaryTree.kt 
-	```
-
-3. 실행
-	```sh
-	kotlin -classpath target com.example.algorithm.BinaryTreeKt
-	```
-
-
-
-

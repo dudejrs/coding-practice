@@ -1,106 +1,112 @@
 package com.example.cote.GJM.하노이의_탑
 
-import java.util.*
-import java.nio.file.*
 import java.io.*
+import java.nio.file.*
+import java.util.*
 
-val MAX_DISCS = 12
+object 너비_우선_탐색 {
 
-fun getState(str : String): List<Int> {
-	val discs = str.trim().split(" ").filter(String::isNotEmpty)
+    val MAX_DISCS = 12
 
-	return if (discs.size > 0) discs.map(String::toInt) 
-	else listOf()
-}
+    fun getState(str: String): List<Int> {
+        val discs = str.trim().split(" ").filter(String::isNotEmpty)
 
-fun set(state: Int, col: Int, i: Int) : Int {
-	return (state and (3 shl (i * 2)).inv()) or (col shl (i * 2))
-}
+        return if (discs.size > 0) discs.map(String::toInt) else listOf()
+    }
 
-fun get(state: Int, i: Int) : Int {
-	return (state shr (i * 2)) and 3
-}
+    fun set(state: Int, col: Int, i: Int): Int {
+        return (state and (3 shl (i * 2)).inv()) or (col shl (i * 2))
+    }
 
-fun translate(state: List<List<Int>>): Int {
-	var ret = 0
+    fun get(state: Int, i: Int): Int {
+        return (state shr (i * 2)) and 3
+    }
 
-	for ((col, column) in state.withIndex()) {
-		for (i in column) {
-			ret = set(ret, col, i - 1)
-		}
-	}
+    fun translate(state: List<List<Int>>): Int {
+        var ret = 0
 
-	return ret
-}
+        for ((col, column) in state.withIndex()) {
+            for (i in column) {
+                ret = set(ret, col, i - 1)
+            }
+        }
 
-fun dfs(initial : Int, final_: Int, n: Int) : Int {
-	val cost = MutableList(1 shl MAX_DISCS * 2) {-1}
-	val queue = ArrayDeque<Int>()
+        return ret
+    }
 
-	queue.addLast(initial) 
-	cost[initial] = 0 
+    fun dfs(initial: Int, final_: Int, n: Int): Int {
+        val cost = MutableList(1 shl MAX_DISCS * 2) { -1 }
+        val queue = ArrayDeque<Int>()
 
-	while (!queue.isEmpty()) {
-		val cur = queue.removeFirst()
+        queue.addLast(initial)
+        cost[initial] = 0
 
-		val top = MutableList(4) {-1}
-		for (disc in n - 1 downTo 0) {
-			top[get(cur, disc)] = disc
-		}
+        while (!queue.isEmpty()) {
+            val cur = queue.removeFirst()
 
-		for (i in 0..3) {
-			if (top[i] == -1) {
-				continue
-			}
+            val top = MutableList(4) { -1 }
+            for (disc in n - 1 downTo 0) {
+                top[get(cur, disc)] = disc
+            }
 
-			for (j in 0..3) {
-				if (i == j || (top[j] != -1 && top[i] > top[j])) {
-					continue
-				}
+            for (i in 0..3) {
+                if (top[i] == -1) {
+                    continue
+                }
 
-				val next = set(cur, j, top[i])
+                for (j in 0..3) {
+                    if (i == j || (top[j] != -1 && top[i] > top[j])) {
+                        continue
+                    }
 
-				if (cost[next] != -1) {
-					continue
-				}
+                    val next = set(cur, j, top[i])
 
-				cost[next] = cost[cur] + 1
+                    if (cost[next] != -1) {
+                        continue
+                    }
 
-				if (next == final_) {
-					return cost[next]
-				}
+                    cost[next] = cost[cur] + 1
 
-				queue.addLast(next)
-			}
-		}
-	}
+                    if (next == final_) {
+                        return cost[next]
+                    }
 
-	return -1
-}
+                    queue.addLast(next)
+                }
+            }
+        }
 
-fun solve(n: Int, initial: List<List<Int>>, final_: List<List<Int>>): Int {
-	val begin = translate(initial)
-	val end = translate(final_)
+        return -1
+    }
 
-	return dfs(begin, end, n)
+    fun solve(n: Int, initial: List<List<Int>>, final_: List<List<Int>>): Int {
+        val begin = translate(initial)
+        val end = translate(final_)
+
+        return dfs(begin, end, n)
+    }
+
+    fun main() {
+        val reader =
+            with(
+                Paths.get(
+                    System.getProperty("user.dir") + "/data/하노이의_탑.txt")) {
+                    Files.newBufferedReader(this)
+                }
+
+        repeat(reader.readLine().toInt()) {
+            val n = reader.readLine().toInt()
+            val initial: List<List<Int>> =
+                List(4) { getState(reader.readLine()) }
+
+            val final: List<List<Int>> = List(4) { getState(reader.readLine()) }
+
+            val answer = reader.readLine().toInt()
+            println("$answer ${solve(n, initial, final)}")
+        }
+    }
 }
 
 fun main() {
-	val reader = with(Paths.get(System.getProperty("user.dir") + "/data/하노이의_탑.txt")) {
-		Files.newBufferedReader(this)
-	}
-
-	repeat(reader.readLine().toInt()) {
-		val n = reader.readLine().toInt()
-		val initial : List<List<Int>> = List(4) {
-			getState(reader.readLine())
-		}
-
-		val final : List<List<Int>> = List(4) {
-			getState(reader.readLine())
-		}
-
-		val answer = reader.readLine().toInt()
-		println("$answer ${solve(n, initial, final)}")
-	}
+    너비_우선_탐색.main()
 }

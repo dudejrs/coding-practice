@@ -1,93 +1,99 @@
 package com.example.cote.PGMRS
 
-import kotlin.random.*
 import kotlin.math.*
+import kotlin.random.*
 
-val N = 1000
+object 절단점_찾기 {
 
-val TEST_CASES = 10
-val random = Random(43)
+    val N = 1000
 
-fun reachable(ret: List<List<Int>>): Boolean {
-	val visited = MutableList(ret.size) {false}
+    val TEST_CASES = 10
+    val random = Random(43)
 
-	fun dfs(cur: Int) {
-		visited[cur] = true
+    fun reachable(ret: List<List<Int>>): Boolean {
+        val visited = MutableList(ret.size) { false }
 
-		for (next in ret[cur]) {
-			if (!visited[next]) {
-				dfs(next)
-			}
-		}
-	}
+        fun dfs(cur: Int) {
+            visited[cur] = true
 
-	dfs(0)
+            for (next in ret[cur]) {
+                if (!visited[next]) {
+                    dfs(next)
+                }
+            }
+        }
 
-	return visited.all{it}
-}
+        dfs(0)
 
-fun initialize(): List<List<Int>> {
-	var ret : List<List<Int>>
+        return visited.all { it }
+    }
 
-	while (true) {
-		val n = random.nextInt(N - 3) + 3
-		ret = List(n) { i ->
-			IntRange(0, n - 1)
-			.filter { j ->
-				j != i && random.nextFloat() < 0.0075
-			}
-		}
+    fun initialize(): List<List<Int>> {
+        var ret: List<List<Int>>
 
-		if (reachable(ret)) {
-			break
-		}
-	}
+        while (true) {
+            val n = random.nextInt(N - 3) + 3
+            ret =
+                List(n) { i ->
+                    IntRange(0, n - 1).filter { j ->
+                        j != i && random.nextFloat() < 0.0075
+                    }
+                }
 
-	return ret
-}
+            if (reachable(ret)) {
+                break
+            }
+        }
 
-fun solve(adj: List<List<Int>>): List<Int> {
-	val curVertexes = mutableListOf<Int>()
-	val discovered = MutableList(adj.size) {-1}
-	var counter = 0
+        return ret
+    }
 
-	fun find(cur: Int, isRoot: Boolean): Int {
-		discovered[cur] = counter++
+    fun solve(adj: List<List<Int>>): List<Int> {
+        val curVertexes = mutableListOf<Int>()
+        val discovered = MutableList(adj.size) { -1 }
+        var counter = 0
 
-		var children = 0 
-		var ret = discovered[cur]
+        fun find(cur: Int, isRoot: Boolean): Int {
+            discovered[cur] = counter++
 
-		for (next in adj[cur]) {
-			if (discovered[next] == -1) {
-				children++
+            var children = 0
+            var ret = discovered[cur]
 
-				val subtree = find(next, false) 
+            for (next in adj[cur]) {
+                if (discovered[next] == -1) {
+                    children++
 
-				if (!isRoot && subtree >= discovered[cur]) {
-					curVertexes.add(cur)
-				}
-				ret = min(ret, subtree)
+                    val subtree = find(next, false)
 
-			} else {
-				ret = min(ret, discovered[next])
-			}
-		}
+                    if (!isRoot && subtree >= discovered[cur]) {
+                        curVertexes.add(cur)
+                    }
+                    ret = min(ret, subtree)
+                } else {
+                    ret = min(ret, discovered[next])
+                }
+            }
 
-		if (isRoot && children > 1) {
-			curVertexes.add(cur)
-		}
+            if (isRoot && children > 1) {
+                curVertexes.add(cur)
+            }
 
-		return ret
-	}
+            return ret
+        }
 
-	find(0 , true)
+        find(0, true)
 
-	return curVertexes
+        return curVertexes
+    }
+
+    fun main() {
+        repeat(TEST_CASES) {
+            val adj = initialize()
+            println(solve(adj))
+        }
+    }
 }
 
 fun main() {
-	repeat(TEST_CASES) {
-		val adj = initialize()	
-		println(solve(adj))
-	}
+    절단점_찾기.main()
 }
