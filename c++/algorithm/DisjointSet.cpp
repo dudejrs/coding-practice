@@ -3,108 +3,91 @@
 
 using namespace std;
 
-
 template <typename T>
-struct Node{
-	Node* representitive;
-	T value;
-	Node* next;
+struct Node {
+  Node* representitive;
+  T value;
+  Node* next;
 
-	Node(T value) : representitive(this), value(value),next(nullptr) {
-	}
+  Node(T value) : representitive(this), value(value), next(nullptr) {}
 };
 
 template <typename T>
-struct DisjointSet{
-	
-	DisjointSet(int n){}
+struct DisjointSet {
+  DisjointSet(int n) {}
 
-	virtual int find(int a) = 0;	
-	virtual bool merge(int a, int b) = 0;
+  virtual int find(int a) = 0;
+  virtual bool merge(int a, int b) = 0;
 };
-
 
 template <typename T>
 struct LinkedListDisjointSet : DisjointSet<T> {
+  vector<Node<T>*> groups;
 
+  LinkedListDisjointSet(int n) : DisjointSet<T>(n), groups(0) {
+    for (int i = 0; i < n; i++) {
+      groups.push_back(new Node<T>(i));
+    }
+  }
 
-	vector<Node<T>*> groups;
+  void _changeRoot(int rootA, int rootB) {
+    if (find(rootA) != rootA || find(rootB) != rootB) return;
 
-	LinkedListDisjointSet(int n ) : DisjointSet<T>(n), groups(0){ 
-		
-		for(int i=0; i<n; i++){
-			groups.push_back(new Node<T>(i));
-		}
-	}
+    Node<T>* cur = groups[rootA];
+    while (cur->next != nullptr) {
+      cur = cur->next;
+    }
+    cur->next = groups[rootB];
+    cur = groups[rootB];
 
-	void _changeRoot(int rootA, int rootB ){
+    while (cur != nullptr) {
+      cur->representitive = groups[rootA];
+      cur = cur->next;
+    }
+  }
 
+  int find(int a) override {
+    Node<T>* r = groups[a]->representitive;
+    int i = 0;
+    for (auto group : groups) {
+      if (r == group) break;
+      i++;
+    }
 
-		if(find(rootA) !=  rootA || find(rootB) != rootB) return;
+    return i;
+  }
 
-		Node<T>* cur = groups[rootA];
-		while(cur->next != nullptr){
-			cur= cur->next;
-		}
-		cur->next = groups[rootB];
-		cur = groups[rootB];
+  bool merge(int a, int b) override {
+    int rootA = find(a);
+    int rootB = find(b);
 
-		while(cur != nullptr){
-			cur->representitive = groups[rootA];
-			cur = cur->next;
-		}
-	}
+    if (rootA == rootB) return false;
 
+    if (a < b)
+      _changeRoot(rootA, rootB);
+    else
+      _changeRoot(rootB, rootA);
 
-	int find(int a) override{
-
-		Node<T>* r = groups[a]->representitive;
-		int i =0;
-		for( auto group : groups){
-			if( r == group) break;
-			i++;
-		}
-
-		return i;
-	}
-
-
-	bool merge(int a, int b)override{
-
-		int rootA = find(a);
-		int rootB = find(b);
-
-		if (rootA == rootB) return false;
-
-		if(a<b)
-			_changeRoot(rootA, rootB);	
-		else 
-			_changeRoot(rootB,rootA);
-		
-
-		return true;
-	}
+    return true;
+  }
 };
 
-int main(void){
+int main(void) {
+  LinkedListDisjointSet<int> llds(10);
 
-	LinkedListDisjointSet<int> llds(10);
+  for (int i = 0; i < 10; i++) {
+    cout << llds.find(i) << " ";
+  }
+  cout << endl;
 
-	for(int i=0; i<10; i++){
-		cout <<  llds.find(i) << " ";
-	}
-	cout << endl;
+  llds.merge(0, 1);
+  llds.merge(1, 2);
+  llds.merge(8, 9);
 
-	llds.merge(0,1);
-	llds.merge(1,2);
-	llds.merge(8,9);
+  for (int i = 0; i < 10; i++) {
+    cout << llds.find(i) << " ";
+  }
+  cout << endl;
 
-	for(int i=0; i<10; i++){
-		cout <<  llds.find(i) << " ";
-	}
-	cout << endl;
-
-
-
-	return 0;
+  return 0;
 }

@@ -4,59 +4,51 @@ using namespace std;
 
 namespace simpleMVC {
 
+struct Student {
+  string name;
+  string id;
 
-	struct Student {
-		string name; 
-		string id;
+  Student(const string& name, const string& id) : name(name), id(id) {}
+};
 
-		Student(const string& name, const string& id) : name(name), id(id){}
-	};
+class StudentView {
+ public:
+  void print_student_details(string name, string id) {
+    cout << "[Student " + id + "] " + name << endl;
+  }
+};
 
-	class StudentView {
-		public :
-			void print_student_details(string name, string id){
-				cout << "[Student "+ id + "] " + name << endl;
-			}
-	};
+struct StudentController {
+  StudentController(Student student, StudentView view)
+      : student(student), view(view) {}
 
-	struct StudentController {
+  void updateView() { view.print_student_details(student.name, student.id); }
 
-		StudentController(Student student, StudentView view) : student(student), view(view){}
+  void set_student_name(string name) { student.name = name; }
 
-		void updateView(){
-			view.print_student_details(student.name, student.id);
-		}
+  string get_student_name() { return student.name; }
 
-		void set_student_name(string name){
-			student.name = name;
-		}
+ private:
+  Student student;
+  StudentView view;
+};
 
-		string get_student_name(){
-			return student.name;
-		}
+void main(void) {
+  cout << "[simpleMVC]" << endl;
 
-		private :
-			Student student;
-			StudentView view;
-	};
+  Student student("Tom", "s115");
+  StudentView view;
 
-	void main(void){
-		cout << "[simpleMVC]" << endl;
+  StudentController controller(student, view);
+  controller.updateView();
+  controller.set_student_name("Tam");
+  controller.updateView();
 
-		Student student("Tom", "s115");
-		StudentView view;
-
-		StudentController controller(student, view);
-		controller.updateView();
-		controller.set_student_name("Tam");
-		controller.updateView();
-
-
-		cout << endl;
-	}
+  cout << endl;
 }
+}  // namespace simpleMVC
 
-int main(void){
-	simpleMVC::main();
-	return 0;
+int main(void) {
+  simpleMVC::main();
+  return 0;
 }

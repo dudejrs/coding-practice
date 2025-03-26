@@ -1,352 +1,315 @@
+#include <boost/signals2/signal.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <boost/signals2/signal.hpp>
 
 using namespace std;
 
-
 namespace BasicMediator {
-	
-	struct Mediator;
 
-	struct ComponentA{
+struct Mediator;
 
-		ComponentA() : mediator(nullptr){}
+struct ComponentA {
+  ComponentA() : mediator(nullptr) {}
 
-		void opeationA();
-		void set_mediator(Mediator* mediator){
-			this->mediator = mediator;
-		}
-		
-		private : 
-			Mediator* mediator;
-	};
+  void opeationA();
+  void set_mediator(Mediator* mediator) { this->mediator = mediator; }
 
-	struct ComponentB{
+ private:
+  Mediator* mediator;
+};
 
-		ComponentB() : mediator(nullptr){}
+struct ComponentB {
+  ComponentB() : mediator(nullptr) {}
 
-		void opeationB();
+  void opeationB();
 
-		void set_mediator(Mediator* mediator){
-			this->mediator = mediator;
-		}
+  void set_mediator(Mediator* mediator) { this->mediator = mediator; }
 
-		private :
-			Mediator* mediator;
-	};
+ private:
+  Mediator* mediator;
+};
 
+struct Mediator {
+  ComponentA* a;
+  ComponentB* b;
 
-	struct Mediator{
+  Mediator(ComponentA* a, ComponentB* b) : a(a), b(b) {
+    a->set_mediator(this);
+    b->set_mediator(this);
+  }
 
-		ComponentA* a;
-		ComponentB* b;
+  void notify(const string& sender, const string& recevier) {
+    if (sender == "A")
+      cout << "Mediator react to A and  Send Message to " << recevier << endl;
 
-		Mediator(ComponentA* a, ComponentB* b) : a(a), b(b){
-			a->set_mediator(this);
-			b->set_mediator(this);
-		}
+    else if (sender == "B")
+      cout << "Mediator react to B and  Send Message to " << recevier << endl;
+  }
+};
 
-		void notify(const string& sender, const string& recevier){
-			if(sender == "A")
-				cout << "Mediator react to A and  Send Message to " << recevier << endl;
+void ComponentA::opeationA() {
+  cout << "A does operation" << endl;
+  mediator->notify("A", "B");
+};
+void ComponentB::opeationB() {
+  cout << "B does operation" << endl;
+  mediator->notify("B", "A");
+};
 
-			else if(sender == "B")
-				cout << "Mediator react to B and  Send Message to " << recevier << endl;
+void main(void) {
+  cout << "[BasicMediator]" << endl;
 
-			
-		}
-	};
+  ComponentA a;
+  ComponentB b;
+  Mediator m(&a, &b);
 
-	void ComponentA::opeationA(){
-		cout << "A does operation" << endl;
-		mediator->notify("A", "B");
-	};
-	void ComponentB::opeationB(){
-		cout << "B does operation" << endl;
-		mediator->notify("B", "A");
-	};
-
-	void main(void){
-		cout <<"[BasicMediator]" << endl;
-
-		ComponentA a;
-		ComponentB b;
-		Mediator m(&a, &b);
-
-		a.opeationA();
-		cout << endl;
-		b.opeationB();
-		cout << endl;
-
-	}
+  a.opeationA();
+  cout << endl;
+  b.opeationB();
+  cout << endl;
 }
+}  // namespace BasicMediator
 
 namespace CollectionMediator {
 
+struct ChatRoom;
 
-	struct ChatRoom;
+struct Person {
+  string name;
+  ChatRoom* room = nullptr;
+  vector<string> chat_log;
 
-	struct Person{
-		string name;
-		ChatRoom* room = nullptr;
-		vector<string> chat_log;
+  Person(const string& name) : name(name) {}
 
-		Person(const string& name) : name(name){}
+  void say(const string& message) const;
+  void pm(const string& who, const string& message) const;
+  void recieve(const string& origin, const string& message) {
+    string s{origin + " : " + message + "\t"};
+    cout << "[" << name << "'s session]  " << s << endl;
+    chat_log.emplace_back(s);
+  }
+};
 
-		void say(const string& message)const;
-		void pm(const string& who, const string& message) const;
-		void recieve(const string& origin, const string& message) {
-			string s{origin+" : "+message+"\t"};
-			cout << "[" << name<<"'s session]  " << s << endl;
-			chat_log.emplace_back(s);
-		}
-	};
+struct ChatRoom {
+  vector<Person*> people;
 
-	struct ChatRoom{
-		vector<Person*> people;
+  void join(Person* p) {
+    string join_msg = p->name + " joins the chat";
+    p->room = this;
+    broadcast("rooms", join_msg);
+    people.push_back(p);
+  }
 
-		void join(Person* p){
-			string join_msg = p->name + " joins the chat";
-			p->room = this;
-			broadcast("rooms", join_msg);
-			people.push_back(p);
-		}
+  void broadcast(const string& origin, const string& message) {
+    for (auto p : people)
+      if (p->name != origin) p->recieve(origin, message);
+  }
 
-		void broadcast(const string& origin, const string& message){
-			for(auto p : people)
-				if(p->name != origin)
-					p->recieve(origin, message);
-			
-		}
+  void message(const string& origin, const string& who, const string& message) {
+    auto target = find_if(begin(people), end(people),
+                          [&](const Person* p) { return p->name == who; });
 
-		void message(const string& origin, const string& who, const string& message){
-			auto target = find_if(begin(people), end(people),[&](const Person* p){
-				return p->name == who;
-			});
+    if (target != end(people)) (*target)->recieve(origin, message);
+  }
+};
 
-			if(target != end(people))
-				(*target)->recieve(origin, message);
-		}
-	};
-
-	void Person::say(const string& message)const {
-		room->broadcast(name, message);
-	}
-	void Person::pm(const string& who, const string& message) const {
-		room->message(name,who,message);
-	}
-
-
-
-	void main(void){
-
-		cout <<"[CollectionMediator]" << endl;
-
-		ChatRoom room;
-
-		Person john{"john"};
-		Person jane{"jane"};
-		Person simon{"simon"};
-
-		room.join(&john);
-		room.join(&jane);
-		john.say("hi jane");
-		room.join(&simon);
-		john.say("hi simon");
-		john.pm("simon", "glad  you could join us, simon!");
-
-
-
-		cout << endl;
-	}
+void Person::say(const string& message) const {
+  room->broadcast(name, message);
+}
+void Person::pm(const string& who, const string& message) const {
+  room->message(name, who, message);
 }
 
+void main(void) {
+  cout << "[CollectionMediator]" << endl;
+
+  ChatRoom room;
+
+  Person john{"john"};
+  Person jane{"jane"};
+  Person simon{"simon"};
+
+  room.join(&john);
+  room.join(&jane);
+  john.say("hi jane");
+  room.join(&simon);
+  john.say("hi simon");
+  john.pm("simon", "glad  you could join us, simon!");
+
+  cout << endl;
+}
+}  // namespace CollectionMediator
 
 namespace MediatorWithHierahicalComponent {
 
-	class BaseComponent;
-	class Mediator{
-		public :
-			virtual void notify(BaseComponent* sender, const string& event) const = 0;
-	};
+class BaseComponent;
+class Mediator {
+ public:
+  virtual void notify(BaseComponent* sender, const string& event) const = 0;
+};
 
-	class BaseComponent {
-		protected : 
-			Mediator* mediator;
+class BaseComponent {
+ protected:
+  Mediator* mediator;
 
-		public :
-			string name;
-			BaseComponent() : mediator(nullptr){}
-			BaseComponent(const string& name) : mediator(nullptr), name(name){}
-			BaseComponent(const string& name, Mediator* mediator) :name(name), mediator(mediator){}
-			
-			virtual void set_mediator(Mediator* mediator){
-				this->mediator = mediator;
-			}
-	};
+ public:
+  string name;
+  BaseComponent() : mediator(nullptr) {}
+  BaseComponent(const string& name) : mediator(nullptr), name(name) {}
+  BaseComponent(const string& name, Mediator* mediator)
+      : name(name), mediator(mediator) {}
 
-	struct ComponentA : public BaseComponent{
+  virtual void set_mediator(Mediator* mediator) { this->mediator = mediator; }
+};
 
-		explicit ComponentA(const string& name) : BaseComponent(name){}
+struct ComponentA : public BaseComponent {
+  explicit ComponentA(const string& name) : BaseComponent(name) {}
 
-		void doA(){
-			cout << "Component " <<  name << " does A" << endl;
-			mediator->notify(this, "A");
-		}
+  void doA() {
+    cout << "Component " << name << " does A" << endl;
+    mediator->notify(this, "A");
+  }
 
-		void doB(){
-			cout << "Component " <<  name << " does B" << endl;
-			mediator->notify(this, "B");
-		}
+  void doB() {
+    cout << "Component " << name << " does B" << endl;
+    mediator->notify(this, "B");
+  }
+};
 
-	};
+struct ComponentB : public BaseComponent {
+  explicit ComponentB(const string& name) : BaseComponent(name) {}
 
-	struct ComponentB : public BaseComponent{
+  void doC() {
+    cout << "Component " << name << " does C" << endl;
+    mediator->notify(this, "C");
+  }
 
+  void doD() {
+    cout << "Component " << name << " does D" << endl;
+    mediator->notify(this, "D");
+  }
+};
 
-		explicit ComponentB(const string& name) : BaseComponent(name){}
+class ConcreteMediator : public Mediator {
+  ComponentA* a;
+  ComponentB* b;
 
-		void doC(){
-			cout << "Component " <<  name << " does C" << endl;
-			mediator->notify(this, "C");
-		}
+ public:
+  explicit ConcreteMediator(ComponentA* a, ComponentB* b) : a(a), b(b) {
+    this->a->set_mediator(this);
+    this->b->set_mediator(this);
+  }
 
-		void doD(){
-			cout << "Component " <<  name << " does D" << endl;
-			mediator->notify(this, "D");
-		}
+  void notify(BaseComponent* sender, const string& event) const override {
+    if (auto child = dynamic_cast<ComponentA*>(sender))
+      if (event == "A") {
+        cout << "Mediator reacts " << child->name
+             << " on A and trigger following operations:" << endl;
+        this->b->doC();
+      }
+    if (auto child = dynamic_cast<ComponentB*>(sender))
+      if (event == "D") {
+        cout << "Mediator reacts " << child->name
+             << " on B and trigger following operations:" << endl;
+        this->a->doB();
+      }
+  }
+};
 
-	};
+void main(void) {
+  cout << "[MediatorWithHierahicalComponent]" << endl;
+  ComponentA* a = new ComponentA("<a1>");
+  ComponentB* b = new ComponentB("<b1>");
 
-	class ConcreteMediator : public Mediator {
-		ComponentA* a;
-		ComponentB* b;
+  ConcreteMediator* mediator = new ConcreteMediator(a, b);
 
-		public :
+  a->doA();
+  cout << endl;
+  b->doD();
 
-			explicit ConcreteMediator(ComponentA* a, ComponentB* b) : a(a), b(b){
-				this->a->set_mediator(this);
-				this->b->set_mediator(this);
-			}
-
-
-			void notify(BaseComponent* sender, const string& event)const override{
-
-				if(auto child = dynamic_cast<ComponentA*>(sender))
-					if(event == "A"){
-						cout << "Mediator reacts "<<child->name <<" on A and trigger following operations:" << endl;
-						this->b->doC();
-					}
-				if(auto child =dynamic_cast<ComponentB*>(sender))
-					if( event == "D"){
-						cout << "Mediator reacts "<<child->name << " on B and trigger following operations:" << endl;
-						this->a->doB();
-					}
-			}
-	};
-
-
-	void main(void){
-		cout <<"[MediatorWithHierahicalComponent]" << endl;
-		ComponentA* a = new ComponentA("<a1>");
-		ComponentB* b = new ComponentB("<b1>");
-
-		ConcreteMediator* mediator = new ConcreteMediator(a,b);
-
-		a->doA();
-		cout << endl;
-		b->doD();
-
-		delete a;
-		delete b;
-		delete mediator;
-
-	}
+  delete a;
+  delete b;
+  delete mediator;
 }
-
-
+}  // namespace MediatorWithHierahicalComponent
 
 namespace EventHandlerMediator {
 
-	template<typename P>
-	using signal = boost::signals2::signal<P>;
+template <typename P>
+using signal = boost::signals2::signal<P>;
 
-	struct EventData{
-		virtual ~EventData() = default;
-		virtual void print() const = 0;
-	};
-
-	struct PlayerScoreData : EventData {
-		string player_name;
-		int goals_scored;
-
-		PlayerScoreData(const string& player_name, const int goals_scored) :
-			player_name(player_name), goals_scored(goals_scored){}
-
-		void print() const override{
-			cout << player_name << "has scored (thier "<< goals_scored <<" goal."<< endl;
-		}
-	};
-
-	struct Game {
-		signal<void(EventData*)> events;
-	};
-
-	struct Player {
-		string name;
-		int goals_scored = 0;
-		Game& game;
-
-		Player(const string& name, Game& game) : name(name), game(game){}
-
-		void score() {
-			goals_scored += 1;
-			PlayerScoreData ps(name, goals_scored);
-			game.events(&ps);
-			
-		};
-	};
-
-	struct Coach{
-		Game& game;
-		explicit Coach(Game& game) : game(game){
-			game.events.connect([](EventData* e){
-					PlayerScoreData* ps = dynamic_cast<PlayerScoreData*>(e);
-					if(ps && ps->goals_scored < 3)
-						cout << "coach says : well done. " <<ps->player_name <<"!" << endl;
-			});
-		}
-	};
-
-
-	void main(void){
-		cout <<"[EventHandlerMediator]" << endl;
-
-		Game game;
-		Player player("James", game);
-		Coach coach{game};
-
-		player.score();
-		player.score();
-		player.score();
-
-		cout << endl;
-
-	}
+struct EventData {
+  virtual ~EventData() = default;
+  virtual void print() const = 0;
 };
 
+struct PlayerScoreData : EventData {
+  string player_name;
+  int goals_scored;
 
-int main(void){
-	BasicMediator::main();
-	cout << endl;
-	CollectionMediator::main();
-	cout << endl;
-	MediatorWithHierahicalComponent::main();
-	cout << endl;
-	EventHandlerMediator::main();
-	cout << endl;
+  PlayerScoreData(const string& player_name, const int goals_scored)
+      : player_name(player_name), goals_scored(goals_scored) {}
 
-	return 0;
+  void print() const override {
+    cout << player_name << "has scored (thier " << goals_scored << " goal."
+         << endl;
+  }
+};
+
+struct Game {
+  signal<void(EventData*)> events;
+};
+
+struct Player {
+  string name;
+  int goals_scored = 0;
+  Game& game;
+
+  Player(const string& name, Game& game) : name(name), game(game) {}
+
+  void score() {
+    goals_scored += 1;
+    PlayerScoreData ps(name, goals_scored);
+    game.events(&ps);
+  };
+};
+
+struct Coach {
+  Game& game;
+  explicit Coach(Game& game) : game(game) {
+    game.events.connect([](EventData* e) {
+      PlayerScoreData* ps = dynamic_cast<PlayerScoreData*>(e);
+      if (ps && ps->goals_scored < 3)
+        cout << "coach says : well done. " << ps->player_name << "!" << endl;
+    });
+  }
+};
+
+void main(void) {
+  cout << "[EventHandlerMediator]" << endl;
+
+  Game game;
+  Player player("James", game);
+  Coach coach{game};
+
+  player.score();
+  player.score();
+  player.score();
+
+  cout << endl;
+}
+};  // namespace EventHandlerMediator
+
+int main(void) {
+  BasicMediator::main();
+  cout << endl;
+  CollectionMediator::main();
+  cout << endl;
+  MediatorWithHierahicalComponent::main();
+  cout << endl;
+  EventHandlerMediator::main();
+  cout << endl;
+
+  return 0;
 }

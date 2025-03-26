@@ -1,5 +1,5 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -10,113 +10,101 @@
 
 using namespace std;
 
-int n,k,m,r;
+int n, k, m, r;
 int* prerequisite;
 int* classes;
-int cache[MAXM][1<<MAXN];
+int cache[MAXM][1 << MAXN];
 
+vector<int> split(const string& s) {
+  vector<int> ret;
+  stringstream ss(s);
+  string buf;
 
-vector<int> split(const string& s){
-	vector<int> ret;
-	stringstream ss(s);
-	string buf;
+  while (getline(ss, buf, ' ')) {
+    ret.push_back(stoi(buf));
+  }
 
-
-	while(getline(ss,buf,' ')){
-		ret.push_back(stoi(buf));
-	}
-
-
-	return ret;
+  return ret;
 }
 
+int graduate(int semester, int taken) {
+  // cout << semester << "," << taken << endl;
+  if (__builtin_popcount(taken) >= k) return 0;
+  if (semester == m) return INF;
 
-int graduate(int semester, int taken){
-	// cout << semester << "," << taken << endl;
-	if(__builtin_popcount(taken) >= k ) return 0;
-	if(semester == m) return INF;
+  int& ret = cache[semester][taken];
+  if (ret != -1) return ret;
+  ret = INF;
 
-	int& ret = cache[semester][taken];
-	if(ret != -1) return ret;
-	ret = INF;
+  int canTake = (classes[semester] & ~taken);
 
-	int canTake = (classes[semester] & ~taken);
+  for (int i = 0; i < n; i++)
+    if ((canTake & (1 << i) && (prerequisite[i] & taken) != prerequisite[i]))
+      canTake &= ~(1 << i);
 
-	for(int i=0; i< n; i++)
-		if( (canTake&(1<<i) && (prerequisite[i] & taken) != prerequisite[i]))
-			canTake &= ~(1<<i);
-
-	for(int set= canTake; set > 0; set = (canTake & (set-1))){
-		if(__builtin_popcount(taken) > r) continue;
-		ret = min(ret, graduate(semester+1, taken | set)+1);
-	}
-	ret = min(ret, graduate(semester+1, taken));
-	return ret;
+  for (int set = canTake; set > 0; set = (canTake & (set - 1))) {
+    if (__builtin_popcount(taken) > r) continue;
+    ret = min(ret, graduate(semester + 1, taken | set) + 1);
+  }
+  ret = min(ret, graduate(semester + 1, taken));
+  return ret;
 }
 
-string solve(){
-	memset(cache, -1, sizeof(cache));
-	int ret = graduate(0,0);
-	if(ret > 0 && ret <= m) return to_string(ret);
+string solve() {
+  memset(cache, -1, sizeof(cache));
+  int ret = graduate(0, 0);
+  if (ret > 0 && ret <= m) return to_string(ret);
 
-	return "IMPOSSIBLE";
+  return "IMPOSSIBLE";
 }
 
+int main(void) {
+  fstream fd("data/졸업학기.txt");
+  string buf;
 
-int main(void){
+  getline(fd, buf);
+  int test_cases = stoi(buf);
 
-	fstream fd("data/졸업학기.txt");
-	string buf;
+  while (test_cases > 0) {
+    getline(fd, buf);
+    vector<int> result = split(buf);
 
-	getline(fd,buf);
-	int test_cases = stoi(buf);
+    n = result[0];
+    k = result[1];
+    m = result[2];
+    r = result[3];
+    prerequisite = new int[n];
+    classes = new int[m];
 
-	while(test_cases > 0){
+    for (int i = 0; i < n; i++) {
+      getline(fd, buf);
+      vector<int> tmp = split(buf);
 
-		getline(fd, buf);
-		vector<int> result = split(buf);
+      int cur = 0;
+      for (int j = 1; j <= tmp[0]; j++) {
+        cur |= (1 << tmp[j]);
+      }
 
+      prerequisite[i] = cur;
+    }
 
-		n = result[0];
-		k = result[1];
-		m = result[2];
-		r = result[3];
-		prerequisite = new int[n];
-		classes = new int[m];
+    for (int i = 0; i < m; i++) {
+      getline(fd, buf);
+      vector<int> tmp = split(buf);
+      int cur = 0;
+      for (int j = 1; j <= tmp[0]; j++) {
+        cur |= (1 << tmp[j]);
+      }
+      classes[i] = cur;
+    }
 
+    cout << solve() << endl;
 
-		for(int i=0; i<n; i++){
-			getline(fd,buf);
-			vector<int> tmp = split(buf);
+    delete[] prerequisite;
+    delete[] classes;
 
-			int cur = 0;
-			for(int j=1; j<=tmp[0]; j++){
-				cur |= (1 << tmp[j]);
-			}
+    test_cases--;
+  }
 
-			prerequisite[i] = cur;
-		}
-
-		for(int i=0; i<m; i++){
-			getline(fd,buf);
-			vector<int> tmp = split(buf);
-			int cur = 0;
-			for(int j=1; j<=tmp[0]; j++){
-				cur |= (1 <<tmp[j]);
-			}
-			classes[i] = cur;
-		}
-		
-		cout << solve() << endl;
-
-		delete[] prerequisite;
-		delete[] classes;
-
-		test_cases--;
-	}
-
-
-
-
-	return 0;
+  return 0;
 }

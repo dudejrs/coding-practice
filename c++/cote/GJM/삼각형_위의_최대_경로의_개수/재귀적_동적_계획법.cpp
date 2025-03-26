@@ -10,68 +10,70 @@ using namespace std;
 int cache[MAX_N][MAX_N];
 int count_cache[MAX_N][MAX_N];
 
-int** initialize(default_random_engine& gen,int n){
+int** initialize(default_random_engine& gen, int n) {
+  uniform_int_distribution<int> dis(1, MAX_VALUE);
 
-	uniform_int_distribution<int> dis(1,MAX_VALUE);
-	
-	int**  map = new int*[n];
-	for (int i = 0; i < n; i++) { map[i] =  new int[n];}
+  int** map = new int*[n];
+  for (int i = 0; i < n; i++) {
+    map[i] = new int[n];
+  }
 
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			map[i][j] = dis(gen);
-	}} 
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      map[i][j] = dis(gen);
+    }
+  }
 
-	return map;
+  return map;
 }
 
-int maximum(int y, int x, int** map, int n){
-	int& ret = cache[y][x];
-	if (ret != -1) return ret;
-	if (y == n-1) return map[y][x];	
-	return ret = max(maximum(y+1,x,map,n), maximum(y+1,x+1,map,n)) + map[y][x];
+int maximum(int y, int x, int** map, int n) {
+  int& ret = cache[y][x];
+  if (ret != -1) return ret;
+  if (y == n - 1) return map[y][x];
+  return ret = max(maximum(y + 1, x, map, n), maximum(y + 1, x + 1, map, n)) +
+               map[y][x];
 }
 
-int count (int y, int x, int** map, int n){
-	if (y == n-1) return 1;
+int count(int y, int x, int** map, int n) {
+  if (y == n - 1) return 1;
 
-	int& ret = count_cache[y][x];
+  int& ret = count_cache[y][x];
 
-	if (ret != -1) {
-		return ret;
-	}
+  if (ret != -1) {
+    return ret;
+  }
 
-	int left = maximum(y + 1, x, map,n);
-	int right = maximum(y + 1, x + 1, map, n);
-	
-	if (left > right){
-		return ret = count(y + 1, x, map, n);
-	} else if (left < right){
-		return ret = count(y + 1, x + 1, map, n);
-	}
-	return ret = count(y+1, x, map, n)+ count(y+1, x+1, map, n);
+  int left = maximum(y + 1, x, map, n);
+  int right = maximum(y + 1, x + 1, map, n);
+
+  if (left > right) {
+    return ret = count(y + 1, x, map, n);
+  } else if (left < right) {
+    return ret = count(y + 1, x + 1, map, n);
+  }
+  return ret = count(y + 1, x, map, n) + count(y + 1, x + 1, map, n);
 }
 
-int solve(int** map, int n){
-	memset(cache,-1,sizeof(cache));
-	memset(count_cache, -1, sizeof(count_cache));
-	return count(0,0,map,n);
+int solve(int** map, int n) {
+  memset(cache, -1, sizeof(cache));
+  memset(count_cache, -1, sizeof(count_cache));
+  return count(0, 0, map, n);
 }
 
-int main(void){
-	default_random_engine gen(43);
-	for (int i = 0; i < TEST_CASE; i++) {
+int main(void) {
+  default_random_engine gen(43);
+  for (int i = 0; i < TEST_CASE; i++) {
+    int n = gen() % MAX_N;
+    int** map = initialize(gen, n);
 
-		int n = gen() % MAX_N;
-		int** map = initialize(gen,n);
+    cout << solve(map, n) << endl;
 
-		cout << solve(map,n) << endl;
+    for (int i = 0; i < n; i++) {
+      delete[] map[i];
+    }
+    delete[] map;
+  }
 
-		for (int i =0; i<n; i++) {
-			delete[] map[i];
-		}
-		delete[] map;
-	}
-
-	return 0;
+  return 0;
 }

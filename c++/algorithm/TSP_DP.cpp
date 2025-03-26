@@ -1,87 +1,84 @@
-#include <iostream>
-#include <random>
-#include <limits>
 #include <cmath>
-#include <vector>
 #include <iomanip>
+#include <iostream>
+#include <limits>
+#include <random>
+#include <vector>
 #define N 10
 #define MAX 987654321
 
 using namespace std;
 
-double cache[N][1<<N];
+double cache[N][1 << N];
 
 double** initialize() {
-	default_random_engine gen(43);
-	normal_distribution<double> dis(N, 3*N);
+  default_random_engine gen(43);
+  normal_distribution<double> dis(N, 3 * N);
 
-	double** w = new double*[N];
-	for(int i=0;i<N;i++){
-		w[i] = new double[N];
-	}
+  double** w = new double*[N];
+  for (int i = 0; i < N; i++) {
+    w[i] = new double[N];
+  }
 
-	for (int i=0; i<N;i++){
-		w[i][i] = MAX; 
-		for(int j=0; j<i; j++){
-			double tmp = abs(dis(gen));
-			if((int)floor(tmp) % 37 <1 )tmp =MAX;
-			
-			w[i][j] = tmp;
-			w[j][i] = tmp;
-		}
-	}
+  for (int i = 0; i < N; i++) {
+    w[i][i] = MAX;
+    for (int j = 0; j < i; j++) {
+      double tmp = abs(dis(gen));
+      if ((int)floor(tmp) % 37 < 1) tmp = MAX;
 
-	memset(cache, -1, sizeof(cache));
+      w[i][j] = tmp;
+      w[j][i] = tmp;
+    }
+  }
 
-	return w;
+  memset(cache, -1, sizeof(cache));
+
+  return w;
 }
 
-double shortest_path( int here, int visited, double** w){
-	if(visited == (1 << N) -1)
-		return w[here][0];
+double shortest_path(int here, int visited, double** w) {
+  if (visited == (1 << N) - 1) return w[here][0];
 
-	double& ret = cache[here][visited];
-	
-	if(ret >= 0) return ret;
+  double& ret = cache[here][visited];
 
-	ret= MAX;
+  if (ret >= 0) return ret;
 
-	for(int i=0; i<N; i++){
-		if(visited & (1 << i)) continue;
-		ret = min(ret, shortest_path(i, visited + (1<<i), w)+ w[here][i]);
-	}
+  ret = MAX;
 
-	return ret;
+  for (int i = 0; i < N; i++) {
+    if (visited & (1 << i)) continue;
+    ret = min(ret, shortest_path(i, visited + (1 << i), w) + w[here][i]);
+  }
+
+  return ret;
 }
 
-void print_result (double** w, double ret){
-	for(int i=0; i<N; i++){
-		for(int j=0; j<N; j++){
-			if(w[i][j] == MAX){
-				cout << setw(5) << "-";
-				cout << " ";
-				continue;
-			}
-			cout <<fixed<<setw(5) << setprecision(2)<< w[i][j];
-			cout << " ";
-		}
-		cout << endl;
-	}
+void print_result(double** w, double ret) {
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++) {
+      if (w[i][j] == MAX) {
+        cout << setw(5) << "-";
+        cout << " ";
+        continue;
+      }
+      cout << fixed << setw(5) << setprecision(2) << w[i][j];
+      cout << " ";
+    }
+    cout << endl;
+  }
 
-	cout << "result :  "<< fixed<< setprecision(2) << ret << endl;
+  cout << "result :  " << fixed << setprecision(2) << ret << endl;
 }
 
-int main(void){
+int main(void) {
+  vector<int> path;
+  double** w = initialize();
+  int visited = 1;
+  path.push_back(0);
 
-	vector<int> path;
-	double** w = initialize();
-	int visited = 1;
-	path.push_back(0);
+  double ret = shortest_path(0, visited, w);
 
-	double ret = shortest_path(0, visited, w);
+  print_result(w, ret);
 
-	print_result(w,ret);
-
-
-	return 0;
+  return 0;
 }
