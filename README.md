@@ -1,22 +1,3 @@
-# coding-practice
-
-## 1. c++ 소스파일 실행 방법
-
-1. 각 소스파일 디렉터리로 이동
-	```sh
-	## cd [project rooot]/c++/[ToSrcDirectory]
-	cd ./c++/algorithm
-	```
-1. 컴파일
-	```sh
-	## make [소스파일 이름]
-	make binaryTree
-	```
-1. 실행
-	```sh
-	## ./[소스파일 이름].out
-	./binaryTree.out
-	```
 
 ## 5. go 실행방법
 
