@@ -1,36 +1,39 @@
 from typing import List
-import itertools 
+import itertools
 import random
 
 TEST_CASES = 10
 N = 5
 
-def solve(nums: List[int]) -> List[List[int]] :
-	ret = []
-	prev = []
 
-	def dfs(elements : List[int]) : 
+def solve(nums: List[int]) -> List[List[int]]:
+    ret = []
+    prev = []
 
-		if len(elements) == 0 :
-			ret.append(prev[:])
+    def dfs(elements: List[int]):
 
-		for e in elements :
-			next = elements[:]
-			next.remove(e)
+        if len(elements) == 0:
+            ret.append(prev[:])
 
-			prev.append(e)
-			dfs(next)
-			prev.pop()
+        for e in elements:
+            next = elements[:]
+            next.remove(e)
 
-	dfs(nums)
-	return ret
+            prev.append(e)
+            dfs(next)
+            prev.pop()
 
-def solve2(nums: List[int]) -> List[List[int]] :
-	return list(itertools.permutations(nums))
+    dfs(nums)
+    return ret
 
-if __name__ == "__main__" :
-	random.seed(43)
 
-	for _ in range(TEST_CASES) :
-		nums = random.sample(range(1, 3*N), N)
-		print(solve(nums), solve2(nums))
+def solve2(nums: List[int]) -> List[List[int]]:
+    return list(itertools.permutations(nums))
+
+
+if __name__ == "__main__":
+    random.seed(43)
+
+    for _ in range(TEST_CASES):
+        nums = random.sample(range(1, 3 * N), N)
+        print(solve(nums), solve2(nums))

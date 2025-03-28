@@ -3,38 +3,39 @@ import random
 TEST_CASES = 10
 
 
-def balance(amount, duration, rates, monthlyAmount) :
-	balance = amount
+def balance(amount, duration, rates, monthlyAmount):
+    balance = amount
 
-	for _ in range(duration) :
-		balance *= (1.0 + (rates/12.0)/100.0) 
-		balance -= monthlyAmount
+    for _ in range(duration):
+        balance *= 1.0 + (rates / 12.0) / 100.0
+        balance -= monthlyAmount
 
-	return balance
+    return balance
 
 
-def payment(amount, duration, rates) :
-	lo = 0
-	hi = amount 
+def payment(amount, duration, rates):
+    lo = 0
+    hi = amount
 
-	for _ in range(100): 
-		mid = (lo + hi)/2.0
-		if  balance(amount, duration, rates, mid) > 0 :
-			lo = mid 
-		else :
-			hi = mid
+    for _ in range(100):
+        mid = (lo + hi) / 2.0
+        if balance(amount, duration, rates, mid) > 0:
+            lo = mid
+        else:
+            hi = mid
 
-	return hi
+    return hi
 
-if __name__ == "__main__" :
-	random.seed(43)
 
-	for _ in range(TEST_CASES) :
+if __name__ == "__main__":
+    random.seed(43)
 
-		amount = random.randrange(10000)
-		duration = random.randint(1,120)
-		rates = random.random() * 5 + 2
+    for _ in range(TEST_CASES):
 
-		print(payment(amount, duration, rates))
+        amount = random.randrange(10000)
+        duration = random.randint(1, 120)
+        rates = random.random() * 5 + 2
 
-	pass
+        print(payment(amount, duration, rates))
+
+    pass

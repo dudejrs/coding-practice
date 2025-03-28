@@ -4,53 +4,55 @@ import random
 TEST_CASES = 10
 N = 10000
 
-def search(target : int, nums : List[int])-> List[List[int]] :
-	ret = []
 
-	left, right = target+1, len(nums)-1
+def search(target: int, nums: List[int]) -> List[List[int]]:
+    ret = []
 
-	while left < right :
-		sum = nums[target] + nums[left] + nums[right] 
+    left, right = target + 1, len(nums) - 1
 
-		if sum < 0 :
-			left += 1
-		elif sum > 0 :
-			right -= 1
-		else :
-			ret.append(sorted([nums[left], nums[right], nums[target]]))
+    while left < right:
+        sum = nums[target] + nums[left] + nums[right]
 
-			while left < right and nums[left] == nums[left+1] :
-				left += 1
-			while left < right and nums[right] == nums[right-1] :
-				right -= 1
+        if sum < 0:
+            left += 1
+        elif sum > 0:
+            right -= 1
+        else:
+            ret.append(sorted([nums[left], nums[right], nums[target]]))
 
-			left += 1
-			right -= 1
+            while left < right and nums[left] == nums[left + 1]:
+                left += 1
+            while left < right and nums[right] == nums[right - 1]:
+                right -= 1
 
-	return ret
+            left += 1
+            right -= 1
+
+    return ret
 
 
-def solve(nums : List[int]) -> List[List[int]] : 
-	ret = []
+def solve(nums: List[int]) -> List[List[int]]:
+    ret = []
 
-	nums.sort()
+    nums.sort()
 
-	for i in range(len(nums)-2) : 
-		
-		if nums[i] > 0 and nums[i] == nums[i-1] :
-			continue;
-		
-		tmp = search(i, nums)
-		
-		if len(tmp) != 0 :
-			ret.extend(tmp)
+    for i in range(len(nums) - 2):
 
-	return ret
+        if nums[i] > 0 and nums[i] == nums[i - 1]:
+            continue
 
-if __name__ == "__main__" :
-	random.seed(43)
+        tmp = search(i, nums)
 
-	for _ in range(TEST_CASES) :
-		n = random.randrange(100,N)
-		nums = random.sample(range(-(n//2), n//2), n//2)
-		print(solve(nums))
+        if len(tmp) != 0:
+            ret.extend(tmp)
+
+    return ret
+
+
+if __name__ == "__main__":
+    random.seed(43)
+
+    for _ in range(TEST_CASES):
+        n = random.randrange(100, N)
+        nums = random.sample(range(-(n // 2), n // 2), n // 2)
+        print(solve(nums))

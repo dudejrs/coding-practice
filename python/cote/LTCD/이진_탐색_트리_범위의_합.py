@@ -9,82 +9,87 @@ MAX_DEPTH = 20
 
 T = TypeVar("T")
 
-class Node(Generic[T]) :
 
-	def __init__(self, value: T, left: Node[T] = None, right: Node[T] = None):
-		self.value = value
-		self.left = left
-		self.right = right
+class Node(Generic[T]):
 
-	def __iter__(self) :
-		queue = deque([self])
+    def __init__(self, value: T, left: Node[T] = None, right: Node[T] = None):
+        self.value = value
+        self.left = left
+        self.right = right
 
-		while queue :
-			node = queue.popleft()
+    def __iter__(self):
+        queue = deque([self])
 
-			if node :
-				yield node.value
-				queue.append(node.left)
-				queue.append(node.right)
-			else :
-				yield None
+        while queue:
+            node = queue.popleft()
 
-	def __str__(self) :
-		return str([*self])
+            if node:
+                yield node.value
+                queue.append(node.left)
+                queue.append(node.right)
+            else:
+                yield None
 
-def solve(node: Node[int], left: int, right: int) -> int :
+    def __str__(self):
+        return str([*self])
 
-	def dfs(cur: Node[int]) -> int :
-		if not cur :
-			return 0
-		if cur.value < left :
-			return dfs(cur.right)
-		if cur.value >= right :
-			return dfs(cur.left)
 
-		return cur.value + dfs(cur.left) + dfs(cur.right)
+def solve(node: Node[int], left: int, right: int) -> int:
 
-	return dfs(node)
+    def dfs(cur: Node[int]) -> int:
+        if not cur:
+            return 0
+        if cur.value < left:
+            return dfs(cur.right)
+        if cur.value >= right:
+            return dfs(cur.left)
 
-def solve2(node: Node[int], left: int, right: int) -> int :
-	queue = deque([node])
-	acc = 0
+        return cur.value + dfs(cur.left) + dfs(cur.right)
 
-	while queue :
-		cur = queue.popleft()
-		if not cur :
-			continue
-		if cur.value > left :
-			queue.append(cur.left)
-		if cur.value < right :
-			queue.append(cur.right)
-		if left <= cur.value < right :
-			acc += cur.value
-			
-	return acc
+    return dfs(node)
 
-def initialize(depth: int, left: int, right: int) :
-	if left + 1 >= right :
-		return
 
-	if depth >= MAX_DEPTH :
-		return None 
+def solve2(node: Node[int], left: int, right: int) -> int:
+    queue = deque([node])
+    acc = 0
 
-	if depth > 0 and random.random() / depth < 1 / MAX_DEPTH :
-		return None
+    while queue:
+        cur = queue.popleft()
+        if not cur:
+            continue
+        if cur.value > left:
+            queue.append(cur.left)
+        if cur.value < right:
+            queue.append(cur.right)
+        if left <= cur.value < right:
+            acc += cur.value
 
-	mid = random.randrange(left + 1, right)
+    return acc
 
-	left_node = initialize(depth + 1, left, mid)
-	right_node = initialize(depth + 1, mid, right)
 
-	return Node(mid, left_node, right_node)
+def initialize(depth: int, left: int, right: int):
+    if left + 1 >= right:
+        return
 
-if __name__ == "__main__" :
-	random.seed(43)
+    if depth >= MAX_DEPTH:
+        return None
 
-	for _ in range(TEST_CASES) :
-		node = initialize(0, 0, MAX_VALUE)
-		right = random.randrange(1, MAX_VALUE)
-		left = random.randrange(right)
-		print(solve(node, left, right), solve2(node, left, right))
+    if depth > 0 and random.random() / depth < 1 / MAX_DEPTH:
+        return None
+
+    mid = random.randrange(left + 1, right)
+
+    left_node = initialize(depth + 1, left, mid)
+    right_node = initialize(depth + 1, mid, right)
+
+    return Node(mid, left_node, right_node)
+
+
+if __name__ == "__main__":
+    random.seed(43)
+
+    for _ in range(TEST_CASES):
+        node = initialize(0, 0, MAX_VALUE)
+        right = random.randrange(1, MAX_VALUE)
+        left = random.randrange(right)
+        print(solve(node, left, right), solve2(node, left, right))

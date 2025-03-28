@@ -9,72 +9,76 @@ MAX_VALUE = 100
 
 T = TypeVar("T")
 
-class Node(Generic[T]) : 
-	
-	def __init__(self, value: T, left: Node[T] = None, right: Node[T] = None) :
-		self.value = value
-		self.left = left 
-		self.right = right
 
-	def __iter__(self) :
-		queue = deque([self])
+class Node(Generic[T]):
 
-		while queue :
-			cur = queue.popleft()
+    def __init__(self, value: T, left: Node[T] = None, right: Node[T] = None):
+        self.value = value
+        self.left = left
+        self.right = right
 
-			if cur : 
-				yield cur.value
-				queue.append(cur.left)
-				queue.append(cur.right)
+    def __iter__(self):
+        queue = deque([self])
 
-	
-	def __str__(self) :
-		return str([*self])
+        while queue:
+            cur = queue.popleft()
 
-def initialize(depth: int = 0) -> Node[T] :
+            if cur:
+                yield cur.value
+                queue.append(cur.left)
+                queue.append(cur.right)
 
-	if depth >= MAX_DEPTH : 
-		return None
+    def __str__(self):
+        return str([*self])
 
-	if depth > 0 and random.random() / depth < 1 / MAX_DEPTH :
-		return None
 
-	left = initialize(depth + 1)
-	right = initialize(depth + 1)
+def initialize(depth: int = 0) -> Node[T]:
 
-	return Node(random.randrange(MAX_VALUE), left, right)
+    if depth >= MAX_DEPTH:
+        return None
 
-def solve(node: Node[T]) -> Node[T] :
-	queue = deque([node])
+    if depth > 0 and random.random() / depth < 1 / MAX_DEPTH:
+        return None
 
-	while queue :
-		cur = queue.popleft()
+    left = initialize(depth + 1)
+    right = initialize(depth + 1)
 
-		if cur: 
-			cur.left, cur.right = cur.right, cur.left 
+    return Node(random.randrange(MAX_VALUE), left, right)
 
-			queue.append(cur.left)
-			queue.append(cur.right)
 
-	return node
+def solve(node: Node[T]) -> Node[T]:
+    queue = deque([node])
 
-def solve2(node: Node[T]) -> Node[T] :
-	stack = deque([node])
+    while queue:
+        cur = queue.popleft()
 
-	while stack :
-		cur = stack.pop()
+        if cur:
+            cur.left, cur.right = cur.right, cur.left
 
-		if cur :
-			stack.append(cur.left)
-			stack.append(cur.right)
+            queue.append(cur.left)
+            queue.append(cur.right)
 
-			cur.left, cur.right = cur.right, cur.left
+    return node
 
-	return node
 
-if __name__ == "__main__" :
-	random.seed(43)
+def solve2(node: Node[T]) -> Node[T]:
+    stack = deque([node])
 
-	for _ in range(TEST_CASES) :
-		node = initialize()
-		print(solve(node))
+    while stack:
+        cur = stack.pop()
+
+        if cur:
+            stack.append(cur.left)
+            stack.append(cur.right)
+
+            cur.left, cur.right = cur.right, cur.left
+
+    return node
+
+
+if __name__ == "__main__":
+    random.seed(43)
+
+    for _ in range(TEST_CASES):
+        node = initialize()
+        print(solve(node))

@@ -8,75 +8,79 @@ MAX_VALUE = 10
 
 T = TypeVar("T")
 
-class Node(Generic[T]) :
-	
-	def __init__(self, value: T, left: Node[T] = None, right: Node[T] = None) :
-		self.value = value
-		self.left = left
-		self.right = right
 
-	def __iter__(self) :
+class Node(Generic[T]):
 
-		yield self.value
+    def __init__(self, value: T, left: Node[T] = None, right: Node[T] = None):
+        self.value = value
+        self.left = left
+        self.right = right
 
-		if self.left :
-			for val in self.left :
-				yield val 
+    def __iter__(self):
 
-		if self.right :
-			for val in self.right :
-				yield val
+        yield self.value
 
-	def __repr__(self) :
-		return str([*self])
+        if self.left:
+            for val in self.left:
+                yield val
 
-def initialize(depth: int = 0) -> Node[int] :
+        if self.right:
+            for val in self.right:
+                yield val
 
-	if depth >= MAX_DEPTH : 
-		return None
+    def __repr__(self):
+        return str([*self])
 
-	if depth > 0 and random.random() / depth < 1 / MAX_DEPTH :
-		return None
 
-	left = initialize(depth + 1)
-	right = initialize(depth + 1)
+def initialize(depth: int = 0) -> Node[int]:
 
-	return Node(random.randrange(MAX_VALUE), left, right)
+    if depth >= MAX_DEPTH:
+        return None
 
-def solve(node: Node[T]) -> int :
-	longest: int = 0
+    if depth > 0 and random.random() / depth < 1 / MAX_DEPTH:
+        return None
 
-	def dfs(cur: Node[T]) -> int :
-		nonlocal longest
+    left = initialize(depth + 1)
+    right = initialize(depth + 1)
 
-		if cur is None :
-			return 0
+    return Node(random.randrange(MAX_VALUE), left, right)
 
-		left = dfs(cur.left)
-		right = dfs(cur.right)
 
-		if cur.left and cur.left.value == cur.value :
-			left += 1
-		else :
-			left = 0
+def solve(node: Node[T]) -> int:
+    longest: int = 0
 
-		if cur.right and cur.right.value == cur.right :
-			right += 1
-		else :
-			right = 0
+    def dfs(cur: Node[T]) -> int:
+        nonlocal longest
 
-		longest = max(longest, left + right)
+        if cur is None:
+            return 0
 
-		return max(left, right)
+        left = dfs(cur.left)
+        right = dfs(cur.right)
 
-	dfs(node)
+        if cur.left and cur.left.value == cur.value:
+            left += 1
+        else:
+            left = 0
 
-	return longest
+        if cur.right and cur.right.value == cur.right:
+            right += 1
+        else:
+            right = 0
 
-if __name__ == "__main__" :
-	random.seed(43)
+        longest = max(longest, left + right)
 
-	for _ in range(TEST_CASES) :
-		node = initialize()		
-		# print(node)
-		print(solve(node))
+        return max(left, right)
+
+    dfs(node)
+
+    return longest
+
+
+if __name__ == "__main__":
+    random.seed(43)
+
+    for _ in range(TEST_CASES):
+        node = initialize()
+        # print(node)
+        print(solve(node))

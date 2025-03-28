@@ -1,49 +1,52 @@
 from collections import defaultdict
 
-class Node :
 
-	def __init__(self) :
-		self.terminate = False
-		self.children = defaultdict(Node)
+class Node:
 
-class Trie : 
+    def __init__(self):
+        self.terminate = False
+        self.children = defaultdict(Node)
 
-	def __init__(self) :
-		self.root = Node()
 
-	def insert(self, word: str) :
-		node = self.root
-		
-		for char in word :
-			node = node.children[char]
+class Trie:
 
-		node.terminate = True
+    def __init__(self):
+        self.root = Node()
 
-	def search(self, word: str) -> bool :
-		node = self.root
+    def insert(self, word: str):
+        node = self.root
 
-		for char in word :
-			if not node.children[char] :
-				return False
+        for char in word:
+            node = node.children[char]
 
-			node = node.children[char]
+        node.terminate = True
 
-		return node.terminate
+    def search(self, word: str) -> bool:
+        node = self.root
 
-	def startsWidth(self, word: str) -> bool :
-		node = self.root
+        for char in word:
+            if not node.children[char]:
+                return False
 
-		for char in word :
-			if not node :
-				return False
-			node = node.children[char]
+            node = node.children[char]
 
-		return True
+        return node.terminate
 
-if __name__ == "__main__" :
-	trie = Trie()
+    def startsWidth(self, word: str) -> bool:
+        node = self.root
 
-	trie.insert("apple")
-	print(trie.search("apple"))
-	print(trie.search("app"))
-	print(trie.startsWidth("app"))
+        for char in word:
+            if not node:
+                return False
+            node = node.children[char]
+
+        return True
+
+
+if __name__ == "__main__":
+    trie = Trie()
+
+    trie.insert("apple")
+    print(trie.search("apple"))
+    print(trie.search("app"))
+    print(trie.startsWidth("app"))

@@ -5,35 +5,36 @@ import random
 
 T = TypeVar("T")
 
+
 class Mystack(Generic[T]):
-	def __init__(self) :
-		self.q = deque()
+    def __init__(self):
+        self.q = deque()
 
-	def push(self, x: T):
-		self.q.append(x)
+    def push(self, x: T):
+        self.q.append(x)
 
-		for _ in range(len(self.q)-1) :
-			self.q.append(self.q.popleft())
+        for _ in range(len(self.q) - 1):
+            self.q.append(self.q.popleft())
 
-	def pop(self):
-		return self.q.popleft()
+    def pop(self):
+        return self.q.popleft()
 
-	def top(self):
-		return self.q[0]
+    def top(self):
+        return self.q[0]
 
-	def empty(self):
-		return len(self.q) == 0
+    def empty(self):
+        return len(self.q) == 0
 
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
 
-	stack = Mystack[int]() 
-	ret = []
+    stack = Mystack[int]()
+    ret = []
 
-	for _ in range(10) :
-		t = random.randrange(100)
-		stack.push(t)
-		ret.append(t)
+    for _ in range(10):
+        t = random.randrange(100)
+        stack.push(t)
+        ret.append(t)
 
-	print(ret[::-1])
-	print([stack.pop() for _ in range(10)])
+    print(ret[::-1])
+    print([stack.pop() for _ in range(10)])
