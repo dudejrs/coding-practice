@@ -1,6 +1,6 @@
 import pytest
 
-from .조합 import solve
+from ..조합 import solve
 
 
 @pytest.mark.parametrize(
@@ -12,4 +12,4 @@ from .조합 import solve
     ],
 )
 def test_accuracy(n, k, expected):
-    assert solve(n, k) == expected
+    assert set(solve(n, k)) == expected
