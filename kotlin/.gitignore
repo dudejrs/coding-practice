@@ -56,6 +56,6 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/kotlin,gradle
 
-gradle/
 META-INF/
 .kotlin
+target/

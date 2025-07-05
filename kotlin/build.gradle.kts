@@ -15,7 +15,9 @@ repositories {
 dependencies {
     api(libs.org.jetbrains.kotlin.kotlin.stdlib)
     testImplementation(libs.org.jetbrains.kotlin.kotlin.test.junit)
-    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.engine)
+    testImplementation(libs.junit.params)
 }
 
 group = "com.example."
@@ -46,4 +48,8 @@ spotless {
           it.setManageTrailingCommas(false)
         }
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

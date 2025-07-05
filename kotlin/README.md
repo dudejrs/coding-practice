@@ -12,7 +12,11 @@
 	```
 
 ### 2. 테스트 코드가 있는 경우 
-추가 작성 예정입니다. 
+
+1. 테스트 코드 실행 
+```sh
+./gradlew test --tests com.eaxmple.algorithm.BinaryTreeTest
+```
 
 ## 코드 작성 요령 
 1. 테스트 코드 작성
