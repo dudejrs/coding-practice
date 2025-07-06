@@ -34,4 +34,4 @@ if __name__ == "__main__":
         for _ in range(num):
             expression = f.readline().strip()
             answer = f.readline().strip()
-            print(f'{answer} : {solve(expression)}')
+            print(f"{answer} : {solve(expression)}")

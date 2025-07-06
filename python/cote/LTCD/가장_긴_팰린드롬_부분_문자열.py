@@ -18,7 +18,7 @@ def solve(s: str) -> str:
     if s == s[::-1]:
         return s
 
-    result = ''
+    result = ""
     for i in range(len(s) - 1):
         result = max(result, expand(i, i + 1), expand(i, i + 2), key=len)
 

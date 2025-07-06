@@ -23,7 +23,7 @@ def test_accuracy(index_picker: IndexPicker, k: int, expected: list[int]):
 
 
 @pytest.mark.parametrize("k, expected", [(1, [0]), (2, [1, 2]), (3, [3, 4, 5]), (4, [6, 7, 8, 9])])
-def test_fequency(index_picker: IndexPicker, k: int, expected: list[int]):
+def test_frequency(index_picker: IndexPicker, k: int, expected: list[int]):
     T = 10000
     threshold = 0.01
     counts = Counter()

@@ -21,5 +21,5 @@ if __name__ == "__main__":
     random.seed(43)
     for _ in range(TEST_CASES):
         l = random.randrange(1, N)
-        s = "".join([chr(random.randrange(ord('a'), ord('z') + 1)) for _ in range(l)])
+        s = "".join([chr(random.randrange(ord("a"), ord("z") + 1)) for _ in range(l)])
         print(solve(s))

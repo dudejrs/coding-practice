@@ -6,7 +6,7 @@ LENGTH = 100
 
 
 def randomChar():
-    return chr(random.choice(range(ord('a'), ord('z'))))
+    return chr(random.choice(range(ord("a"), ord("z"))))
 
 
 # 재귀
@@ -15,7 +15,7 @@ def solve1(s):
     for c in sorted(set(s)):
         suffix = s[s.index(c) :]
         if set(s) == set(suffix):
-            return c + solve1(suffix.replace(c, ''))
+            return c + solve1(suffix.replace(c, ""))
 
     return ""
 

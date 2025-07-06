@@ -71,11 +71,11 @@ if __name__ == "__main__":
         test_cases = int(f.readline())
 
         for _ in range(0, test_cases):
-            H, W = list(map(lambda i: int(i), f.readline().split(' ')))
+            H, W = list(map(lambda i: int(i), f.readline().split(" ")))
 
             board = []
             for _ in range(0, H):
-                board.append(f.readline().strip('\n'))
+                board.append(f.readline().strip("\n"))
 
             board = process(board, H, W)
 

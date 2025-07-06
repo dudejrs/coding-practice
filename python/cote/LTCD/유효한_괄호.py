@@ -3,13 +3,13 @@ import random
 
 TEST_CASES = 30
 N = 4
-Brakets = ['[', ']', '(', ')', '{', '}']
+Brakets = ["[", "]", "(", ")", "{", "}"]
 
 
 def solve(s: str) -> bool:
 
     stack = []
-    braketMap = {'(': ')', '{': '}', '[': ']'}
+    braketMap = {"(": ")", "{": "}", "[": "]"}
 
     for char in s:
         if char in braketMap.keys():

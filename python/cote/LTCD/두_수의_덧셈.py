@@ -78,7 +78,7 @@ def solve1(l1: Node, l2: Node) -> Node:
     a = to_list(reverse_list(copy_node(l1)))
     b = to_list(reverse_list(copy_node(l2)))
 
-    result = int(''.join(a)) + int(''.join(b))
+    result = int("".join(a)) + int("".join(b))
 
     return to_linked_list(str(result))
 

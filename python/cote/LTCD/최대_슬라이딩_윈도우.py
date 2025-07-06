@@ -12,7 +12,7 @@ def solve(nums: List[int], k: int) -> List[int]:
     ret = []
     window = deque()
 
-    curmax = float('-inf')
+    curmax = float("-inf")
 
     for i, v in enumerate(nums):
         window.append(v)
@@ -20,7 +20,7 @@ def solve(nums: List[int], k: int) -> List[int]:
         if i < k - 1:
             continue
 
-        if curmax == float('-inf'):
+        if curmax == float("-inf"):
             curmax = max(window)
         elif v > curmax:
             curmax = v
@@ -28,7 +28,7 @@ def solve(nums: List[int], k: int) -> List[int]:
         ret.append(curmax)
 
         if curmax == window.popleft():
-            curmax = float('-inf')
+            curmax = float("-inf")
 
     return ret
 

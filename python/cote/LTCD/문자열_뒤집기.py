@@ -16,6 +16,6 @@ def solve(word: List[str]) -> None:
 if __name__ == "__main__":
     random = random.Random(43)
     for _ in range(10):
-        word = [chr(random.randrange(ord('a'), ord('z'))) for _ in range(1, MAX_LENGTH)]
+        word = [chr(random.randrange(ord("a"), ord("z"))) for _ in range(1, MAX_LENGTH)]
         solve(word)
         print(word)

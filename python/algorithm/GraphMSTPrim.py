@@ -31,9 +31,9 @@ class MatrixGraph(Graph):
             ret += "["
             for j in range(self.n):
                 if self.w[i][j] != INFINTIY:
-                    ret += '{:>4d}'.format(self.w[i][j])
+                    ret += "{:>4d}".format(self.w[i][j])
                 else:
-                    ret += '{:>4s}'.format("_")
+                    ret += "{:>4s}".format("_")
             ret += "]"
             if i != self.n - 1:
                 ret += "\n"

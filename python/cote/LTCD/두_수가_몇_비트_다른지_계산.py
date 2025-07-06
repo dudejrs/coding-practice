@@ -5,7 +5,7 @@ MAX_VAL = 100
 
 
 def solve(x: int, y: int) -> int:
-    return bin(x ^ y).count('1')
+    return bin(x ^ y).count("1")
 
 
 if __name__ == "__main__":

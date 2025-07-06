@@ -37,4 +37,4 @@ if __name__ == "__main__":
         for _ in range(testcases):
             expression = f.readline().strip()
             answer = int(f.readline())
-            print(f'{answer} {solve(expression)}')
+            print(f"{answer} {solve(expression)}")

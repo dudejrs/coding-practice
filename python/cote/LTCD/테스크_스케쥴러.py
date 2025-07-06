@@ -6,7 +6,7 @@ TEST_CASES = 10
 
 
 def task(num: int) -> int:
-    return chr(ord('a') + num)
+    return chr(ord("a") + num)
 
 
 def solve(tasks: List[int], n: int) -> int:
@@ -35,6 +35,6 @@ if __name__ == "__main__":
     random.seed(43)
 
     for _ in range(TEST_CASES):
-        tasks = random.sample([chr(ord('a') + num) for num in range(26)], random.randrange(2, 26))
+        tasks = random.sample([chr(ord("a") + num) for num in range(26)], random.randrange(2, 26))
         n = random.randrange(1, 30)
         print(solve(tasks, n))

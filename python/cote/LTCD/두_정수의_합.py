@@ -27,9 +27,9 @@ def solve(a: int, b: int) -> int:
         result.append(str(sum))
 
     if carry == 1:
-        result.append('1')
+        result.append("1")
 
-    result = int(''.join(result[::-1]), 2) & MASK
+    result = int("".join(result[::-1]), 2) & MASK
 
     if result > MAX:
         result = ~(result & MASK)

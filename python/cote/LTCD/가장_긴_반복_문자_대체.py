@@ -7,7 +7,7 @@ K = 100
 
 
 def randchr() -> str:
-    return chr(ord('A') + random.randrange(ord('Z') - ord('A')))
+    return chr(ord("A") + random.randrange(ord("Z") - ord("A")))
 
 
 def solve(s: str, k: int) -> int:

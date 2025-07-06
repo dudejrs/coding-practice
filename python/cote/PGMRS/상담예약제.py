@@ -56,13 +56,13 @@ if __name__ == "__main__":
 
         for _ in range(test_cases):
 
-            token = fd.readline().strip().split(' ')
+            token = fd.readline().strip().split(" ")
             booked = [[token[2 * i], token[2 * i + 1]] for i in range(len(token) // 2)]
 
-            token = fd.readline().strip().split(' ')
+            token = fd.readline().strip().split(" ")
             unbooked = [[token[2 * i], token[2 * i + 1]] for i in range(len(token) // 2)]
 
-            answer = fd.readline().strip().split(' ')
+            answer = fd.readline().strip().split(" ")
 
             print(solve(booked, unbooked))
             print(answer)

@@ -141,16 +141,16 @@ if __name__ == "__main__":
     tree = BinaryTreeBuilder().set_root(1).insert(2).insert(3).insert(4).insert(5).build()
 
     for cur in InorderBinaryTreeTraversal(tree.root):
-        print(cur, end=' ')
+        print(cur, end=" ")
     print()
 
     for cur in PreorderBinaryTreeTraversal(tree.root):
-        print(cur, end=' ')
+        print(cur, end=" ")
     print()
 
     for cur in PostorderBinaryTreeTraversal(tree.root):
-        print(cur, end=' ')
+        print(cur, end=" ")
     print()
     for cur in LevelorderBinaryTreeTraversal(tree.root):
-        print(cur, end=' ')
+        print(cur, end=" ")
     print()

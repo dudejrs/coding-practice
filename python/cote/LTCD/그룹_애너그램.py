@@ -7,7 +7,7 @@ def solve(words: List[str]) -> List[List[str]]:
     anagrams = defaultdict(list)
 
     for word in words:
-        anagrams[''.join(sorted(word))].append(word)
+        anagrams["".join(sorted(word))].append(word)
 
     return list(anagrams.values())
 

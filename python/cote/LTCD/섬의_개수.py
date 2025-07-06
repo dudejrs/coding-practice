@@ -8,10 +8,10 @@ def solve(grid: List[List[str]]) -> int:
         if y < 0 or y >= len(grid) or x < 0 or x >= len(grid[0]):
             return
 
-        if grid[y][x] != '1':
+        if grid[y][x] != "1":
             return
 
-        grid[y][x] = '0'
+        grid[y][x] = "0"
 
         dfs(y - 1, x)
         dfs(y, x - 1)
@@ -23,7 +23,7 @@ def solve(grid: List[List[str]]) -> int:
     count = 0
     for i in range(len(grid)):
         for j in range(len(grid[0])):
-            if grid[i][j] == '1':
+            if grid[i][j] == "1":
                 dfs(i, j)
                 count += 1
 

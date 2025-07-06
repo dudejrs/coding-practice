@@ -79,6 +79,6 @@ if __name__ == "__main__":
     for _ in range(testcases):
         words = f.readline().strip().split(" ")
         tokens = f.readline().strip().split(",")
-        answer = [] if len(tokens) == 1 else [list(map(int, token.split(' '))) for token in tokens]
-        print(f'answer: {answer}')
-        print(f'sovled: {solve(tokens)}')
+        answer = [] if len(tokens) == 1 else [list(map(int, token.split(" "))) for token in tokens]
+        print(f"answer: {answer}")
+        print(f"sovled: {solve(tokens)}")

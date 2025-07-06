@@ -3,7 +3,7 @@ import re
 
 def solve(word) -> bool:
     word = word.lower()
-    word = re.sub('[^a-z0-9]', '', word)
+    word = re.sub("[^a-z0-9]", "", word)
 
     return word == word[::-1]
 

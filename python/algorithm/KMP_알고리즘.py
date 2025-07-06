@@ -8,10 +8,10 @@ M_SIZE = 10
 
 def initialize():
 
-    s = ['a', 'b', 'c']
+    s = ["a", "b", "c"]
 
-    h = ''.join([random.choice(s) for _ in range(H_SIZE)])
-    m = ''.join([random.choice(s) for _ in range(M_SIZE)])
+    h = "".join([random.choice(s) for _ in range(H_SIZE)])
+    m = "".join([random.choice(s) for _ in range(M_SIZE)])
 
     return (h, m)
 

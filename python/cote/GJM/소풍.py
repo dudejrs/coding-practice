@@ -38,7 +38,7 @@ def solve(areFriend, n):
 
 
 if __name__ == "__main__":
-    with open('data/소풍.txt') as fd:
+    with open("data/소풍.txt") as fd:
 
         TEST_CASES = int(fd.readline())
         while TEST_CASES > 0:

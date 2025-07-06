@@ -102,7 +102,7 @@ def binarySearch(score, scores):
 
 def count(query, scoresMap):
 
-    tokens = list(filter(lambda x: x != 'and', re.split(r' ', query)))
+    tokens = list(filter(lambda x: x != "and", re.split(r" ", query)))
     key = "".join(tokens[:-1])
     score = tokens[-1]
     scores = scoresMap.get(key)

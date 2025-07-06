@@ -49,7 +49,7 @@ class Node:
         return self.right.max
 
     def __str__(self):
-        return f'Node({self.value})'
+        return f"Node({self.value})"
 
 
 def split(root: Node, key):

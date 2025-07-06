@@ -29,7 +29,7 @@ class Node:
         if offset == len(keyword):
             return self.terminals[0]
 
-        if keyword[offset] == '?':
+        if keyword[offset] == "?":
             return self.terminals[len(keyword) - offset]
 
         if keyword[offset] not in self.children.keys():
@@ -42,11 +42,11 @@ if __name__ == "__main__":
 
     trie = Node()
 
-    words = ['hello', 'hell', 'helio', 'help', 'held', 'helicopter']
+    words = ["hello", "hell", "helio", "help", "held", "helicopter"]
 
     for word in words:
         trie.add(word)
 
-    print(trie.search('hell'))
-    print(trie.search('helium'))
-    print(trie.count('hel?'))
+    print(trie.search("hell"))
+    print(trie.search("helium"))
+    print(trie.count("hel?"))

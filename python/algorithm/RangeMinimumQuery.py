@@ -70,6 +70,6 @@ if __name__ == "__main__":
 
         for n in nums[k:]:
             rmq.update(random.randrange(k), n)
-            print(rmq.query(0, k), end=' ')
+            print(rmq.query(0, k), end=" ")
 
         print()

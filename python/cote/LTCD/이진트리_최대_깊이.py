@@ -13,7 +13,11 @@ T = TypeVar("T")
 class Node(Generic[T]):
 
     def __init__(
-        self, value: T, parent: Node[T] = None, left: Node[T] = None, right: Node[T] = None
+        self,
+        value: T,
+        parent: Node[T] = None,
+        left: Node[T] = None,
+        right: Node[T] = None,
     ):
         self.value = value
         self.left = left

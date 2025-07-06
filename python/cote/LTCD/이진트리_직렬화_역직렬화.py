@@ -31,7 +31,7 @@ class Node(Generic[T]):
                 yield "#"
 
     def __str__(self):
-        return ' '.join([*self])
+        return " ".join([*self])
 
 
 def initialize(depth: int = 0) -> Node[int]:
@@ -49,7 +49,7 @@ def initialize(depth: int = 0) -> Node[int]:
 
 def deserialize(data: str) -> Node[int]:
 
-    if data == '# #':
+    if data == "# #":
         return None
 
     nodes = data.split()
@@ -62,13 +62,13 @@ def deserialize(data: str) -> Node[int]:
     while queue:
         node = queue.popleft()
 
-        if nodes[cur] is not '#':
+        if nodes[cur] is not "#":
             node.left = Node(int(nodes[cur]))
             queue.append(node.left)
 
         cur += 1
 
-        if nodes[cur] is not '#':
+        if nodes[cur] is not "#":
             node.right = Node(int(nodes[cur]))
             queue.append(node.right)
         cur += 1
