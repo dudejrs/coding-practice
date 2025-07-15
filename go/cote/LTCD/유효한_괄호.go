@@ -1,4 +1,4 @@
-package main
+package LTCD
 
 import (
 	"fmt"
@@ -6,38 +6,46 @@ import (
 	"container/list"
 )
 
-const (
-	TEST_CASE = 10
-	N = 4
-)
+// const (
+// 	TEST_CASE = 10
+// 	N = 4
+// )
 
-var brackets = [...]rune{'(',')','[',']','{','}'}
-var closed = map[rune]rune {
-	'(' : ')',
-	'[' : ']',
-	'{' : '}'}
+// var brackets = [...]rune{'(',')','[',']','{','}'}
+// var closed = map[rune]rune {
+// 	'(' : ')',
+// 	'[' : ']',
+// 	'{' : '}'}
 
 
-func generate(random *rand.Rand) string {
+type 유효한_괄호 struct {
+	TEST_CASE int
+	N int
+	brackets []rune
+	closed map[rune]rune
+}
 
-	b := make([]rune, N)
+
+func (problem *유효한_괄호) generate(random *rand.Rand) string {
+
+	b := make([]rune, problem.N)
 
 	for i, _ := range b {
-		j := random.Intn(len(brackets))
-		b[i] = 	brackets[j]
+		j := random.Intn(len(problem.brackets))
+		b[i] = 	problem.brackets[j]
 	}
 
 	return string(b)
 }
 
-func solve(s string) bool {
+func (problem *유효한_괄호) solve(s string) bool {
 
 	stack := list.New()
 
 	for _, v := range s {
 		switch v {
 			case '(', '{', '[' :
-				stack.PushBack(closed[v])
+				stack.PushBack(problem.closed[v])
 			case ')', '}',']' :
 				if stack.Len() == 0 || stack.Back().Value != v {
 					return false
@@ -49,12 +57,12 @@ func solve(s string) bool {
 	return stack.Len() == 0
 }
 
-func main() {
+func (problem *유효한_괄호) main() {
 	random := rand.New(rand.NewSource(15));
 	
-	for it := 0; it < TEST_CASE; it++ {
+	for it := 0; it < problem.TEST_CASE; it++ {
 
-		s := generate(random)
-		fmt.Println(solve(s))
+		s := problem.generate(random)
+		fmt.Println(problem.solve(s))
 	}
 }

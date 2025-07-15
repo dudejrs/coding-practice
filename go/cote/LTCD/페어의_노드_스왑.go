@@ -1,0 +1,4 @@
+package LTCD
+
+func solve() {
+}

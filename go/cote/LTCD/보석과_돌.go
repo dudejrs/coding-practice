@@ -1,17 +1,23 @@
-package main
+package LTCD
 
 import (
 	"fmt"	
 	"math/rand"
 )
 
-const (
-	TEST_CASE = 10
-	STONES = 100
-	JEWALS = 'z' - 'a' + 1
-)
+// const (
+// 	TEST_CASE = 10
+// 	STONES = 100
+// 	JEWALS = 'z' - 'a' + 1
+// )
 
-func solve(jewals ,stones []string) int {
+type 보석과_돌 struct {
+	TEST_CASE int 
+	STONES int 
+	JEWALS int
+}
+
+func (problem 보석과_돌) solve(jewals ,stones []string) int {
 	ret := 0
 	freq := make(map[string]int, 0)
 
@@ -32,10 +38,10 @@ func solve(jewals ,stones []string) int {
 	return ret
 }
 
-func main() {
+func (problem 보석과_돌) main() {
 	random := rand.New(rand.NewSource(43))
 
-	for it := 0; it < TEST_CASE; it++ {
+	for it := 0; it < problem.TEST_CASE; it++ {
 			
 		jewals := make([]string, 0)
 
@@ -45,12 +51,12 @@ func main() {
 			}
 		}
 
-		stones := make([]string, random.Intn(STONES - 1) + 1)
+		stones := make([]string, random.Intn(problem.STONES - 1) + 1)
 
 		for i, _ := range stones {
-			stones[i] = string('a' + random.Intn(JEWALS))
+			stones[i] = string('a' + random.Intn(problem.JEWALS))
 		}
 
-		fmt.Println(solve(jewals, stones))
+		fmt.Println(problem.solve(jewals, stones))
 	}
 }

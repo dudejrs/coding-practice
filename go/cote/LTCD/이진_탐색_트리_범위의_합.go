@@ -1,4 +1,4 @@
-package main
+package LTCD
 
 import (
 	"fmt"
@@ -6,61 +6,67 @@ import (
 	"container/list"
 )
 
-const (
-	TEST_CASE = 10
-	MAX_VALUE = 100
-	MAX_DEPTH = 20
-)
+// const (
+// 	TEST_CASE = 10
+// 	MAX_VALUE = 100
+// 	MAX_DEPTH = 20
+// )
 
-type Node struct {
-	Value int
-	Left *Node
-	Right *Node
+type 이진_탐색_트리_범위의_합 struct {
+	TEST_CASE int
+	MAX_VALUE int
+	MAX_DEPTH int
 }
 
-func initialize(depth int, left, right int, random *rand.Rand) *Node {
+type Node2 struct {
+	Value int
+	Left *Node2
+	Right *Node2
+}
+
+func (problem 이진_탐색_트리_범위의_합) initialize(depth int, left, right int, random *rand.Rand) *Node2 {
 	if (left + 1 >= right){
 		return nil
 	}
 
-	if depth >= MAX_DEPTH {
+	if depth >= problem.MAX_DEPTH {
 		return nil
 	}
 
-	if random.Float32() / float32(depth) < 1.0 / float32(MAX_DEPTH) {
+	if random.Float32() / float32(depth) < 1.0 / float32(problem.MAX_DEPTH) {
 		return nil
 	}
 
-	node := new(Node)
+	node := new(Node2)
 
 	node.Value = random.Intn(right - left) + left
-	node.Left = initialize(depth + 1, left, node.Value - 1, random)
-	node.Right = initialize(depth + 1, node.Value, right, random)
+	node.Left = problem.initialize(depth + 1, left, node.Value - 1, random)
+	node.Right = problem.initialize(depth + 1, node.Value, right, random)
 
 	return node
 }
 
-func dfs(node * Node, left, right int) int {
+func (problem 이진_탐색_트리_범위의_합) dfs(node * Node2, left, right int) int {
 	if node == nil {
 		return 0
 	}
 
 	if node.Value < left {
-		return dfs(node.Right, left, right)
+		return problem.dfs(node.Right, left, right)
 	}
 
 	if node.Value >= right {
-		return dfs(node.Left, left, right) 
+		return problem.dfs(node.Left, left, right) 
 	}
 
-	return node.Value + dfs(node.Left, left, right)+ dfs(node.Right, left, right) 
+	return node.Value + problem.dfs(node.Left, left, right) + problem.dfs(node.Right, left, right) 
 }
 
-func solve1(node *Node, left, right int) int {
-	return dfs(node, left, right)
+func (problem 이진_탐색_트리_범위의_합) solve1(node *Node2, left, right int) int {
+	return problem.dfs(node, left, right)
 }
 
-func solve2(node *Node, left, right int) int {
+func (problem 이진_탐색_트리_범위의_합) solve2(node *Node2, left, right int) int {
 
 	queue := list.New()
 	queue.PushBack(node)
@@ -95,12 +101,12 @@ func solve2(node *Node, left, right int) int {
 	return acc
 }
 
-func main() {
+func (problem 이진_탐색_트리_범위의_합) main() {
 	random := rand.New(rand.NewSource(43))
-	for it := 0; it < TEST_CASE; it++ {
-		node := initialize(0, 0, MAX_VALUE, random)
-		right := random.Intn(MAX_VALUE - 1) + 1
+	for it := 0; it < problem.TEST_CASE; it++ {
+		node := problem.initialize(0, 0, problem.MAX_VALUE, random)
+		right := random.Intn(problem.MAX_VALUE - 1) + 1
 		left := random.Intn(right)
-		fmt.Println(solve1(node, left, right), solve2(node, left, right))
+		fmt.Println(problem.solve1(node, left, right), problem.solve2(node, left, right))
 	}
 }

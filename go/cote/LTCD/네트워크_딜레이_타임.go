@@ -1,4 +1,4 @@
-package main
+package LTCD
 
 import (
 	"fmt"
@@ -8,11 +8,17 @@ import (
 	"container/heap"
 )
 
-const (
-	TEST_CASE = 10
-	N = 20
-	MAX_DELAY = 10
-)
+// const (
+// 	TEST_CASE = 10
+// 	N = 20
+// 	MAX_DELAY = 10
+// )
+
+type 네트워크_딜레이_타입 struct {
+	TEST_CASE  int
+	N int
+	MAX_DELAY int
+}
 
 type Entry struct {
 	Time int
@@ -45,7 +51,7 @@ func (h *Heap) Pop() any {
 	return x
 }
 
-func initialize(n int, random *rand.Rand) ([][]int, int) {
+func (problem 네트워크_딜레이_타입) initialize(n int, random *rand.Rand) ([][]int, int) {
 	numEdges := random.Intn(int(math.Floor(float64(n * (n-1) / 2.0))))
 	ret := make([][]int, 0)
 	count := make([]int, n)
@@ -65,7 +71,7 @@ func initialize(n int, random *rand.Rand) ([][]int, int) {
 			continue
 		}
 
-		ret = append(ret, []int{i, j, random.Intn(MAX_DELAY)})
+		ret = append(ret, []int{i, j, random.Intn(problem.MAX_DELAY)})
 		set[i][j], set[j][i] = true, true
 		count[i]++
 		count[j]++
@@ -76,7 +82,7 @@ func initialize(n int, random *rand.Rand) ([][]int, int) {
 	return ret, count[0]
 }
 
-func solve(edges [][]int, n, k int) int {
+func (problem 네트워크_딜레이_타입) solve(edges [][]int, n, k int) int {
 
 	graph := make(map[int][][]int, n)
 	dist := make(map[int]int)
@@ -124,13 +130,13 @@ func solve(edges [][]int, n, k int) int {
 	return -1
 }
 
-func main() {
+func (problem 네트워크_딜레이_타입) main() {
 	random := rand.New(rand.NewSource(43))
 
-	for it := 0; it < TEST_CASE; it++ {
-		n := random.Intn(N - 3) + 3
-		edges, k  := initialize(n, random)
+	for it := 0; it < problem.TEST_CASE; it++ {
+		n := random.Intn(problem.N - 3) + 3
+		edges, k  := problem.initialize(n, random)
 		
-		fmt.Println(solve(edges, n, k))
+		fmt.Println(problem.solve(edges, n, k))
 	}
 }

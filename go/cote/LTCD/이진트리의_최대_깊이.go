@@ -1,4 +1,4 @@
-package main
+package LTCD
 
 import (
 	"fmt"
@@ -6,43 +6,49 @@ import (
 	"container/list"
 )
 
-const (
-	TEST_CASE = 10
-	MAX_VALUE = 100
-	MAX_DEPTH = 20
-)
+// const (
+// 	TEST_CASE = 10
+// 	MAX_VALUE = 100
+// 	MAX_DEPTH = 20
+// )
 
-type Node struct {
-	Value int
-	Left *Node
-	Right *Node
+type 이진트리의_최대_깊이 struct {
+	TEST_CASE int 
+	MAX_VALUE int 
+	MAX_DEPTH int
 }
 
-func max(x, y int) int {
+type Node3 struct {
+	Value int
+	Left *Node3
+	Right *Node3
+}
+
+func (problem 이진트리의_최대_깊이) max(x, y int) int {
 	if x >= y {
 		return x
 	}
 	return y
 }
 
-func initialize(depth int, random *rand.Rand) *Node {
+func (problem 이진트리의_최대_깊이) initialize(depth int, random *rand.Rand) *Node3 {
 
-	if depth >= MAX_DEPTH {
+	if depth >= problem.MAX_DEPTH {
 		return nil
 	}
 
-	if depth > 0 && random.Float32() / float32(depth) < 1.0 / float32(MAX_DEPTH) {
+	if depth > 0 && random.Float32() / float32(depth) < 1.0 / float32(problem.MAX_DEPTH) {
 		return nil
 	}
 
-	left := initialize(depth + 1, random)
-	right := initialize(depth + 1, random)
+	left := problem.initialize(depth + 1, random)
+	right := problem.initialize(depth + 1, random)
 
 
-	return &Node{random.Intn(MAX_VALUE), left, right}
+	return &Node3{random.Intn(problem.MAX_VALUE), left, right}
 }
 
-func solve(node *Node) int {
+func (problem 이진트리의_최대_깊이) solve(node *Node3) int {
 	depth := 0
 	queue := list.New()
 	queue.PushBack(node)
@@ -54,7 +60,7 @@ func solve(node *Node) int {
 		depth ++ 
 
 		for i :=0; i < queue.Len(); i++ {
-			cur := queue.Front().Value.(*Node)
+			cur := queue.Front().Value.(*Node3)
 
 			if cur.Left != nil {
 				queue.PushBack(cur.Left)
@@ -72,11 +78,11 @@ func solve(node *Node) int {
 	return depth
 }
 
-func main() {
+func (problem 이진트리의_최대_깊이) main() {
 	random := rand.New(rand.NewSource(43))
 
-	for it := 0; it < TEST_CASE; it++ {
-		node := initialize(0, random)
-		fmt.Println(solve(node))
+	for it := 0; it < problem.TEST_CASE; it++ {
+		node := problem.initialize(0, random)
+		fmt.Println(problem.solve(node))
 	}
 }

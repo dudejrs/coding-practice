@@ -1,15 +1,20 @@
-package main
+package LTCD
 
 import (
 	"fmt"
 	"math/rand"
 )
-const (
-	TEST_CASE = 10
-	N = 100
-)
+// const (
+// 	TEST_CASE = 10
+// 	N = 100
+// )
 
-func initialize(n int, random *rand.Rand) [][]int {
+type 코스_스케쥴 struct {
+	TEST_CASE int
+	N int
+}
+
+func (problem 코스_스케쥴) initialize(n int, random *rand.Rand) [][]int {
 	ret := make([][]int, 0)
 	set := make(map[int]map[int]bool, 0)
 
@@ -39,7 +44,7 @@ func initialize(n int, random *rand.Rand) [][]int {
 	return ret
 }
 
-func dfs(cur int, graph [][]int, traced []bool, visited []bool) bool {
+func (problem 코스_스케쥴) dfs(cur int, graph [][]int, traced []bool, visited []bool) bool {
 
 	if traced[cur] {
 		return false
@@ -52,7 +57,7 @@ func dfs(cur int, graph [][]int, traced []bool, visited []bool) bool {
 	traced[cur] = true
 
 	for _, y := range graph[cur] {
-		if !dfs(y, graph, traced, visited) {
+		if !problem.dfs(y, graph, traced, visited) {
 			return false
 		}
 	}
@@ -63,7 +68,7 @@ func dfs(cur int, graph [][]int, traced []bool, visited []bool) bool {
 	return true
 }
 
-func solve(n int, prerequisites [][]int) bool {
+func (problem 코스_스케쥴) solve(n int, prerequisites [][]int) bool {
 
 	graph := make([][]int, n)
 
@@ -81,7 +86,7 @@ func solve(n int, prerequisites [][]int) bool {
 	visited := make([]bool, n)
 
 	for i := 0; i < n; i++ {
-		if !dfs(i, graph, traced, visited) {
+		if !problem.dfs(i, graph, traced, visited) {
 			return false
 		}
 	}
@@ -89,12 +94,12 @@ func solve(n int, prerequisites [][]int) bool {
 	return true
 }
 
-func main() {
+func (problem 코스_스케쥴) main() {
 	random := rand.New(rand.NewSource(43))
-	for it := 0; it < TEST_CASE; it++ {
-		n := random.Intn(N)
-		prerequisites := initialize(n, random)			
+	for it := 0; it < problem.TEST_CASE; it++ {
+		n := random.Intn(problem.N)
+		prerequisites := problem.initialize(n, random)			
 		
-		fmt.Println(solve(n, prerequisites))
+		fmt.Println(problem.solve(n, prerequisites))
 	}
 }
