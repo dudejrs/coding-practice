@@ -1,11 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-	"bufio"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 func countBackard(cur int, graph [][]bool, visited []bool) int {
@@ -36,7 +36,7 @@ func countForward(cur int, graph [][]bool, visited []bool) int {
 
 func solve(n int, edges [][]int) int {
 	graph := make([][]bool, n)
-	
+
 	for i := 0; i < n; i++ {
 		graph[i] = make([]bool, n)
 	}
@@ -46,13 +46,13 @@ func solve(n int, edges [][]int) int {
 		graph[i-1][j-1] = true
 	}
 
-	count := 0 
+	count := 0
 
 	for i := 0; i < n; i++ {
 		wins := countForward(i, graph, make([]bool, n)) - 1
 		loses := countBackard(i, graph, make([]bool, n)) - 1
 
-		if wins + loses == n - 1 {
+		if wins+loses == n-1 {
 			count++
 		}
 	}
@@ -71,15 +71,15 @@ func main() {
 	for it := 0; it < testcases; it++ {
 		s, _ = r.ReadString('\n')
 		n, _ := strconv.Atoi(strings.Trim(s, "\n"))
-		
+
 		s, _ = r.ReadString('\n')
 		numEdges, _ := strconv.Atoi(strings.Trim(s, "\n"))
 		edges := make([][]int, numEdges)
 
-		for i := 0; i < numEdges; i++{
+		for i := 0; i < numEdges; i++ {
 			s, _ = r.ReadString('\n')
 			edge := strings.Split(strings.Trim(s, "\n"), " ")
-			edges[i] = make([]int ,2)
+			edges[i] = make([]int, 2)
 
 			for j := 0; j < 2; j++ {
 				v, _ := strconv.Atoi(edge[j])

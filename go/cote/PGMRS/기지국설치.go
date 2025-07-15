@@ -1,12 +1,12 @@
 package main
 
 import (
+	"bufio"
+	"container/list"
 	"fmt"
 	"os"
-	"bufio"
 	"strconv"
 	"strings"
-	"container/list"
 )
 
 func solve(numApartment int, equipped []int, wide int) int {
@@ -24,11 +24,11 @@ func solve(numApartment int, equipped []int, wide int) int {
 			break
 		}
 
-		if queue.Len() != 0 &&  queue.Front().Value.(int) <= position + wide  {
+		if queue.Len() != 0 && queue.Front().Value.(int) <= position+wide {
 			position = queue.Remove(queue.Front()).(int) + wide + 1
 		} else {
 			ret++
-			position += 2 * wide + 1
+			position += 2*wide + 1
 		}
 	}
 
@@ -52,7 +52,7 @@ func main() {
 
 		s, _ = r.ReadString('\n')
 		tokens := strings.Split(strings.Trim(s, "\n"), " ")
-		equipped := make([]int,0)
+		equipped := make([]int, 0)
 
 		for _, apartment := range tokens {
 			n, _ := strconv.Atoi(apartment)
@@ -66,6 +66,6 @@ func main() {
 		answer, _ := strconv.Atoi(strings.Trim(s, "\n"))
 
 		fmt.Printf("%d %d\n", answer, solve(numApartment, equipped, wide))
-		testcases--;
+		testcases--
 	}
 }

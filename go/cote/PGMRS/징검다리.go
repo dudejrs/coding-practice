@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	TEST_CASE = 10
-	MAX_DISTANCE = 1000000000
+	TEST_CASE       = 10
+	MAX_DISTANCE    = 1000000000
 	MAX_ROCK_NUMBER = 50000
 )
 
@@ -17,7 +17,7 @@ func isValid(rocks []int, n, distance int) bool {
 	last, removed := 0, 0
 
 	for _, rock := range rocks {
-		if rock - last < distance {
+		if rock-last < distance {
 			removed++
 			continue
 		}
@@ -27,12 +27,12 @@ func isValid(rocks []int, n, distance int) bool {
 	return removed <= n
 }
 
-func solve(rocks []int, n int) int{
+func solve(rocks []int, n int) int {
 
 	lo, hi := 0, MAX_DISTANCE
 
 	for {
-		if lo + 1 == hi  {
+		if lo+1 == hi {
 			break
 		}
 

@@ -1,12 +1,12 @@
 package main
 
 import (
+	"bufio"
+	"container/list"
 	"fmt"
 	"os"
-	"bufio"
 	"strconv"
 	"strings"
-	"container/list"
 )
 
 func getContact(s string) [][2]int {
@@ -18,7 +18,7 @@ func getContact(s string) [][2]int {
 	for i := 0; i < len(l)/2; i++ {
 		a, _ := strconv.Atoi(l[2*i])
 		b, _ := strconv.Atoi(l[2*i+1])
-		ret = append(ret, [2]int{a,b})
+		ret = append(ret, [2]int{a, b})
 	}
 
 	return ret
@@ -37,7 +37,6 @@ func solve(n, c, k int, contact [][2]int) int {
 		graph[i][j] = true
 	}
 
-
 	counts := make([]int, n)
 	queue := list.New()
 
@@ -55,13 +54,13 @@ func solve(n, c, k int, contact [][2]int) int {
 		queue.Remove(queue.Front())
 
 		for i := c; i < n; i++ {
-			if counts[i] >= 0 && graph[cur][i]  {
+			if counts[i] >= 0 && graph[cur][i] {
 				counts[i]++
 			}
 		}
 
 		for i := 0; i < n; i++ {
-			if counts[i] >=k {
+			if counts[i] >= k {
 				queue.PushBack(i)
 				counts[i] = -1
 			}
@@ -82,7 +81,7 @@ func solve(n, c, k int, contact [][2]int) int {
 func main() {
 
 	f, _ := os.Open("data/행운의_편지.txt")
-	r :=  bufio.NewReader(f)
+	r := bufio.NewReader(f)
 
 	s, _ := r.ReadString('\n')
 	testcases, _ := strconv.Atoi(strings.Trim(s, "\n"))
@@ -90,9 +89,9 @@ func main() {
 	for it := 0; it < testcases; it++ {
 		s, _ := r.ReadString('\n')
 		n, _ := strconv.Atoi(strings.Trim(s, "\n"))
-		
+
 		s, _ = r.ReadString('\n')
-		c, _ := strconv.Atoi(strings.Trim(s, "\n")) 
+		c, _ := strconv.Atoi(strings.Trim(s, "\n"))
 
 		s, _ = r.ReadString('\n')
 		k, _ := strconv.Atoi(strings.Trim(s, "\n"))
@@ -103,7 +102,7 @@ func main() {
 		s, _ = r.ReadString('\n')
 		answer, _ := strconv.Atoi(strings.Trim(s, "\n"))
 
-		fmt.Println(answer, solve(n,c,k,contact))
+		fmt.Println(answer, solve(n, c, k, contact))
 	}
 
 }

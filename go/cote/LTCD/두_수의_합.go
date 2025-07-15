@@ -13,30 +13,30 @@ import (
 
 type 두_수의_합 struct {
 	TEST_CASE int
-	N int
-	TARGET int
+	N         int
+	TARGET    int
 }
 
 func (problem 두_수의_합) initialize(random *rand.Rand) []int {
-	n := random.Intn(problem.N - 1) + 1
+	n := random.Intn(problem.N-1) + 1
 	ret := make([]int, n)
 
 	set := make(map[int]bool, 0)
 
-	for i :=0; i < n; i++ {
-		
+	for i := 0; i < n; i++ {
+
 		for {
 			c := random.Intn(problem.N)
 			_, ok := set[c]
 			if !ok {
 				set[c] = true
 				ret[i] = c
-				break;
+				break
 			}
 		}
 	}
 
-	return ret 
+	return ret
 }
 
 func (problem 두_수의_합) solve(nums []int, target int) [][]int {
@@ -48,7 +48,7 @@ func (problem 두_수의_합) solve(nums []int, target int) [][]int {
 	}
 
 	for i, num := range nums {
-		v, ok := num_to_index[target - num]
+		v, ok := num_to_index[target-num]
 		if ok && i != v {
 			ret = append(ret, []int{i, v})
 		}
@@ -62,7 +62,7 @@ func (problem 두_수의_합) main() {
 
 	for it := 0; it < problem.TEST_CASE; it++ {
 		nums := problem.initialize(random)
-		target := random.Intn(problem.TARGET - 1) + 1
+		target := random.Intn(problem.TARGET-1) + 1
 		fmt.Println(problem.solve(nums, target))
 	}
 }

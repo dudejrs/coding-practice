@@ -1,15 +1,15 @@
 package main
 
 import (
+	"container/list"
 	"fmt"
 	"math/rand"
 	"slices"
-	"container/list"
 )
 
 const (
 	TEST_CASES = 10
-	N = 1000
+	N          = 1000
 )
 
 func _dfs(cur int, adj [][]int, visited []bool) {
@@ -31,7 +31,7 @@ func check_reachable(adj [][]int) bool {
 }
 
 func initialize(random *rand.Rand) (ret [][]int) {
-	n := random.Intn(N - 3) + 3
+	n := random.Intn(N-3) + 3
 	for {
 		ret = make([][]int, n)
 
@@ -54,7 +54,7 @@ func initialize(random *rand.Rand) (ret [][]int) {
 
 func min(x, y int) int {
 	if x < y {
-		return x 
+		return x
 	}
 	return y
 }
@@ -80,8 +80,8 @@ func dfs(cur int, finished []bool, discovered, sccIds []int, stack *list.List, v
 			t := stack.Back().Value.(int)
 			stack.Remove(stack.Back())
 			sccIds[t] = *scc_counter
-			
-			if (t == cur) {
+
+			if t == cur {
 				break
 			}
 		}
@@ -115,7 +115,7 @@ func solve(adj [][]int) []int {
 
 	dfs(0, finished, discovered, sccIds, stack, &vertex_counter, &scc_counter, adj)
 
-	return sccIds 
+	return sccIds
 }
 
 func main() {

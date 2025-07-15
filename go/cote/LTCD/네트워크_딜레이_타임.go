@@ -1,11 +1,11 @@
 package LTCD
 
 import (
+	"container/heap"
 	"fmt"
 	"math"
 	"math/rand"
 	"sort"
-	"container/heap"
 )
 
 // const (
@@ -15,8 +15,8 @@ import (
 // )
 
 type 네트워크_딜레이_타입 struct {
-	TEST_CASE  int
-	N int
+	TEST_CASE int
+	N         int
 	MAX_DELAY int
 }
 
@@ -44,7 +44,7 @@ func (h *Heap) Push(x any) {
 }
 
 func (h *Heap) Pop() any {
-	old := *h 
+	old := *h
 	n := len(old)
 	x := old[n-1]
 	*h = old[0 : n-1]
@@ -52,19 +52,19 @@ func (h *Heap) Pop() any {
 }
 
 func (problem 네트워크_딜레이_타입) initialize(n int, random *rand.Rand) ([][]int, int) {
-	numEdges := random.Intn(int(math.Floor(float64(n * (n-1) / 2.0))))
+	numEdges := random.Intn(int(math.Floor(float64(n * (n - 1) / 2.0))))
 	ret := make([][]int, 0)
 	count := make([]int, n)
 	set := make([][]bool, n)
 
 	for i, _ := range set {
-		set[i] = make([]bool, n)	
+		set[i] = make([]bool, n)
 	}
 
 	for {
 		if len(ret) == numEdges {
 			break
-		} 
+		}
 		i, j := random.Intn(n), random.Intn(n)
 
 		if set[i][j] || i == j {
@@ -88,9 +88,9 @@ func (problem 네트워크_딜레이_타입) solve(edges [][]int, n, k int) int 
 	dist := make(map[int]int)
 
 	for _, e := range edges {
-		i, j, v := e[0], e[1], e[2]	
-		graph[i] = append(graph[i], []int {j, v})
-	}	
+		i, j, v := e[0], e[1], e[2]
+		graph[i] = append(graph[i], []int{j, v})
+	}
 
 	h := &Heap{Entry{0, k}}
 	heap.Init(h)
@@ -99,7 +99,7 @@ func (problem 네트워크_딜레이_타입) solve(edges [][]int, n, k int) int 
 		if h.Len() == 0 {
 			break
 		}
-		
+
 		e := heap.Pop(h).(Entry)
 		time, node := e.Time, e.Node
 
@@ -120,7 +120,7 @@ func (problem 네트워크_딜레이_타입) solve(edges [][]int, n, k int) int 
 
 		for _, v := range dist {
 			if max < v {
-				max = v 
+				max = v
 			}
 		}
 
@@ -134,9 +134,9 @@ func (problem 네트워크_딜레이_타입) main() {
 	random := rand.New(rand.NewSource(43))
 
 	for it := 0; it < problem.TEST_CASE; it++ {
-		n := random.Intn(problem.N - 3) + 3
-		edges, k  := problem.initialize(n, random)
-		
+		n := random.Intn(problem.N-3) + 3
+		edges, k := problem.initialize(n, random)
+
 		fmt.Println(problem.solve(edges, n, k))
 	}
 }

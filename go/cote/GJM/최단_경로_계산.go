@@ -1,19 +1,19 @@
 package main
 
 import (
+	"container/list"
 	"fmt"
 	"math/rand"
-	"container/list"
 	"slices"
 )
 
 const (
 	TEST_CASES = 10
-	N = 1000
+	N          = 1000
 )
 
 func initialize(random *rand.Rand) ([][]int, int, int) {
-	n := random.Intn(N - 3) + 3
+	n := random.Intn(N-3) + 3
 	ret := make([][]int, n)
 
 	for i := 0; i < n; i++ {
@@ -26,7 +26,7 @@ func initialize(random *rand.Rand) ([][]int, int, int) {
 		}
 	}
 
-	a := random.Intn(n - 1) + 1
+	a := random.Intn(n-1) + 1
 	b := random.Intn(a)
 	return ret, b, a
 }
@@ -45,10 +45,10 @@ func bfs(src int, adj [][]int) []int {
 
 	queue := list.New()
 	queue.PushBack(src)
-	parent[src] = src 
+	parent[src] = src
 	distance[src] = 0
 
-	for{
+	for {
 		if queue.Len() == 0 {
 			break
 		}
@@ -73,7 +73,7 @@ func shoretest_path(target int, parent []int) []int {
 
 	ret = append(ret, target)
 	for {
-		if parent[target] == - 1 {
+		if parent[target] == -1 {
 			return make([]int, 0)
 		}
 

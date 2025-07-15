@@ -2,8 +2,8 @@ package LTCD
 
 import (
 	"container/list"
-	"math/rand"
 	"fmt"
+	"math/rand"
 )
 
 // const (
@@ -13,8 +13,8 @@ import (
 // )
 
 type 빗물_트래핑 struct {
-	TEST_CASE int
-	N int
+	TEST_CASE  int
+	N          int
 	MAX_HEIGHT int
 }
 
@@ -34,27 +34,25 @@ func (problem 빗물_트래핑) min(a, b int) int {
 
 func (problem 빗물_트래핑) solve1(heights []int) int {
 	volumne := 0
-	left, right  := int(0), len(heights)-1
+	left, right := int(0), len(heights)-1
 	leftmax, rightmax := int(0), int(0)
 
-	for ok:= true; ok; ok = (left < right) {
+	for ok := true; ok; ok = (left < right) {
 
 		leftmax = problem.max(leftmax, heights[left])
 		rightmax = problem.max(rightmax, heights[right])
 
 		if leftmax <= rightmax {
 			volumne += leftmax - heights[left]
-			left ++
+			left++
 		} else {
 			volumne += rightmax - heights[right]
 			right--
 		}
 	}
 
-
 	return volumne
 }
-
 
 func (problem 빗물_트래핑) solve2(heights []int) int {
 
@@ -75,7 +73,7 @@ func (problem 빗물_트래핑) solve2(heights []int) int {
 			}
 
 			cur := stack.Remove(stack.Back()).(int)
-			
+
 			if stack.Len() == 0 {
 				break
 			}
@@ -87,10 +85,8 @@ func (problem 빗물_트래핑) solve2(heights []int) int {
 
 		}
 
-
 		stack.PushBack(i)
-	}	
-
+	}
 
 	return volume
 }
@@ -98,10 +94,10 @@ func (problem 빗물_트래핑) solve2(heights []int) int {
 func (problem 빗물_트래핑) main() {
 	rand.Seed(41)
 
-	for it :=0; it < problem.TEST_CASE; it++ {
-		n := rand.Intn(problem.N-2)+2
-		h := rand.Intn(problem.MAX_HEIGHT-1)+1
-		
+	for it := 0; it < problem.TEST_CASE; it++ {
+		n := rand.Intn(problem.N-2) + 2
+		h := rand.Intn(problem.MAX_HEIGHT-1) + 1
+
 		heights := make([]int, n)
 
 		for i, _ := range heights {

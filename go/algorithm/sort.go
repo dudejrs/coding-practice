@@ -1,4 +1,4 @@
-package main 
+package main
 
 import (
 	"fmt"
@@ -27,14 +27,14 @@ func test(f func([]int)) {
 func insertionSort(a []int) {
 
 	for i := 0; i < len(a); i++ {
-		j := i-1
+		j := i - 1
 
 		for {
 			if j < 0 || a[j] <= a[j+1] {
 				break
 			}
-				a[j], a[j+1] = a[j+1], a[j]
-				j--
+			a[j], a[j+1] = a[j+1], a[j]
+			j--
 		}
 	}
 }
@@ -56,7 +56,7 @@ func selectionSort(a []int) {
 		target := len(a) - i - 1
 		max := 0
 
-		for j := 0; j < len(a) - i; j++ {
+		for j := 0; j < len(a)-i; j++ {
 			if a[j] > a[max] {
 				max = j
 			}
@@ -66,7 +66,7 @@ func selectionSort(a []int) {
 	}
 }
 
-func main () {
+func main() {
 
 	test(insertionSort)
 	test(bubbleSort)

@@ -8,13 +8,13 @@ import (
 
 const (
 	TEST_CASE = 10
-	N = 10
+	N         = 10
 	MAX_DELAY = 100
 )
 
 type Edge struct {
-	From int
-	To int
+	From  int
+	To    int
 	Delay int
 }
 
@@ -39,18 +39,18 @@ type DisjointSet interface {
 }
 
 type TreeSet struct {
-	Parent []int 
-	Rank []int
-	Size int
+	Parent []int
+	Rank   []int
+	Size   int
 }
 
-func (s *TreeSet) Init(n int){
+func (s *TreeSet) Init(n int) {
 	s.Parent = make([]int, n)
 	s.Rank = make([]int, n)
 	s.Size = n
 
 	for i, _ := range s.Parent {
-		s.Parent[i] = i 
+		s.Parent[i] = i
 	}
 }
 
@@ -76,15 +76,15 @@ func (s *TreeSet) Merge(u, v int) {
 		u, v = v, u
 	}
 	s.Parent[v] = u
-	
+
 	if s.Rank[u] == s.Rank[v] {
-		s.Rank[u]++ 
-	} 
+		s.Rank[u]++
+	}
 	s.Size--
 }
 
 func initialize(random *rand.Rand) (n int, edges []Edge) {
-	n = random.Intn(N - 3) + 3
+	n = random.Intn(N-3) + 3
 	edges = make([]Edge, n)
 
 	for i, _ := range edges {
@@ -97,14 +97,14 @@ func initialize(random *rand.Rand) (n int, edges []Edge) {
 	}
 
 	sort.Sort(Edges(edges))
-	return 
+	return
 }
 
 func solve(n int, edges []Edge) int {
 	set := new(TreeSet)
 	set.Init(n)
 
-	for _, edge := range edges{
+	for _, edge := range edges {
 		i, j, delay := edge.From, edge.To, edge.Delay
 
 		if set.Size == 1 {

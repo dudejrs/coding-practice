@@ -7,11 +7,11 @@ import (
 
 const (
 	TEST_CASES = 10
-	N = 100
+	N          = 100
 )
 
 func initialize(random *rand.Rand) [][]int {
-	n := random.Intn(N - 3) + 3
+	n := random.Intn(N-3) + 3
 	ret := make([][]int, n)
 
 	for i, _ := range ret {
@@ -50,10 +50,10 @@ func solve(a, b int, graph [][]int) bool {
 
 func main() {
 	random := rand.New(rand.NewSource(43))
-	
+
 	for it := 0; it < TEST_CASES; it++ {
-		graph := initialize(random)	
-		b := random.Intn(len(graph) - 1) + 1
+		graph := initialize(random)
+		b := random.Intn(len(graph)-1) + 1
 		a := random.Intn(b)
 
 		fmt.Println(solve(a, b, graph))

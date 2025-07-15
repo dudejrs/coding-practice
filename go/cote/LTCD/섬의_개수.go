@@ -1,26 +1,26 @@
 package LTCD
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-	"bufio"
 	"strconv"
 	"strings"
 )
 
-type 섬의_개수 struct {}
+type 섬의_개수 struct{}
 
 func (problem 섬의_개수) dfs(y, x int, grid [][]int) {
 
 	if y < 0 || y >= len(grid) || x < 0 || x >= len(grid[0]) {
 		return
-	} 
-
-	if grid[y][x] != 1 {
-		return 
 	}
 
-	grid[y][x] = 0 
+	if grid[y][x] != 1 {
+		return
+	}
+
+	grid[y][x] = 0
 
 	problem.dfs(y-1, x, grid)
 	problem.dfs(y, x-1, grid)
@@ -45,12 +45,12 @@ func (problem 섬의_개수) solve(grid [][]int) int {
 	return count
 }
 
-func (problem 섬의_개수)  main() {
+func (problem 섬의_개수) main() {
 	f, _ := os.Open("data/섬의_개수.txt")
 	reader := bufio.NewReader(f)
 	s, _ := reader.ReadString('\n')
-	testcases, _ :=  strconv.Atoi(strings.Trim(s, "\n"))
-	
+	testcases, _ := strconv.Atoi(strings.Trim(s, "\n"))
+
 	for it := 0; it < testcases; it++ {
 		s, _ = reader.ReadString('\n')
 		tokens := strings.Split(strings.Trim(s, "\n"), " ")
@@ -65,7 +65,7 @@ func (problem 섬의_개수)  main() {
 
 		for i, _ := range grid {
 			s, _ = reader.ReadString('\n')
-			row := strings.Split(strings.Trim(s, "\n"), "") 
+			row := strings.Split(strings.Trim(s, "\n"), "")
 
 			grid[i] = make([]int, nums[1])
 

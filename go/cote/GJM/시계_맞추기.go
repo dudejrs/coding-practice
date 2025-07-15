@@ -1,11 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-	"bufio"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 const INF = 987654321
@@ -17,7 +17,7 @@ func min(x, y int) int {
 	return y
 }
 
-func aligned(clocks []int) bool{
+func aligned(clocks []int) bool {
 
 	for _, clock := range clocks {
 		if clock != 12 {
@@ -29,7 +29,7 @@ func aligned(clocks []int) bool{
 }
 
 func push(cur int, linked [][]bool, clocks []int) {
-	for i, v := range clocks{
+	for i, v := range clocks {
 		if linked[cur][i] == true {
 			clocks[i] = (v + 3) % 12
 		}
@@ -47,17 +47,16 @@ func search(cur int, linked [][]bool, clocks []int) int {
 	ret := INF
 
 	for it := 0; it < 4; it++ {
-		ret = min(ret, it + search(cur+1, linked, clocks))
+		ret = min(ret, it+search(cur+1, linked, clocks))
 		push(cur, linked, clocks)
-	} 
+	}
 
 	return ret
 }
 
-func solve(linked [][]bool, clocks []int) int{
+func solve(linked [][]bool, clocks []int) int {
 	return search(0, linked, clocks)
 }
-
 
 func main() {
 	f, _ := os.Open("data/시계_맞추기.txt")
@@ -73,14 +72,14 @@ func main() {
 	for i, _ := range linked {
 		s, _ = r.ReadString('\n')
 		linked[i] = make([]bool, numClocks)
-		s = strings.Trim(s,"\n")
+		s = strings.Trim(s, "\n")
 
 		for j, v := range s {
 			switch v {
-				case 'x' :
-					linked[i][j] = true
-				default :
-					linked[i][j] = false
+			case 'x':
+				linked[i][j] = true
+			default:
+				linked[i][j] = false
 			}
 		}
 	}
@@ -92,9 +91,9 @@ func main() {
 		s = strings.Trim(s, "\n")
 
 		clocks := make([]int, numClocks)
-		states := strings.Split(s," ")
+		states := strings.Split(s, " ")
 
-		for j,v := range states {
+		for j, v := range states {
 			time, _ := strconv.Atoi(v)
 			clocks[j] = time
 		}

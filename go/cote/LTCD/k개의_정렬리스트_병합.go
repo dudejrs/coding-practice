@@ -1,9 +1,9 @@
 package LTCD
 
 import (
-	"math/rand"
-	"fmt"
 	"container/heap"
+	"fmt"
+	"math/rand"
 )
 
 // const (
@@ -15,14 +15,14 @@ import (
 
 type k개의_정렬리스트_병합 struct {
 	TEST_CASES int
-	K int
-	MAX_VALUE int
-	STEP int
+	K          int
+	MAX_VALUE  int
+	STEP       int
 }
 
 type Node1 struct {
 	Value int
-	Next *Node1
+	Next  *Node1
 }
 
 func (n Node1) String() string {
@@ -43,9 +43,9 @@ func (n Node1) String() string {
 
 type NodeHeap1 []*Node1
 
-func (h NodeHeap1) Len() int {return len(h)}
-func (h NodeHeap1) Less(x, y int) bool {return h[x].Value < h[y].Value}
-func (h NodeHeap1) Swap(x, y int)  { 
+func (h NodeHeap1) Len() int           { return len(h) }
+func (h NodeHeap1) Less(x, y int) bool { return h[x].Value < h[y].Value }
+func (h NodeHeap1) Swap(x, y int) {
 	h[x], h[y] = h[y], h[x]
 }
 
@@ -62,14 +62,14 @@ func (h *NodeHeap1) Pop() any {
 	return x
 }
 
-func (problem k개의_정렬리스트_병합) initialize(random *rand.Rand) []*Node1  {
-	k := random.Intn(problem.K - 2) + 2
+func (problem k개의_정렬리스트_병합) initialize(random *rand.Rand) []*Node1 {
+	k := random.Intn(problem.K-2) + 2
 	ret := make([]*Node1, k)
 
 	for i, _ := range ret {
 		ret[i] = &Node1{random.Intn(problem.STEP), nil}
 		cur := ret[i]
-		
+
 		for {
 			tmp := cur.Value + random.Intn(problem.STEP)
 
@@ -101,7 +101,7 @@ func (problem k개의_정렬리스트_병합) solve(nodelists []*Node1) *Node1 {
 		}
 		cur.Next = heap.Pop(h).(*Node1)
 		cur = cur.Next
-		
+
 		if cur.Next != nil {
 			heap.Push(h, cur.Next)
 		}

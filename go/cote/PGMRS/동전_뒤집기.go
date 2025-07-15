@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"bufio"
+	"fmt"
+	"math"
+	"os"
+	"slices"
 	"strconv"
 	"strings"
-	"slices"
-	"math"
 )
 
 func sum(coin []int) int {
@@ -20,7 +20,6 @@ func sum(coin []int) int {
 	return ret
 }
 
-	
 func min(x, y int) int {
 	if x < y {
 		return x
@@ -32,7 +31,7 @@ func flipCoins(coin []int, k, target int) int {
 
 	count := 0
 
-	for i := 0; i < len(coin) - k +1; i++ {
+	for i := 0; i < len(coin)-k+1; i++ {
 		if coin[i] == target {
 			continue
 		}
@@ -51,7 +50,6 @@ func flipCoins(coin []int, k, target int) int {
 	return count
 }
 
-
 func solve(coin []int, k int) int {
 
 	if len(coin) == 1 {
@@ -68,7 +66,6 @@ func solve(coin []int, k int) int {
 		return -1
 	}
 
-
 	all0 := flipCoins(slices.Clone(coin), k, 0)
 	all1 := flipCoins(slices.Clone(coin), k, 1)
 
@@ -84,16 +81,16 @@ func solve(coin []int, k int) int {
 func main() {
 
 	f, _ := os.Open("data/동전_뒤집기.txt")
-	
+
 	r := bufio.NewReader(f)
 
 	s, _ := r.ReadString('\n')
-	testcases, _ := strconv.Atoi(strings.Trim(s,"\n"))
+	testcases, _ := strconv.Atoi(strings.Trim(s, "\n"))
 
 	for it := 0; it < testcases; it++ {
 		s, _ = r.ReadString('\n')
 		tokens := strings.Split(strings.Trim(s, "\n"), " ")
-		coin := make([]int, 0) 
+		coin := make([]int, 0)
 
 		for _, v := range tokens {
 			num, _ := strconv.Atoi(v)

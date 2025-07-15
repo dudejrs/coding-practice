@@ -1,9 +1,9 @@
 package LTCD
 
 import (
+	"container/list"
 	"fmt"
 	"math/rand"
-	"container/list"
 )
 
 // const (
@@ -17,14 +17,12 @@ import (
 // 	'[' : ']',
 // 	'{' : '}'}
 
-
 type 유효한_괄호 struct {
 	TEST_CASE int
-	N int
-	brackets []rune
-	closed map[rune]rune
+	N         int
+	brackets  []rune
+	closed    map[rune]rune
 }
-
 
 func (problem *유효한_괄호) generate(random *rand.Rand) string {
 
@@ -32,7 +30,7 @@ func (problem *유효한_괄호) generate(random *rand.Rand) string {
 
 	for i, _ := range b {
 		j := random.Intn(len(problem.brackets))
-		b[i] = 	problem.brackets[j]
+		b[i] = problem.brackets[j]
 	}
 
 	return string(b)
@@ -44,13 +42,13 @@ func (problem *유효한_괄호) solve(s string) bool {
 
 	for _, v := range s {
 		switch v {
-			case '(', '{', '[' :
-				stack.PushBack(problem.closed[v])
-			case ')', '}',']' :
-				if stack.Len() == 0 || stack.Back().Value != v {
-					return false
-				}
-				stack.Remove(stack.Back())
+		case '(', '{', '[':
+			stack.PushBack(problem.closed[v])
+		case ')', '}', ']':
+			if stack.Len() == 0 || stack.Back().Value != v {
+				return false
+			}
+			stack.Remove(stack.Back())
 		}
 	}
 
@@ -58,8 +56,8 @@ func (problem *유효한_괄호) solve(s string) bool {
 }
 
 func (problem *유효한_괄호) main() {
-	random := rand.New(rand.NewSource(15));
-	
+	random := rand.New(rand.NewSource(15))
+
 	for it := 0; it < problem.TEST_CASE; it++ {
 
 		s := problem.generate(random)

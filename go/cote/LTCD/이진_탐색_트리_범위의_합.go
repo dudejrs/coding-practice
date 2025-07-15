@@ -1,9 +1,9 @@
 package LTCD
 
 import (
+	"container/list"
 	"fmt"
 	"math/rand"
-	"container/list"
 )
 
 // const (
@@ -20,12 +20,12 @@ type 이진_탐색_트리_범위의_합 struct {
 
 type Node2 struct {
 	Value int
-	Left *Node2
+	Left  *Node2
 	Right *Node2
 }
 
 func (problem 이진_탐색_트리_범위의_합) initialize(depth int, left, right int, random *rand.Rand) *Node2 {
-	if (left + 1 >= right){
+	if left+1 >= right {
 		return nil
 	}
 
@@ -33,20 +33,20 @@ func (problem 이진_탐색_트리_범위의_합) initialize(depth int, left, ri
 		return nil
 	}
 
-	if random.Float32() / float32(depth) < 1.0 / float32(problem.MAX_DEPTH) {
+	if random.Float32()/float32(depth) < 1.0/float32(problem.MAX_DEPTH) {
 		return nil
 	}
 
 	node := new(Node2)
 
-	node.Value = random.Intn(right - left) + left
-	node.Left = problem.initialize(depth + 1, left, node.Value - 1, random)
-	node.Right = problem.initialize(depth + 1, node.Value, right, random)
+	node.Value = random.Intn(right-left) + left
+	node.Left = problem.initialize(depth+1, left, node.Value-1, random)
+	node.Right = problem.initialize(depth+1, node.Value, right, random)
 
 	return node
 }
 
-func (problem 이진_탐색_트리_범위의_합) dfs(node * Node2, left, right int) int {
+func (problem 이진_탐색_트리_범위의_합) dfs(node *Node2, left, right int) int {
 	if node == nil {
 		return 0
 	}
@@ -56,10 +56,10 @@ func (problem 이진_탐색_트리_범위의_합) dfs(node * Node2, left, right 
 	}
 
 	if node.Value >= right {
-		return problem.dfs(node.Left, left, right) 
+		return problem.dfs(node.Left, left, right)
 	}
 
-	return node.Value + problem.dfs(node.Left, left, right) + problem.dfs(node.Right, left, right) 
+	return node.Value + problem.dfs(node.Left, left, right) + problem.dfs(node.Right, left, right)
 }
 
 func (problem 이진_탐색_트리_범위의_합) solve1(node *Node2, left, right int) int {
@@ -71,7 +71,7 @@ func (problem 이진_탐색_트리_범위의_합) solve2(node *Node2, left, righ
 	queue := list.New()
 	queue.PushBack(node)
 
-	acc :=0
+	acc := 0
 	for {
 		if queue.Len() == 0 {
 			break
@@ -105,7 +105,7 @@ func (problem 이진_탐색_트리_범위의_합) main() {
 	random := rand.New(rand.NewSource(43))
 	for it := 0; it < problem.TEST_CASE; it++ {
 		node := problem.initialize(0, 0, problem.MAX_VALUE, random)
-		right := random.Intn(problem.MAX_VALUE - 1) + 1
+		right := random.Intn(problem.MAX_VALUE-1) + 1
 		left := random.Intn(right)
 		fmt.Println(problem.solve1(node, left, right), problem.solve2(node, left, right))
 	}

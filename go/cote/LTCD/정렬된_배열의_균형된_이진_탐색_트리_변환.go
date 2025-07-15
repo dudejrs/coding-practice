@@ -1,10 +1,10 @@
 package LTCD
 
 import (
+	"container/list"
 	"fmt"
 	"math/rand"
 	"sort"
-	"container/list"
 )
 
 // const (
@@ -15,13 +15,13 @@ import (
 
 type 정렬된_배열의_균형된_이진_탐색_트리_변환 struct {
 	TEST_CASE int
-	N int
+	N         int
 	MAX_VALUE int
 }
 
 type Node struct {
 	Value int
-	Left *Node
+	Left  *Node
 	Right *Node
 }
 
@@ -32,7 +32,7 @@ func (node *Node) String() string {
 
 	queue := list.New()
 	queue.PushBack(node)
-	ret := make([]int , 0)
+	ret := make([]int, 0)
 
 	for {
 		if queue.Len() == 0 {
@@ -55,11 +55,11 @@ func (node *Node) String() string {
 func (problem 정렬된_배열의_균형된_이진_탐색_트리_변환) solve(nums []int) *Node {
 	if len(nums) == 0 {
 		return nil
-	}	
+	}
 	mid := len(nums) / 2
 	node := new(Node)
 	node.Value = nums[mid]
-	node.Left, node.Right = problem.solve(nums[:mid]), problem.solve(nums[mid + 1:])
+	node.Left, node.Right = problem.solve(nums[:mid]), problem.solve(nums[mid+1:])
 
 	return node
 }
@@ -68,8 +68,8 @@ func (problem 정렬된_배열의_균형된_이진_탐색_트리_변환) main() 
 	random := rand.New(rand.NewSource(43))
 
 	for it := 0; it < problem.TEST_CASE; it++ {
-		n := random.Intn(problem.N - 1) + 1
-		
+		n := random.Intn(problem.N-1) + 1
+
 		nums := make([]int, n)
 		for i, _ := range nums {
 			nums[i] = random.Intn(problem.MAX_VALUE)

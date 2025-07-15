@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 )
+
 // const (
 // 	TEST_CASE = 10
 // 	N = 100
@@ -11,22 +12,22 @@ import (
 
 type 코스_스케쥴 struct {
 	TEST_CASE int
-	N int
+	N         int
 }
 
 func (problem 코스_스케쥴) initialize(n int, random *rand.Rand) [][]int {
 	ret := make([][]int, 0)
 	set := make(map[int]map[int]bool, 0)
 
-	for i :=0; i <n; i++ {
+	for i := 0; i < n; i++ {
 		set[i] = make(map[int]bool, 0)
 	}
 
-	for i :=0; i < n; i++ {
+	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
 			if i == j {
 				continue
-			}	
+			}
 
 			if set[i][j] || set[j][i] {
 				continue
@@ -76,11 +77,9 @@ func (problem 코스_스케쥴) solve(n int, prerequisites [][]int) bool {
 		graph[i] = make([]int, 0)
 	}
 
-
 	for _, p := range prerequisites {
 		graph[p[0]] = append(graph[p[0]], p[1])
 	}
-	
 
 	traced := make([]bool, n)
 	visited := make([]bool, n)
@@ -98,8 +97,8 @@ func (problem 코스_스케쥴) main() {
 	random := rand.New(rand.NewSource(43))
 	for it := 0; it < problem.TEST_CASE; it++ {
 		n := random.Intn(problem.N)
-		prerequisites := problem.initialize(n, random)			
-		
+		prerequisites := problem.initialize(n, random)
+
 		fmt.Println(problem.solve(n, prerequisites))
 	}
 }

@@ -1,8 +1,9 @@
 package LTCD
 
 import (
-	"fmt"	
+	"fmt"
 	"math/rand"
+	"strconv"
 )
 
 // const (
@@ -12,12 +13,12 @@ import (
 // )
 
 type 보석과_돌 struct {
-	TEST_CASE int 
-	STONES int 
-	JEWALS int
+	TEST_CASE int
+	STONES    int
+	JEWALS    int
 }
 
-func (problem 보석과_돌) solve(jewals ,stones []string) int {
+func (problem 보석과_돌) solve(jewals, stones []string) int {
 	ret := 0
 	freq := make(map[string]int, 0)
 
@@ -42,7 +43,7 @@ func (problem 보석과_돌) main() {
 	random := rand.New(rand.NewSource(43))
 
 	for it := 0; it < problem.TEST_CASE; it++ {
-			
+
 		jewals := make([]string, 0)
 
 		for c := 'a'; c < 'z'; c++ {
@@ -51,10 +52,10 @@ func (problem 보석과_돌) main() {
 			}
 		}
 
-		stones := make([]string, random.Intn(problem.STONES - 1) + 1)
+		stones := make([]string, random.Intn(problem.STONES-1)+1)
 
 		for i, _ := range stones {
-			stones[i] = string('a' + random.Intn(problem.JEWALS))
+			stones[i] = strconv.Itoa('a' + random.Intn(problem.JEWALS))
 		}
 
 		fmt.Println(problem.solve(jewals, stones))

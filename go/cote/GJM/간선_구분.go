@@ -1,15 +1,15 @@
 package main
 
-import(
-	"math/rand"
-	"slices"
+import (
 	"fmt"
 	"math"
+	"math/rand"
+	"slices"
 )
 
 const (
 	TEST_CASES = 10
-	N = 10
+	N          = 10
 )
 
 func _dfs(cur int, adj [][]int, visited []bool) {
@@ -30,14 +30,14 @@ func check_reachable(adj [][]int) bool {
 }
 
 func initialize(random *rand.Rand) [][]int {
-	n := random.Intn(N - 3) + 3
+	n := random.Intn(N-3) + 3
 	var ret [][]int
 
 	for {
 		ret = make([][]int, n)
 		for i, _ := range ret {
 			for j := 0; j < n; j++ {
-				if i == j || random.Float32() < 0.8  {
+				if i == j || random.Float32() < 0.8 {
 					continue
 				}
 				ret[i] = append(ret[i], j)
@@ -62,17 +62,17 @@ func dfs(cur int, discovered []int, finished []bool, counter *int, adj [][]int) 
 	for _, next := range adj[cur] {
 
 		if discovered[next] == -1 {
-			fmt.Printf("tree edge(%d,%d) ",cur, next)
+			fmt.Printf("tree edge(%d,%d) ", cur, next)
 			dfs(next, discovered, finished, counter, adj)
-		
+
 		} else if discovered[next] > discovered[cur] {
-			fmt.Printf("forward edge(%d,%d) ",cur, next)
+			fmt.Printf("forward edge(%d,%d) ", cur, next)
 
 		} else if !finished[next] {
-			fmt.Printf("backward edge(%d,%d) ",cur, next)
+			fmt.Printf("backward edge(%d,%d) ", cur, next)
 
 		} else {
-			fmt.Printf("cross edge(%d,%d) ",cur, next)
+			fmt.Printf("cross edge(%d,%d) ", cur, next)
 		}
 	}
 
@@ -81,9 +81,8 @@ func dfs(cur int, discovered []int, finished []bool, counter *int, adj [][]int) 
 	return ret
 }
 
-
 func solve(adj [][]int) {
-	discovered := make([]int, len(adj))	
+	discovered := make([]int, len(adj))
 	finished := make([]bool, len(adj))
 	counter := 0
 

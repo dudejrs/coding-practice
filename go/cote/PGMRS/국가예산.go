@@ -1,14 +1,14 @@
-package main 
+package main
 
-import(
+import (
 	"fmt"
 	"math/rand"
 )
 
 const (
-	TEST_CASE = 10
+	TEST_CASE  = 10
 	MAX_BUDGET = 100
-	N = 10
+	N          = 10
 )
 
 func check(budgets []int, mid float64, m int) bool {
@@ -30,7 +30,7 @@ func solve(budgets []int, m int) float64 {
 
 	for it := 0; it < 100; it++ {
 
-		mid := float64(lo + hi) / 2.0
+		mid := float64(lo+hi) / 2.0
 
 		if check(budgets, mid, m) {
 			lo = mid
@@ -43,15 +43,15 @@ func solve(budgets []int, m int) float64 {
 }
 
 func main() {
-	random := rand.New(rand.NewSource(43))	
-	for it := 0 ; it < TEST_CASE; it ++ {
+	random := rand.New(rand.NewSource(43))
+	for it := 0; it < TEST_CASE; it++ {
 		budgets := make([]int, N)
 
 		for i, _ := range budgets {
 			budgets[i] = random.Intn(MAX_BUDGET)
 		}
 
-		m := random.Intn(MAX_BUDGET * N / 3) + MAX_BUDGET * N / 3
-		fmt.Printf("%.3f\n",solve(budgets, m))
+		m := random.Intn(MAX_BUDGET*N/3) + MAX_BUDGET*N/3
+		fmt.Printf("%.3f\n", solve(budgets, m))
 	}
 }

@@ -1,13 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-	"bufio"
 	"strconv"
 	"strings"
 )
-
 
 func max(x, y int) int {
 	if x < y {
@@ -24,7 +23,6 @@ func min(x, y int) int {
 	return x
 }
 
-
 func search(left, right int, h []int) int {
 
 	if left == right {
@@ -35,8 +33,7 @@ func search(left, right int, h []int) int {
 	ret := max(search(left, mid, h), search(mid+1, right, h))
 	lo, hi := mid, mid+1
 	height := min(h[lo], h[hi])
-	ret = max(ret, 2 * height)
-
+	ret = max(ret, 2*height)
 
 	for {
 		if left == lo && hi == right {
@@ -51,7 +48,7 @@ func search(left, right int, h []int) int {
 			hi++
 		}
 
-		ret = max(ret, height * (hi - lo +1))
+		ret = max(ret, height*(hi-lo+1))
 	}
 
 	return ret
@@ -62,11 +59,10 @@ func solve(n int, h []int) int {
 	return search(0, n-1, h)
 }
 
-
 func main() {
 	f, _ := os.Open("data/울타리_잘라내기.txt")
 	r := bufio.NewReader(f)
-	s, _:= r.ReadString('\n')
+	s, _ := r.ReadString('\n')
 	testcases, _ := strconv.Atoi(strings.Trim(s, "\n"))
 
 	for {
@@ -75,14 +71,13 @@ func main() {
 		}
 		s, _ := r.ReadString('\n')
 		n, _ := strconv.Atoi(strings.Trim(s, "\n"))
-		s , _ = r.ReadString('\n')
+		s, _ = r.ReadString('\n')
 		tokens := strings.Split(strings.Trim(s, "\n"), " ")
 		h := make([]int, len(tokens))
 
 		for i, v := range tokens {
 			h[i], _ = strconv.Atoi(v)
 		}
-
 
 		fmt.Println(solve(n, h))
 		testcases--

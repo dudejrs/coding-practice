@@ -8,7 +8,7 @@ import (
 
 const (
 	TEST_CASES = 10
-	N = 10
+	N          = 10
 )
 
 func _dfs(cur int, adj [][]int, visited []bool) {
@@ -22,14 +22,14 @@ func _dfs(cur int, adj [][]int, visited []bool) {
 }
 
 func check_reachable(adj [][]int) bool {
-	visited := make([]bool, len(adj)) 
+	visited := make([]bool, len(adj))
 
 	_dfs(0, adj, visited)
 
 	for _, v := range visited {
 		if !v {
 			return false
-		} 
+		}
 	}
 
 	return true
@@ -38,7 +38,7 @@ func check_reachable(adj [][]int) bool {
 func initialize(random *rand.Rand) (ret [][]int) {
 
 	for {
-		n := random.Intn(N - 3) + 3
+		n := random.Intn(N-3) + 3
 		ret = make([][]int, n)
 		for i, _ := range ret {
 			for j := 0; j < n; j++ {
@@ -49,7 +49,7 @@ func initialize(random *rand.Rand) (ret [][]int) {
 			}
 		}
 
-		if check_reachable(ret)  {
+		if check_reachable(ret) {
 			return
 		}
 
@@ -61,13 +61,13 @@ func dfs(cur int, adj [][]int, visited []bool, path []int) bool {
 	visited[cur] = true
 
 	for _, next := range adj[cur] {
-		if !visited[next]  {
+		if !visited[next] {
 			newPath := append(slices.Clone(path), next)
 			if dfs(next, adj, visited, newPath) {
 				return true
 			}
 
-		} else if slices.Contains(path, next){
+		} else if slices.Contains(path, next) {
 			return true
 		}
 	}

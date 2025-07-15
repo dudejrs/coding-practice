@@ -7,19 +7,18 @@ import (
 
 const (
 	TEST_CASES = 10
-	N = 20
-	MAX_VALUE = 100
+	N          = 20
+	MAX_VALUE  = 100
 )
-
 
 var cache = make([]int, N+1)
 
-func max(x,y int) int {
+func max(x, y int) int {
 	if x < y {
 		return y
 	}
-	return x 
-} 
+	return x
+}
 
 func search(cur int, l []int) int {
 
@@ -33,9 +32,9 @@ func search(cur int, l []int) int {
 
 	*ret = 0
 
-	for i := cur+1; i < len(l); i++ {
+	for i := cur + 1; i < len(l); i++ {
 		if cur == -1 || l[cur] < l[i] {
-			*ret = max(*ret, 1 + search(i, l))
+			*ret = max(*ret, 1+search(i, l))
 		}
 	}
 
@@ -54,7 +53,7 @@ func solve(l []int) int {
 func main() {
 	rand.Seed(43)
 	for it := 0; it < TEST_CASES; it++ {
-		n := rand.Intn(N-10)+10
+		n := rand.Intn(N-10) + 10
 		l := make([]int, n)
 
 		for i := 0; i < n; i++ {

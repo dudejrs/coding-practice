@@ -7,29 +7,29 @@ import (
 
 const (
 	TEST_CASES = 10
-	N = 1000
+	N          = 1000
 )
 
-func initialize(random *rand.Rand)(ret [][]int) {
+func initialize(random *rand.Rand) (ret [][]int) {
 	n := random.Intn(N)
 	ret = make([][]int, n)
 
 	for i, _ := range ret {
-		for j := i +1; j < n; j++ {
+		for j := i + 1; j < n; j++ {
 			if random.Float32() < 0.25 {
 				ret[i] = append(ret[i], j)
 			}
 		}
 	}
-	return 
+	return
 }
 
-func dfs(cur int, visited []bool,graph [][]int) {
+func dfs(cur int, visited []bool, graph [][]int) {
 	visited[cur] = true
 
 	for _, next := range graph[cur] {
 		if !visited[next] {
-			dfs(next, visited, graph)			
+			dfs(next, visited, graph)
 		}
 	}
 

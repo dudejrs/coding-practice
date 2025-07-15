@@ -15,8 +15,8 @@ import (
 type 조합 struct {
 	TEST_CASE int
 	MAX_VALUE int
-	N int
-	K int
+	N         int
+	K         int
 }
 
 func (problem 조합) dfs(nums []int, elements []int, start int, k int, ret *[][]int) {
@@ -29,7 +29,7 @@ func (problem 조합) dfs(nums []int, elements []int, start int, k int, ret *[][
 			continue
 		}
 		temp := append(elements, v)
-		problem.dfs(nums, temp, i + 1, k - 1, ret)
+		problem.dfs(nums, temp, i+1, k-1, ret)
 	}
 }
 
@@ -45,14 +45,14 @@ func (problem 조합) main() {
 	random := rand.New(rand.NewSource(43))
 
 	for it := 0; it < problem.TEST_CASE; it++ {
-		n := random.Intn(problem.N - 2) + 2
-		k := random.Intn(n - 1) + 1
+		n := random.Intn(problem.N-2) + 2
+		k := random.Intn(n-1) + 1
 		nums := make([]int, n)
 		for i, v := range random.Perm(problem.MAX_VALUE) {
 			if i >= n {
 				break
 			}
-			nums[i] = v 
+			nums[i] = v
 		}
 		fmt.Println(problem.solve(nums, k))
 	}

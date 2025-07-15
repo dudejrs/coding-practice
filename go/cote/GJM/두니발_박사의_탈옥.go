@@ -1,9 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
-	"bufio"
 	"strconv"
 	"strings"
 )
@@ -54,7 +54,7 @@ func search(cur, q, days, d int, graph [][]int, degree []int, cache [][]float32)
 
 	for i, cell := range graph[cur] {
 		if cell == 1 {
-			*ret += search(i, q, days +1, d, graph, degree, cache) / float32(degree[cur])
+			*ret += search(i, q, days+1, d, graph, degree, cache) / float32(degree[cur])
 		}
 	}
 
@@ -67,9 +67,9 @@ func solve(n, d, p int, graph [][]int, queries []int) []float32 {
 	ret := make([]float32, len(queries))
 
 	for i, q := range queries {
-		cache := make([][]float32 , n)
+		cache := make([][]float32, n)
 		for i, _ := range cache {
-			cache[i] = make([]float32, d + 1)
+			cache[i] = make([]float32, d+1)
 			for j, _ := range cache[i] {
 				cache[i][j] = float32(-1)
 			}
@@ -80,7 +80,7 @@ func solve(n, d, p int, graph [][]int, queries []int) []float32 {
 	return ret
 }
 
-func main(){
+func main() {
 	f, _ := os.Open("./data/두니발_박사의_탈옥.txt")
 	defer f.Close()
 

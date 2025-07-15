@@ -1,15 +1,15 @@
 package main
 
 import (
+	"container/heap"
 	"fmt"
 	"math"
 	"math/rand"
-	"container/heap"
 	"slices"
 )
 
 type State struct {
-	Cur int
+	Cur  int
 	Cost float32
 }
 
@@ -34,17 +34,17 @@ func (p *PQ) Push(x any) {
 func (p *PQ) Pop() any {
 	old := *p
 	n := len(old)
-	x := old[n - 1]
-	*p = old[0 : n - 1]
+	x := old[n-1]
+	*p = old[0 : n-1]
 	return x
 }
 
 const (
-	N = 1000
-	M = 10 * N
+	N          = 1000
+	M          = 10 * N
 	TEST_CASES = 10
-	MIN_COST = 1.0
-	MAX_COST = 3.0
+	MIN_COST   = 1.0
+	MAX_COST   = 3.0
 )
 
 func _dfs(cur int, graph [][]float32, visited []bool) {
@@ -73,23 +73,23 @@ func _all_reachable(graph [][]float32) bool {
 func initialize(n int, random *rand.Rand) [][]float32 {
 	var ret [][]float32
 	for {
-			ret = make([][]float32, n)
+		ret = make([][]float32, n)
 
-			for i, _ := range ret {
-				ret[i] = make([]float32, n)
-				for j, _ := range ret[i] {
-					if random.Float32() >= 0.05 {
-						continue
-					}
-
-					ret[i][j] = random.Float32() * float32(MAX_COST - MIN_COST) + float32(MIN_COST)
+		for i, _ := range ret {
+			ret[i] = make([]float32, n)
+			for j, _ := range ret[i] {
+				if random.Float32() >= 0.05 {
+					continue
 				}
-			}
-			
-			if _all_reachable(ret) {
-				break
+
+				ret[i][j] = random.Float32()*float32(MAX_COST-MIN_COST) + float32(MIN_COST)
 			}
 		}
+
+		if _all_reachable(ret) {
+			break
+		}
+	}
 
 	return ret
 }
@@ -122,7 +122,7 @@ func solve(n, src, dst int, graph [][]float32) float32 {
 				continue
 			}
 
-			next_cost := cost * v 
+			next_cost := cost * v
 
 			if next_cost < dist[next] {
 				dist[next] = next_cost
@@ -138,8 +138,8 @@ func main() {
 	random := rand.New(rand.NewSource(43))
 
 	for it := 0; it < TEST_CASES; it++ {
-		n := random.Intn(N - 3) + 3
-		k := random.Intn(n - 1) + 1
+		n := random.Intn(N-3) + 3
+		k := random.Intn(n-1) + 1
 
 		graph := initialize(n, random)
 		fmt.Println(solve(n, 0, k, graph))

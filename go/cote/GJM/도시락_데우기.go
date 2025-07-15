@@ -8,13 +8,13 @@ import (
 
 const (
 	TEST_CASE = 10
-	N = 1000
-	MAX_EAT = 180
-	MAX_HEAT = 180
+	N         = 1000
+	MAX_EAT   = 180
+	MAX_HEAT  = 180
 )
 
 type Person struct {
-	Eat int
+	Eat  int
 	Heat int
 }
 
@@ -46,7 +46,7 @@ func initialize(n int, random *rand.Rand, max int) []int {
 		ret[i] = random.Intn(max)
 	}
 
-	return ret 
+	return ret
 }
 
 func solve(n int, eat, heat []int) int {
@@ -63,7 +63,7 @@ func solve(n int, eat, heat []int) int {
 	cur, ret := 0, 0
 	for _, person := range people {
 		cur += person.Heat
-		ret = max(ret, cur + person.Eat)
+		ret = max(ret, cur+person.Eat)
 	}
 
 	return ret
@@ -77,5 +77,5 @@ func main() {
 		heat := initialize(n, random, MAX_HEAT)
 		eat := initialize(n, random, MAX_EAT)
 		fmt.Println(solve(n, eat, heat))
-	}	
+	}
 }

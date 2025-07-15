@@ -1,9 +1,9 @@
 package LTCD
 
 import (
+	"container/list"
 	"fmt"
 	"math/rand"
-	"container/list"
 )
 
 // const (
@@ -13,14 +13,14 @@ import (
 // )
 
 type 이진트리의_최대_깊이 struct {
-	TEST_CASE int 
-	MAX_VALUE int 
+	TEST_CASE int
+	MAX_VALUE int
 	MAX_DEPTH int
 }
 
 type Node3 struct {
 	Value int
-	Left *Node3
+	Left  *Node3
 	Right *Node3
 }
 
@@ -37,13 +37,12 @@ func (problem 이진트리의_최대_깊이) initialize(depth int, random *rand.
 		return nil
 	}
 
-	if depth > 0 && random.Float32() / float32(depth) < 1.0 / float32(problem.MAX_DEPTH) {
+	if depth > 0 && random.Float32()/float32(depth) < 1.0/float32(problem.MAX_DEPTH) {
 		return nil
 	}
 
-	left := problem.initialize(depth + 1, random)
-	right := problem.initialize(depth + 1, random)
-
+	left := problem.initialize(depth+1, random)
+	right := problem.initialize(depth+1, random)
 
 	return &Node3{random.Intn(problem.MAX_VALUE), left, right}
 }
@@ -57,9 +56,9 @@ func (problem 이진트리의_최대_깊이) solve(node *Node3) int {
 		if queue.Len() == 0 {
 			break
 		}
-		depth ++ 
+		depth++
 
-		for i :=0; i < queue.Len(); i++ {
+		for i := 0; i < queue.Len(); i++ {
 			cur := queue.Front().Value.(*Node3)
 
 			if cur.Left != nil {
@@ -73,7 +72,6 @@ func (problem 이진트리의_최대_깊이) solve(node *Node3) int {
 			queue.Remove(queue.Front())
 		}
 	}
-
 
 	return depth
 }
