@@ -19,7 +19,7 @@
 	```
 4. swiftlint 점검
 	```sh
-	swiftlint --lint fix
+	swiftlint --fix
 	```
 5. swiftformat 점검
 	```sh
