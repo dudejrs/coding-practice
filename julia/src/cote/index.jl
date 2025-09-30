@@ -1,6 +1,6 @@
-module Cote 
-	export TestModule
-	include("test.jl")
+module Cote
+export TestModule
+include("test.jl")
 
 
 end
