@@ -193,8 +193,6 @@ public extension cote.PUZZLE {
                 let cur: State! = queue.popFirst()
                 visited.insert(cur)
 
-                print(cur.count)
-
                 if cur.completed {
                     count = cur.count
                     break
